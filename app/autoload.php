@@ -22,5 +22,5 @@ require __DIR__ . "/functions.php";
 $config = require __DIR__ . "/config.php";
 
 // Connection to DB
-// $dbPath = __DIR__ . "/database/filename.db";
-// $pdo = new PDO("sqlite:" . $dbPath);
+$dbPath = __DIR__ . "/database/bookings.sqlite3";
+$pdo = new PDO("sqlite:" . $dbPath);
