@@ -1,0 +1,61 @@
+body {
+  width: 100%;
+  height: 100%;
+}
+
+.whiteBox {
+  background-color: rgba(255, 255, 255, 0.9);
+  margin-top: 20vh;
+  border-radius: 20px;
+  border: 5px dashed grey;
+  /* padding: 10%; */
+  text-align: center;
+  z-index: 5;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 4px;
+  width: fit-content;
+  margin: 1rem auto;
+  font-family: system-ui, sans-serif;
+  padding: 10%;
+}
+
+.day {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f4f4;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.day:hover {
+  background: #eaeaea;
+  transform: scale(1.05);
+}
+
+/* Weekends */
+.weekend {
+  background: #fbe9e7;
+  color: #b71c1c;
+  font-weight: 500;
+}
+
+/* Booked dates */
+.booked {
+  background: #bd9321;
+  border-color: #7b4002;
+  color: #b26229;
+  font-weight: 600;
+}
+
+.booked:hover {
+  background: #d6caa5;
+}
