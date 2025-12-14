@@ -1,6 +1,6 @@
 <?php
 // Require in all PHP files for logic here:
-require __DIR__ . "/autoload.php";
+require __DIR__ . "/app/autoload.php";
 require __DIR__ . "/app/calendar.php";
 
 ?>
