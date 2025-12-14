@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+// JUST FOR DEVELOP ENVIRONMENT: Set cookie-lifetime to 0 (session dies when browser closes)
+// --------------------- REMOVED BEFORE PRODUCTION!!!!! ---------------------
+ini_set('session.cookie_lifetime', 0);
+
 // Start the session:
 session_start();
 
