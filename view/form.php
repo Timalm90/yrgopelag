@@ -20,14 +20,16 @@
                 <!-- Room type could be fetched from DB? Could also be checkbox with a limit to only choose 1? -->
                 <label for="room">Choose room:</label>
 
-                <input type="radio" name="budget" value="budget">
-                <label for="budget">Budget</label>
+                <?php
+                $pdoRoom = $pdo->prepare("SELECT * FROM rooms");
+                $pdoRoom->execute();
+                $rooms = $pdoRoom->fetchAll(PDO::FETCH_ASSOC);
 
-                <input type="radio" name="standard" value="standard">
-                <label for="standard">Standard</label>
+                foreach ($rooms as $room): ?>
+                    <input type="radio" name="<?= $room['room'] ?>" value="<?= $room['room'] ?>">
+                    <label for="<?= $room['room'] ?>"><?= ucwords($room['room']) ?></label>
+                <?php endforeach; ?>
 
-                <input type="radio" name="luxuary" value="luxuary">
-                <label for="luxuary">Luxuary</label>
             </div>
 
             <div class="field">
@@ -47,21 +49,23 @@
             <!-- FEATURES -->
             <!-- Option 1: All features should be registered in DB and choosen in admin. All the choosen features should be included in an array, sorted by category and then tier. The array of features should be foreach looped here -->
             <!-- Option 2: All features are registered in admin and insert into DB if bought. All choosen features are selected in DB, return as array. Foreach looped here  -->
+
             <div class="field features">
                 <label for="features">Features</label>
-                <div>
-                    <input type="checkbox" id="feature1" name="feature1" value="feature1">
-                    <label for="features1">Feature1</label>
-                </div>
 
-                <div>
-                    <input type="checkbox" id="feature2" name="feature2" value="feature2">
-                    <label for="features2">Feature2</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="feature3" name="feature3" value="feature3">
-                    <label for="features3">Feature3</label>
-                </div>
+                <?php
+                // !!!!!!!!!!!!!!!! Fetch ALL features, change this to purchased features when decided which!!!!!!!!!!!!!!!!
+                $pdoFeatures = $pdo->prepare("SELECT * FROM features");
+                $pdoFeatures->execute();
+                $features = $pdoFeatures->fetchAll(PDO::FETCH_ASSOC);
+
+                // NEED TO FIND A MUCH BETTER SYSTEM FOR input name HERE, SINCE IT WON'T WORK WITH IDENTIFICATION
+                foreach ($features as $feature) : ?>
+                    <div>
+                        <input type="checkbox" id="<?= $feature['feature']; ?>" name="<?= $feature['feature']; ?>" value="<?= $feature['feature']; ?>">
+                        <label for="<?= $feature['feature']; ?>"><?= ucwords($feature['feature']); ?></label>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
             <div class="field">
