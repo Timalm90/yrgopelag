@@ -8,3 +8,7 @@
 // - Change discounts
 // - Show saldo at bank
 -->
+
+<?php
+
+declare(strict_types=1);

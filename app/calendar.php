@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 // This is a calendar file copied from lesson.
 // TO DO:
 // Numbers in booked should be fetched from database

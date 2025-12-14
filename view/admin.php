@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . "/autoload.php";
 
 // To do: Build the admin site with dashboard that is shown when logged in. 
 // Here admin should be able to: 
