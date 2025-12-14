@@ -23,10 +23,11 @@
                 <?php
                 $pdoRoom = $pdo->prepare("SELECT * FROM rooms");
                 $pdoRoom->execute();
-                $rooms = $pdoRoom->fetchAll(PDO::FETCH_ASSOC);
+                $rooms = $pdoRoom->fetchAll(PDO::FETCH_ASSOC); ?>
 
+                <?php
                 foreach ($rooms as $room): ?>
-                    <input type="radio" name="<?= $room['room'] ?>" value="<?= $room['room'] ?>">
+                    <input type="radio" name="room" value="<?= $room['room'] ?>">
                     <label for="<?= $room['room'] ?>"><?= ucwords($room['room']) ?></label>
                 <?php endforeach; ?>
 
