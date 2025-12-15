@@ -1,6 +1,6 @@
 <section class="bookingForm">
     <article class="form">
-        <form action="" method="post">
+        <form action="/app/booking.php" method="post">
             <!-- The for attribute of the <label> tag should be equal to the id attribute of the <input> element to bind them together. -->
             <div class="field">
                 <!-- Name -->
@@ -27,8 +27,11 @@
 
                 <?php
                 foreach ($rooms as $room): ?>
-                    <input type="radio" name="room" value="<?= $room['room'] ?>">
-                    <label for="<?= $room['room'] ?>"><?= ucwords($room['room']) ?></label>
+                    <div>
+                        <input type="radio" id="room_<?= $room['id'] ?>" name="room" value="<?= $room['id'] ?>">
+
+                        <label for="room_<?= $room['id'] ?>"><?= ucwords($room['room']) ?> (<?= $room['price_per_night'] ?> / night)</label>
+                    </div>
                 <?php endforeach; ?>
 
             </div>
