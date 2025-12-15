@@ -57,6 +57,7 @@
                 <?php
                 // !!!!!!!!!!!!!!!! Fetch ALL features, change this to purchased features when decided which!!!!!!!!!!!!!!!!
                 $pdoFeatures = $pdo->prepare("SELECT * FROM features");
+                // $pdoFeatures = $pdo->prepare("SELECT * FROM features WHERE purchased_feature = 1");
                 $pdoFeatures->execute();
                 $features = $pdoFeatures->fetchAll(PDO::FETCH_ASSOC);
 
