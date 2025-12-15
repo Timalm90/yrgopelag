@@ -51,12 +51,10 @@
             </div>
 
             <!-- FEATURES -->
-            <!-- Option 1: All features should be registered in DB and choosen in admin. All the choosen features should be included in an array, sorted by category and then tier. The array of features should be foreach looped here -->
             <!-- Option 2: All features are registered in admin and insert into DB if bought. All choosen features are selected in DB, return as array. Foreach looped here  -->
 
             <div class="field features">
                 <label for="features">Features</label>
-
                 <?php
                 // !!!!!!!!!!!!!!!! Fetch ALL features, change this to purchased features when decided which!!!!!!!!!!!!!!!!
                 $pdoFeatures = $pdo->prepare("SELECT * FROM features");
@@ -64,11 +62,10 @@
                 $pdoFeatures->execute();
                 $features = $pdoFeatures->fetchAll(PDO::FETCH_ASSOC);
 
-                // NEED TO FIND A MUCH BETTER SYSTEM FOR input name HERE, SINCE IT WON'T WORK WITH IDENTIFICATION
                 foreach ($features as $feature) : ?>
                     <div>
-                        <input type="checkbox" id="<?= $feature['feature']; ?>" name="<?= $feature['feature']; ?>" value="<?= $feature['feature']; ?>">
-                        <label for="<?= $feature['feature']; ?>"><?= ucwords($feature['feature']); ?></label>
+                        <input type="checkbox" id="feature_<?= $feature['id']; ?>" name="features[]" value="<?= $feature['id']; ?>">
+                        <label for="feature_<?= $feature['id']; ?>"><?= ucwords($feature['feature']); ?></label>
                     </div>
                 <?php endforeach; ?>
             </div>
