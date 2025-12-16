@@ -19,7 +19,7 @@ require __DIR__ . "/app/calendar.php";
 <body>
 
     <?php
-    // To do: Require in header and navbar when built
+    require __DIR__ . "/view/nav.php";
     ?>
 
     <div class="background">
