@@ -7,10 +7,14 @@ declare(strict_types=1);
 require __DIR__ . "/autoload.php";
 //JUST FOR TESTING
 // -------------------------------------------------------------------------------------------------------------
+// ------------------------------------------- ERROR HANDLING ---------------------------------------------
+$errors = [];
+// --------------------------------------------------------------------------------------------------------
 
 // Check if mandatory information is provided (name & transferCode)
 if (!isset($_POST['name'], $_POST['transferCode']) || $name === '' || $transferCode === '') {
-    //Error
+    $errors[] = "Name and transferCode is mandatory!";
+    header("Location: index.php");
 }
 
 // Sanitize & validate inputs, prevent XSS
@@ -52,8 +56,7 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     }
 
     if (!$isAvailable) {
-        // echo "Room is not avaiable those dates";
-        // Error[]/pop-alert when ok is clicked -> redirect back to index page
+        $errors[] = "Room is not avaiable on choosen dates.";
     }
 };
 
@@ -67,11 +70,8 @@ $departureDay = (int)$departureDT->format('j'); // -> Day as int
 
 if ($departureDay < $arrivalDay) {
     $nights = 0; //Unneseccary?
-
-    //Error message
-    //Error message: Your departure date is earlier than your arrival date. Please choose other dates!
-    // When clicked ok on pop up: 
-    // header("Location: index.php");
+    $errors[] = "Check your dates for arrival and departure.";
+    header("Location: index.php");
 }
 
 // Number of nights
@@ -87,7 +87,7 @@ $allRooms = $pdoAllRooms->fetchAll(PDO::FETCH_ASSOC);
 $roomPrices = [];
 foreach ($allRooms as $room) {
     $roomPrices[$room['id']] = (int)$room['price_per_night'];
-}
+};
 
 // Count total price for choosen room:
 $totalRoomCost = 0;
@@ -95,8 +95,7 @@ $totalRoomCost = 0;
 if ($selectedRoomId && isset($roomPrices[$selectedRoomId])) {
     $pricePerNight = $roomPrices[$selectedRoomId];
     $totalRoomCost = $pricePerNight * $nights;
-}
-//Else - error.
+};
 
 // ------------------------------------------- PAYMENT FEATURE ---------------------------------------------
 // Fetch selected features from form
@@ -119,7 +118,7 @@ foreach ($selectedFeatures as $featureId) {
     if (isset($featurePrices[$featureId])) {
         $totalFeatureCost += $featurePrices[$featureId];
     }
-}
+};
 
 // ------------------------------------------- TOTAL PRICE ---------------------------------------------
 
