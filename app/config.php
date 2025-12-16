@@ -19,7 +19,7 @@ $apiKey = $_ENV['API_KEY'] ?? null;
 
 // Save result for admin
 $adminuser = $_ENV['adminuser'];
-$password = $_ENV['password'];
+$adminpassword = $_ENV['password'];
 
 
 // ------------------------------------- LOG -------------------------------------
