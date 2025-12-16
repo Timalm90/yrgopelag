@@ -51,8 +51,6 @@
             </div>
 
             <!-- FEATURES -->
-            <!-- Option 2: All features are registered in admin and insert into DB if bought. All choosen features are selected in DB, return as array. Foreach looped here  -->
-
             <div class="field features">
                 <label for="features">Features</label>
                 <?php
