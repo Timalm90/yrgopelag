@@ -2,15 +2,27 @@
 
 declare(strict_types=1);
 
+require __DIR__ . "/config.php";
+// Need config to append API-key in receipts.
+// It also require vendor/autoload, which is needed for guzzle to work!
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+
+// ---------------------- INIT Guzzle CLIENT ----------------------
+$client = new Client(['base_uri' => 'https://www.yrgopelag.se']);
+
+
 // -------------------------------------------------------------------------------------------------------------
 // //JUST FOR TESTING
 // require __DIR__ . "/autoload.php";
 // //JUST FOR TESTING
 // -------------------------------------------------------------------------------------------------------------
+
 // ------------------------------------------- ERROR HANDLING ---------------------------------------------
 $errors = [];
-// --------------------------------------------------------------------------------------------------------
 
+// ------------------------------------------- SANITIZE & VALIDATE ---------------------------------------------
 // Check if mandatory information is provided (name & transferCode)
 if (!isset($_POST['name'], $_POST['transferCode']) || $_POST['name'] === '' || $_POST['transferCode'] === '') {
     $errors[] = "Name and transferCode is mandatory!";
@@ -27,12 +39,12 @@ $transferCode = htmlspecialchars($transferCode);
 if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     //Fetch input from form:
     $selectedRoomId = $_POST['room'];
-    $arrivalDate = $_POST['arrivalDate'];
-    $departureDate = $_POST['departureDate'];
+    $arrivalInput = $_POST['arrivalDate'];
+    $departureInput = $_POST['departureDate'];
 
     // Convert to DateTime and append checkin/checkout times
-    $arrivalDT = new DateTime($arrivalDate . ' 15:00');
-    $departureDT = new DateTime($departureDate . ' 11:00');
+    $arrivalDT = new DateTime($arrivalInput . ' 15:00');
+    $departureDT = new DateTime($departureInput . ' 11:00');
 
     // ------------------------------------------- AVAILABLE? ---------------------------------------------
     $occupiedDates = $pdo->prepare("SELECT arrival, departure FROM checkins WHERE room_id = :room_id");
@@ -123,9 +135,62 @@ if (isset($_POST['features'], $_POST['arrivalDate'])) {
 
 $totalPrice = $totalRoomCost + $totalFeatureCost;
 
+// ------------------------------------------- VALIDATE TRANSFERCODE ---------------------------------------------
+try {
+    $transferCodeResponse = $client->post('/centralbank/transferCode', [
+        'json' => [
+            'transferCode' => $transferCode,
+            'totalCost'    => $totalPrice
+        ]
+    ]);
+
+    $transferCodeResult = json_decode(
+        $transferCodeResponse->getBody()->getContents(),
+        true
+    );
+
+    if (
+        !isset($transferCodeResult['status']) ||
+        $transferCodeResult['status'] !== 'success'
+    ) {
+        $errors[] = $transferCodeResult['error']
+            ?? "TransferCode validation failed.";
+    }
+} catch (RequestException $transferCodeException) {
+    $errors[] = $transferCodeException->getMessage();
+}
+
+
 // ------------------------------------------- RECEIPT ---------------------------------------------
 
 // Create a receipt and send to centralbank
+try {
+    $receiptResponse = $client->post('/centralbank/receipt', [
+        'json' => [
+            'user'           => "Emilie",
+            'api_key'        => $apiKey,
+            'island_id'      => 1,
+            'guest_name'     => $name,
+            'arrival_date'   => $arrivalDT->format('Y-m-d'),
+            'departure_date' => $departureDT->format('Y-m-d'),
+            'features_used'  => $selectedFeatures,
+            'star_rating'    => 5
+        ]
+    ]);
+
+    $receiptResult = json_decode(
+        $receiptResponse->getBody()->getContents(),
+        true
+    );
+
+    if (!isset($receiptResult['status'])) {
+        $errors[] = $receiptResult['error']
+            ?? "Receipt registration failed.";
+    }
+} catch (RequestException $receiptException) {
+    $errors[] = $receiptException->getMessage();
+}
+
 
 // ------------------------------------------- REGISTER IN DB ---------------------------------------------
 // ---------------------------------------- FIND/REGISTER GUEST IN DB ------------------------------------------
@@ -151,8 +216,8 @@ if (!$guestDB) {
 $guestId = $guestDB['id'];
 
 // Convert data to fit in DB:
-$arrivalDB = $arrivalDT->format('Y-m-d H:i');
-$departureDB = $departureDT->format('Y-m-d H:i');
+// $arrivalDB = $arrivalDT->format('Y-m-d H:i');
+// $departureDB = $departureDT->format('Y-m-d H:i');
 
 // -------------------------------------- REGISTER BOOKED ROOM IN DB ----------------------------------------
 // Requires: guest_id, room_id, arrival & departure in checkins for room
@@ -161,8 +226,8 @@ if (isset($selectedRoomId, $arrivalDT, $departureDT)) {
     $registerBookedRoom = $pdo->prepare("INSERT INTO checkins (guest_id, room_id, arrival, departure) VALUES (:guest_id, :room_id, :arrival, :departure)");
     $registerBookedRoom->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
     $registerBookedRoom->bindParam(":room_id", $selectedRoomId, PDO::PARAM_INT);
-    $registerBookedRoom->bindParam(":arrival", $arrivalDB, PDO::PARAM_STR);
-    $registerBookedRoom->bindParam(":departure", $departureDB, PDO::PARAM_STR);
+    $registerBookedRoom->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
+    $registerBookedRoom->bindParam(":departure", $departureDT->format('Y-m-d H:i'), PDO::PARAM_STR);
 
     $registerBookedRoom->execute();
 }
@@ -183,7 +248,7 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
 
     $registerFeatureOnly = $pdo->prepare("INSERT INTO checkins (guest_id, arrival) VALUES (:guest_id, :arrival)");
     $registerFeatureOnly->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
-    $registerFeatureOnly->bindParam(":arrival", $arrivalDB, PDO::PARAM_STR);
+    $registerFeatureOnly->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
 
     $registerFeatureOnly->execute();
 }
@@ -195,7 +260,7 @@ if (!empty($selectedFeatures)) {
     //Fetch checkin_id
     $checkinId = $pdo->prepare("SELECT id FROM checkins WHERE guest_id = :guest_id AND arrival = :arrival ORDER BY id DESC LIMIT 1");
     $checkinId->bindParam(":guest_id", $guestId, PDO::PARAM_STR);
-    $checkinId->bindParam(":arrival", $arrivalDB, PDO::PARAM_STR);
+    $checkinId->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
     $checkinId->execute();
     $checkinId = $checkinId->fetch(PDO::FETCH_ASSOC);
     $checkinId = $checkinId['id'];
@@ -211,6 +276,30 @@ if (!empty($selectedFeatures)) {
 
 // ------------------------------------ REQUEST CENTRALBANK DEPOSIT --------------------------------------
 // Make a request to centralbank to make a deposit
+try {
+    $depositResponse = $client->post('/centralbank/deposit', [
+        'json' => [
+            'user'         => $adminuser,
+            'transferCode' => $transferCode
+        ]
+    ]);
+
+    $depositResult = json_decode(
+        $depositResponse->getBody()->getContents(),
+        true
+    );
+
+    if (
+        !isset($depositResult['status']) ||
+        $depositResult['status'] !== 'success'
+    ) {
+        $errors[] = $depositResult['error']
+            ?? "Deposit failed.";
+    }
+} catch (RequestException $depositException) {
+    $errors[] = $depositException->getMessage();
+}
+
 
 // ----------------------------------------- USER CONFIRMATION -------------------------------------------
 // Show confirmation message to user!
