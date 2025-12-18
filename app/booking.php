@@ -56,43 +56,13 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     }
 
     // ---------------------------------------- PAYMENT HOTELL ROOM ------------------------------------------
-    //Count number of nights
-    // $nights = 0;
-
-    // $arrivalDay   = (int)$arrivalDT->format('j');   // -> Day as int
-    // $departureDay = (int)$departureDT->format('j'); // -> Day as int
-
-    // if ($departureDay < $arrivalDay) {
-    //     $errors[] = "Check your dates for arrival and departure.";
-    // }
-
-    // // Number of nights
-    // $nights = $departureDay - $arrivalDay;
-
-    // Count number of nights
     $nights = countNights($arrivalDT, $departureDT);
     if ($nights < 0) {
         $errors[] = "Check your dates for arrival and departure.";
         $nights = 0;
     }
 
-    // Fetch price per night for ALL rooms
-    // $pdoAllRooms = $pdo->prepare("SELECT * FROM rooms");
-    // $pdoAllRooms->execute();
-    // $allRooms = $pdoAllRooms->fetchAll(PDO::FETCH_ASSOC);
-
-    // // Create array: room name => price_per_night
-    // $roomPrices = [];
-    // foreach ($allRooms as $room) {
-    //     $roomPrices[$room['id']] = (int)$room['price_per_night'];
-    // };
-    // $roomPrices = getRoomPrices($pdo);
-
-    // Count total price for choosen room:
-    // $totalRoomCost = 0;
     $totalRoomCost = countRoomCost($pdo, $selectedRoomId, $nights);
-    // $pricePerNight = $roomPrices[$selectedRoomId];
-    // $totalRoomCost = $pricePerNight * $nights;
 };
 
 // ------------------------------------------- BOOK FEATURE ---------------------------------------------
@@ -101,18 +71,8 @@ if (isset($_POST['features'], $_POST['arrivalDate'])) {
     // Fetch selected features from form
     $selectedFeatures = $_POST['features'] ?? [];
 
-    // Fetch price for each feature in DB:
-    // $featurePrices = getFeaturePrices($pdo);
-
-    // $totalFeatureCost = 0;
-    // Takes each selected Feature, find the price in price list, and sums it up in totalFeatureCost
+    // [THIS NEEDS A GOOD EXPLAINING COMMENT]
     $totalFeatureCost = countFeatureCost($pdo, $selectedFeatures);
-
-    // foreach ($selectedFeatures as $featureId) {
-    //     if (isset($featurePrices[$featureId])) {
-    //         $totalFeatureCost += $featurePrices[$featureId];
-    //     };
-    // };
 };
 
 // ------------------------------------------- TOTAL PRICE ---------------------------------------------
@@ -220,9 +180,6 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
 // -------------------------------------- REGISTER BOOKED FEATURE IN DB ----------------------------------------
 //Requires: checkin_id, choosen feature_id
 if (!empty($selectedFeatures) && $checkinId !== NULL) {
-    // // Fetch checkin_id
-    // $checkinId = findCheckinId($pdo, $guestId, $arrivalDT);
-
     // Register chosen features on checkin_id
     registerFeatures($pdo, $checkinId, $selectedFeatures);
 };
