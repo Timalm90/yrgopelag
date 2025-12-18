@@ -25,6 +25,17 @@ function getFeaturePrices(PDO $pdo): array
     return $prices;
 }
 
+function getRoomPrices(PDO $pdo): array
+{
+    $statement = $pdo->query("SELECT id, price_per_night FROM rooms");
+    $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $prices = [];
+    foreach ($rooms as $room) {
+        $prices[$room['id']] = (int)$room['price_per_night'];
+    }
+    return $prices;
+}
+
 function findGuest(PDO $pdo, string $name): int|NULL
 {
     $statement = $pdo->prepare("SELECT id FROM guests WHERE name = :name");
