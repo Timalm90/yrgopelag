@@ -32,10 +32,6 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     $departureDT = new DateTime($departureInput . ' 11:00');
 
     // ------------------------------------------- AVAILABLE? ---------------------------------------------
-    // $occupiedDates = $pdo->prepare("SELECT arrival, departure FROM checkins WHERE room_id = :room_id");
-    // $occupiedDates->bindParam(":room_id", $selectedRoomId, PDO::PARAM_INT);
-    // $occupiedDates->execute();
-    // $occupiedDates = $occupiedDates->fetchAll(PDO::FETCH_ASSOC);
     $occupiedDates = checkAvailable($pdo, $selectedRoomId);
 
     $isAvailable = true;
@@ -94,19 +90,6 @@ if (isset($_POST['features'], $_POST['arrivalDate'])) {
     // ------------------------------------------- PAYMENT FEATURE ---------------------------------------------
     // Fetch selected features from form
     $selectedFeatures = $_POST['features'] ?? [];
-
-    // Fetch price for each feature in DB:
-    // $pdoAllFeatures = $pdo->prepare("SELECT features.id, tiers.price_per_feature FROM features INNER JOIN tiers ON features.tier_id = tiers.id");
-    // $pdoAllFeatures = $pdo->prepare("SELECT features.id, tiers.cost_per_feature FROM features INNER JOIN tiers ON features.tier_id = tiers.id");
-    // $pdoAllFeatures->execute();
-    // $allFeatures = $pdoAllFeatures->fetchAll(PDO::FETCH_ASSOC);
-
-    // // Create array: Feature id => price - this works like a pricelist
-    // $featurePrices = [];
-    // foreach ($allFeatures as $feature) {
-    //     // $featurePrices[$feature['id']] = (int)$feature['price_per_feature'];
-    //     $featurePrices[$feature['id']] = (int)$feature['cost_per_feature'];
-    // };
 
     // Fetch price for each feature in DB:
     $featurePrices = getFeaturePrices($pdo);
@@ -183,26 +166,6 @@ try {
 // ------------------------------------------- REGISTER IN DB ---------------------------------------------
 // ---------------------------------------- FIND/REGISTER GUEST IN DB ------------------------------------------
 // Find guest in DB if already exists
-// $guestDB = $pdo->prepare("SELECT id FROM guests WHERE name = :name");
-// $guestDB->bindParam(":name", $name, PDO::PARAM_STR);
-// $guestDB->execute();
-// $guestDB = $guestDB->fetch(PDO::FETCH_ASSOC);
-
-// Register guest in DB if doesn't exists
-// if (!$guestDB) {
-//     $registerGuest = $pdo->prepare("INSERT INTO guests (name) VALUES (:name)");
-//     $registerGuest->bindParam(":name", $name, PDO::PARAM_STR);
-//     $registerGuest->execute();
-
-//     $guestDB = $pdo->prepare("SELECT id FROM guests WHERE name = :name");
-//     $guestDB->bindParam(":name", $name, PDO::PARAM_STR);
-//     $guestDB->execute();
-//     $guestDB = $guestDB->fetch(PDO::FETCH_ASSOC);
-// };
-
-// Fetch its id (used in checkin to register bookings)
-// $guestId = $guestDB['id'];
-
 $guestId = findGuest($pdo, $name);
 
 if ($guestId === NULL) {
@@ -221,23 +184,14 @@ if (!empty($errors)) {
 // -------------------------------------- REGISTER BOOKED ROOM IN DB ----------------------------------------
 // Requires: guest_id, room_id, arrival & departure in checkins for room
 if (isset($selectedRoomId, $arrivalDT, $departureDT)) {
-    // $registerBookedRoom = $pdo->prepare("INSERT INTO checkins (guest_id, room_id, arrival, departure) VALUES (:guest_id, :room_id, :arrival, :departure)");
-    // $registerBookedRoom->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
-    // $registerBookedRoom->bindParam(":room_id", $selectedRoomId, PDO::PARAM_INT);
-    // $registerBookedRoom->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
-    // $registerBookedRoom->bindParam(":departure", $departureDT->format('Y-m-d H:i'), PDO::PARAM_STR);
-
-    // $registerBookedRoom->execute();
-
     roomCheckin($pdo, $guestId, $$selectedRoomId, $arrivalDT, $departureDT);
     $checkinId = findCheckinId($pdo, $guestId, $arrivalDT);
 }
 // ------------------------------------ REGISTER FEATURE-ONLY-CUSTOMERS --------------------------------------
 // Requires: guest_id, arrival --> customer gets checkin_id (used for registering features)
-
 if (!isset($selectedRoomId) && isset($arrivalDT)) {
 
-    // Check that at least 1 feature is choosen
+    // Check that at least 1 feature is choosen, doesn't want to register empty checkins
     if (empty($selectedFeatures)) {
         $errors[] = "You must select at least one feature!";
         header("Location: /../index.php");
@@ -247,48 +201,17 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
 
     featureOnlyCheckin($pdo, $guestId, $arrivalDT);
     $checkinId = findCheckinId($pdo, $guestId, $arrivalDT);
-    // if (!isset($selectedRoomId) && isset($arrivalDT, $selectedFeatures)) {
-
-    // $registerFeatureOnly = $pdo->prepare("INSERT INTO checkins (guest_id, arrival) VALUES (:guest_id, :arrival)");
-    // $registerFeatureOnly->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
-    // $registerFeatureOnly->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
-
-    // $registerFeatureOnly->execute();
-
 }
 
 
 // -------------------------------------- REGISTER BOOKED FEATURE IN DB ----------------------------------------
 //Requires: checkin_id, choosen feature_id
 if (!empty($selectedFeatures)) {
-    //Fetch checkin_id
-    // $checkinId = $pdo->prepare("SELECT id FROM checkins WHERE guest_id = :guest_id AND arrival = :arrival ORDER BY id DESC LIMIT 1");
-    // $checkinId->bindParam(":guest_id", $guestId, PDO::PARAM_STR);
-    // $checkinId->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
-    // $checkinId->execute();
-    // $checkinId = $checkinId->fetch(PDO::FETCH_ASSOC);
-    // $checkinId = $checkinId['id'];
-
     // Fetch checkin_id
     findCheckinId($pdo, $guestId, $arrivalDT);
 
+    // Register chosen features on checkin_id
     registerFeatures($pdo, $checkinId, $featureIds);
-    // {
-    //     $statement = $pdo->prepare("INSERT INTO checkin_feature (checkin_id, feature_id) VALUES (:checkin_id, :feature_id)");
-    //     foreach ($featureIds as $featureId) {
-    //         $statement->bindParam(':checkin_id', $checkinId, PDO::PARAM_INT);
-    //         $statement->bindParam(':feature_id', $featureId, PDO::PARAM_INT);
-    //         $statement->execute();
-    //     }
-    // }
-
-    // Loop through list of choosen features, each feature gets an own row in DB
-    // foreach ($selectedFeatures as $featureId) {
-    //     $registerBookedFeature = $pdo->prepare("INSERT INTO checkin_feature (checkin_id, feature_id) VALUES (:checkin_id, :feature_id)");
-    //     $registerBookedFeature->bindParam(":checkin_id", $checkinId, PDO::PARAM_INT);
-    //     $registerBookedFeature->bindParam(":feature_id", $featureId, PDO::PARAM_INT);
-    //     $registerBookedFeature->execute();
-    // };
 };
 
 // ------------------------------------ REQUEST CENTRALBANK DEPOSIT --------------------------------------
@@ -316,7 +239,6 @@ try {
 } catch (RequestException $depositException) {
     $errors[] = $depositException->getMessage();
 }
-
 
 // ----------------------------------------- USER CONFIRMATION -------------------------------------------
 // Show confirmation message to user!
