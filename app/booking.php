@@ -10,6 +10,12 @@ use GuzzleHttp\Exception\RequestException;
 // ------------------------------------------- ERROR HANDLING ---------------------------------------------
 $errors = [];
 
+// START VALUES
+$totalRoomCost = 0; // STARTVÄRDE FÖR SÄKERHET
+$totalFeatureCost = 0; // STARTVÄRDE FÖR SÄKERHET
+$selectedFeatures = []; // STARTVÄRDE
+$checkinId = NULL;
+
 // ------------------------------------------- SANITIZE & VALIDATE ---------------------------------------------
 // Check if mandatory information is provided (name & transferCode)
 if (!isset($_POST['name'], $_POST['transferCode']) || $_POST['name'] === '' || $_POST['transferCode'] === '') {
@@ -24,12 +30,10 @@ $transferCode = sanitizeString($_POST['transferCode']);
 if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     //Fetch input from form:
     $selectedRoomId = $_POST['room'];
-    $arrivalInput = $_POST['arrivalDate'];
-    $departureInput = $_POST['departureDate'];
 
     // Convert to DateTime and append checkin/checkout times
-    $arrivalDT = new DateTime($arrivalInput . ' 15:00');
-    $departureDT = new DateTime($departureInput . ' 11:00');
+    $arrivalDT = new DateTime($_POST['arrivalDate'] . ' 15:00');
+    $departureDT = new DateTime($_POST['departureDate'] . ' 11:00');
 
     // ------------------------------------------- AVAILABLE? ---------------------------------------------
     $occupiedDates = checkAvailable($pdo, $selectedRoomId);
@@ -53,36 +57,42 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
 
     // ---------------------------------------- PAYMENT HOTELL ROOM ------------------------------------------
     //Count number of nights
-    $nights = 0;
+    // $nights = 0;
 
-    $arrivalDay   = (int)$arrivalDT->format('j');   // -> Day as int
-    $departureDay = (int)$departureDT->format('j'); // -> Day as int
+    // $arrivalDay   = (int)$arrivalDT->format('j');   // -> Day as int
+    // $departureDay = (int)$departureDT->format('j'); // -> Day as int
 
-    if ($departureDay < $arrivalDay) {
+    // if ($departureDay < $arrivalDay) {
+    //     $errors[] = "Check your dates for arrival and departure.";
+    // }
+
+    // // Number of nights
+    // $nights = $departureDay - $arrivalDay;
+
+    // Count number of nights
+    $nights = countNights($arrivalDT, $departureDT);
+    if ($nights < 0) {
         $errors[] = "Check your dates for arrival and departure.";
+        $nights = 0;
     }
 
-    // Number of nights
-    $nights = $departureDay - $arrivalDay;
-
     // Fetch price per night for ALL rooms
-    $pdoAllRooms = $pdo->prepare("SELECT * FROM rooms");
-    $pdoAllRooms->execute();
-    $allRooms = $pdoAllRooms->fetchAll(PDO::FETCH_ASSOC);
+    // $pdoAllRooms = $pdo->prepare("SELECT * FROM rooms");
+    // $pdoAllRooms->execute();
+    // $allRooms = $pdoAllRooms->fetchAll(PDO::FETCH_ASSOC);
 
-    // Create array: room name => price_per_night
-    $roomPrices = [];
-    foreach ($allRooms as $room) {
-        $roomPrices[$room['id']] = (int)$room['price_per_night'];
-    };
+    // // Create array: room name => price_per_night
+    // $roomPrices = [];
+    // foreach ($allRooms as $room) {
+    //     $roomPrices[$room['id']] = (int)$room['price_per_night'];
+    // };
+    // $roomPrices = getRoomPrices($pdo);
 
     // Count total price for choosen room:
-    $totalRoomCost = 0;
-
-    if (isset($selectedRoomId, $roomPrices[$selectedRoomId])) {
-        $pricePerNight = $roomPrices[$selectedRoomId];
-        $totalRoomCost = $pricePerNight * $nights;
-    };
+    // $totalRoomCost = 0;
+    $totalRoomCost = countRoomCost($pdo, $selectedRoomId, $nights);
+    // $pricePerNight = $roomPrices[$selectedRoomId];
+    // $totalRoomCost = $pricePerNight * $nights;
 };
 
 // ------------------------------------------- BOOK FEATURE ---------------------------------------------
@@ -92,15 +102,17 @@ if (isset($_POST['features'], $_POST['arrivalDate'])) {
     $selectedFeatures = $_POST['features'] ?? [];
 
     // Fetch price for each feature in DB:
-    $featurePrices = getFeaturePrices($pdo);
+    // $featurePrices = getFeaturePrices($pdo);
 
-    $totalFeatureCost = 0;
+    // $totalFeatureCost = 0;
     // Takes each selected Feature, find the price in price list, and sums it up in totalFeatureCost
-    foreach ($selectedFeatures as $featureId) {
-        if (isset($featurePrices[$featureId])) {
-            $totalFeatureCost += $featurePrices[$featureId];
-        };
-    };
+    $totalFeatureCost = countFeatureCost($pdo, $selectedFeatures);
+
+    // foreach ($selectedFeatures as $featureId) {
+    //     if (isset($featurePrices[$featureId])) {
+    //         $totalFeatureCost += $featurePrices[$featureId];
+    //     };
+    // };
 };
 
 // ------------------------------------------- TOTAL PRICE ---------------------------------------------
@@ -184,7 +196,7 @@ if (!empty($errors)) {
 // -------------------------------------- REGISTER BOOKED ROOM IN DB ----------------------------------------
 // Requires: guest_id, room_id, arrival & departure in checkins for room
 if (isset($selectedRoomId, $arrivalDT, $departureDT)) {
-    roomCheckin($pdo, $guestId, $$selectedRoomId, $arrivalDT, $departureDT);
+    roomCheckin($pdo, $guestId, $selectedRoomId, $arrivalDT, $departureDT);
     $checkinId = findCheckinId($pdo, $guestId, $arrivalDT);
 }
 // ------------------------------------ REGISTER FEATURE-ONLY-CUSTOMERS --------------------------------------
@@ -194,6 +206,7 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
     // Check that at least 1 feature is choosen, doesn't want to register empty checkins
     if (empty($selectedFeatures)) {
         $errors[] = "You must select at least one feature!";
+        $_SESSION['errors'] = $errors;
         header("Location: /../index.php");
         //Stop script
         exit;
@@ -206,12 +219,12 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
 
 // -------------------------------------- REGISTER BOOKED FEATURE IN DB ----------------------------------------
 //Requires: checkin_id, choosen feature_id
-if (!empty($selectedFeatures)) {
-    // Fetch checkin_id
-    findCheckinId($pdo, $guestId, $arrivalDT);
+if (!empty($selectedFeatures) && $checkinId !== NULL) {
+    // // Fetch checkin_id
+    // $checkinId = findCheckinId($pdo, $guestId, $arrivalDT);
 
     // Register chosen features on checkin_id
-    registerFeatures($pdo, $checkinId, $featureIds);
+    registerFeatures($pdo, $checkinId, $selectedFeatures);
 };
 
 // ------------------------------------ REQUEST CENTRALBANK DEPOSIT --------------------------------------
