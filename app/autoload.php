@@ -15,8 +15,10 @@ date_default_timezone_set('Europe/Stockholm');
 // Encoding, extra security for making å, ä, ö  & emojis working
 mb_internal_encoding('UTF-8');
 
-// Require in functions file
-require __DIR__ . "/functions.php";
+// Requires
+require __DIR__ . "/functions.php"; // Require functions
+require __DIR__ . "/db.php"; // [SAMLA DB-ANROP]
+require __DIR__ . "/validators.php"; // [VALIDERINGSFUNKTIONER?!]
 
 // Require in config file, save to variable for later usage in files
 $config = require __DIR__ . "/config.php";
@@ -24,3 +26,8 @@ $config = require __DIR__ . "/config.php";
 // Connection to DB
 $dbPath = __DIR__ . "/database/bookings.sqlite3";
 $pdo = new PDO("sqlite:" . $dbPath);
+
+// Guzzle client
+use GuzzleHttp\Client;
+
+$client = new Client(['base_uri' => 'https://www.yrgopelag.se']);
