@@ -1,23 +1,11 @@
 <?php
 
 declare(strict_types=1);
+require __DIR__ . "/autoload.php"; // For $client $pdo
+require __DIR__ . "/config.php"; // For API-key 
+// Also nned require vendor/autoload for guzzle to work?!
 
-require __DIR__ . "/config.php";
-// Need config to append API-key in receipts.
-// It also require vendor/autoload, which is needed for guzzle to work!
-
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-
-// ---------------------- INIT Guzzle CLIENT ----------------------
-$client = new Client(['base_uri' => 'https://www.yrgopelag.se']);
-
-
-// -------------------------------------------------------------------------------------------------------------
-// //JUST FOR TESTING
-// require __DIR__ . "/autoload.php";
-// //JUST FOR TESTING
-// -------------------------------------------------------------------------------------------------------------
 
 // ------------------------------------------- ERROR HANDLING ---------------------------------------------
 $errors = [];
@@ -29,11 +17,8 @@ if (!isset($_POST['name'], $_POST['transferCode']) || $_POST['name'] === '' || $
 }
 
 // Sanitize & validate inputs, prevent XSS
-$name = $_POST['name'];
-$name = htmlspecialchars(trim($name));
-
-$transferCode = $_POST['transferCode'];
-$transferCode = htmlspecialchars($transferCode);
+$name = htmlspecialchars(trim($_POST['name']));
+$transferCode = htmlspecialchars($_POST['transferCode']);
 
 // ------------------------------------------- BOOK ROOM ---------------------------------------------
 if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
@@ -66,7 +51,7 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     }
 
     if (!$isAvailable) {
-        $errors[] = "Room is not avaiable on choosen dates.";
+        $errors[] = "Room is not available on chosen dates.";
     }
 
     // ---------------------------------------- PAYMENT HOTELL ROOM ------------------------------------------
@@ -77,7 +62,6 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     $departureDay = (int)$departureDT->format('j'); // -> Day as int
 
     if ($departureDay < $arrivalDay) {
-        $nights = 0; //Unneseccary?
         $errors[] = "Check your dates for arrival and departure.";
     }
 
@@ -113,14 +97,16 @@ if (isset($_POST['features'], $_POST['arrivalDate'])) {
     $totalFeatureCost = 0;
 
     // Fetch price for each feature in DB:
-    $pdoAllFeatures = $pdo->prepare("SELECT features.id, tiers.price_per_feature FROM features INNER JOIN tiers ON features.tier_id = tiers.id");
+    // $pdoAllFeatures = $pdo->prepare("SELECT features.id, tiers.price_per_feature FROM features INNER JOIN tiers ON features.tier_id = tiers.id");
+    $pdoAllFeatures = $pdo->prepare("SELECT features.id, tiers.cost_per_feature FROM features INNER JOIN tiers ON features.tier_id = tiers.id");
     $pdoAllFeatures->execute();
     $allFeatures = $pdoAllFeatures->fetchAll(PDO::FETCH_ASSOC);
 
     // Create array: Feature id => price - this works like a pricelist
     $featurePrices = [];
     foreach ($allFeatures as $feature) {
-        $featurePrices[$feature['id']] = (int)$feature['price_per_feature'];
+        // $featurePrices[$feature['id']] = (int)$feature['price_per_feature'];
+        $featurePrices[$feature['id']] = (int)$feature['cost_per_feature'];
     };
 
     // Takes each selected Feature, find the price in price list, and sums it up in totalFeatureCost
@@ -169,7 +155,6 @@ try {
         'json' => [
             'user'           => "Emilie",
             'api_key'        => $apiKey,
-            'island_id'      => 1,
             'guest_name'     => $name,
             'arrival_date'   => $arrivalDT->format('Y-m-d'),
             'departure_date' => $departureDT->format('Y-m-d'),
@@ -215,9 +200,14 @@ if (!$guestDB) {
 // Fetch its id (used in checkin to register bookings)
 $guestId = $guestDB['id'];
 
-// Convert data to fit in DB:
-// $arrivalDB = $arrivalDT->format('Y-m-d H:i');
-// $departureDB = $departureDT->format('Y-m-d H:i');
+
+// ------------------------------------------- ERROR HANDLING ---------------------------------------------
+if (!empty($errors)) {
+    // Optionally store errors in session to display in UI
+    $_SESSION['errors'] = $errors;
+    header("Location: /../index.php");
+    exit;
+}
 
 // -------------------------------------- REGISTER BOOKED ROOM IN DB ----------------------------------------
 // Requires: guest_id, room_id, arrival & departure in checkins for room
@@ -239,7 +229,7 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
     // Check that at least 1 feature is choosen
     if (empty($selectedFeatures)) {
         $errors[] = "You must select at least one feature!";
-        header("Location: index.php");
+        header("Location: /../index.php");
         //Stop script
         exit;
     }
@@ -279,7 +269,7 @@ if (!empty($selectedFeatures)) {
 try {
     $depositResponse = $client->post('/centralbank/deposit', [
         'json' => [
-            'user'         => $adminuser,
+            'user'         => "Emilie",
             'transferCode' => $transferCode
         ]
     ]);
@@ -303,65 +293,8 @@ try {
 
 // ----------------------------------------- USER CONFIRMATION -------------------------------------------
 // Show confirmation message to user!
+$_SESSION['success'] = "Booking completed successfully! Your room and features are confirmed.";
 
-// ------------------------------------------- TESTING SECTION ---------------------------------------------
-// Test for payment for rooms - seems to work fine!
-echo "<pre>";
-echo $name . "<br>";
-echo $transferCode . "<br>";
-echo "Selected room ID: $selectedRoomId <br>";
-var_dump($arrivalDate);
-echo "<br>";
-var_dump($departureDate);
-echo "<br>";
-echo "Nights: $nights <br>";
-echo "Total price for room: $totalRoomCost credits <br>";
-echo "Total price for features: $totalFeatureCost credits <br>";
-
-var_dump($_POST['arrivalDate']) . "<br>";
-var_dump($_POST['departureDate']) . "<br>";
-
-
-
-// var_dump($roomPrices); -->
-// [
-//   "budget"   => 2,
-//   "standard" => 5,
-//   "luxury"   => 10
-// ]
-
-// var_dump($featurePrices);
-// array(16) {
-//   [1]=>
-//   int(1)
-//   [2]=>
-//   int(3)
-//   [3]=>
-//   int(6)
-//   [4]=>
-//   int(10)
-//   [5]=>
-//   int(1)
-//   [6]=>
-//   int(3)
-//   [7]=>
-//   int(6)
-//   [8]=>
-//   int(10)
-//   [9]=>
-//   int(1)
-//   [10]=>
-//   int(3)
-//   [11]=>
-//   int(6)
-//   [12]=>
-//   int(10)
-//   [13]=>
-//   int(1)
-//   [14]=>
-//   int(3)
-//   [15]=>
-//   int(6)
-//   [16]=>
-//   int(10)
-// }
+// Send user back to start page
+header("Location: /../index.php");
+exit;
