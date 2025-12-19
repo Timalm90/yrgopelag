@@ -8,4 +8,4 @@ vendor
 
 TESTING
 
-app/database
+bookings.sqlite3
