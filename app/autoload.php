@@ -18,7 +18,6 @@ mb_internal_encoding('UTF-8');
 // Requires
 require __DIR__ . "/functions.php"; // Require functions
 require __DIR__ . "/db.php"; // [SAMLA DB-ANROP]
-require __DIR__ . "/validators.php"; // [VALIDERINGSFUNKTIONER?!]
 
 // Require in config file, save to variable for later usage in files
 $config = require __DIR__ . "/config.php";
