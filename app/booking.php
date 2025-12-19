@@ -29,7 +29,7 @@ $transferCode = sanitizeString($_POST['transferCode']);
 // ------------------------------------------- BOOK ROOM ---------------------------------------------
 if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     //Fetch input from form:
-    $selectedRoomId = $_POST['room'];
+    $selectedRoomId = (int) $_POST['room'];
 
     // Convert to DateTime and append checkin/checkout times
     $arrivalDT = new DateTime($_POST['arrivalDate'] . ' 15:00');
