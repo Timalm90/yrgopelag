@@ -1,0 +1,22 @@
+nav {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  height: 5vh;
+}
+
+.navbar {
+  width: fit-content;
+  display: flex;
+  justify-content: space-around;
+  gap: 40px;
+  margin-right: 5vw;
+}
+
+.navLink {
+  color: black;
+}
+
+.active {
+  font-weight: bold;
+}
