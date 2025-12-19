@@ -56,10 +56,19 @@
                 $pdoFeatures->execute();
                 $features = $pdoFeatures->fetchAll(PDO::FETCH_ASSOC);
 
-                foreach ($features as $feature) : ?>
+                foreach ($features as $feature) :
+                    // FETCH PRICE FOR FEATURE
+                    $featurePrice = $pdo->prepare("SELECT cost_per_feature FROM features INNER JOIN tiers ON tiers.id = features.tier_id WHERE features.id = :id");
+                    $featurePrice->bindParam(":id", $feature['id'], PDO::PARAM_INT);
+                    $featurePrice->execute();
+                    $featurePrice = $featurePrice->fetch(PDO::FETCH_ASSOC);
+                    $featurePrice = $featurePrice['cost_per_feature'];
+                ?>
                     <div>
                         <input type="checkbox" id="feature_<?= $feature['id']; ?>" name="features[]" value="<?= $feature['id']; ?>">
-                        <label for="feature_<?= $feature['id']; ?>"><?= ucwords($feature['feature']); ?></label>
+                        <label for="feature_<?= $feature['id']; ?>"><?= ucwords($feature['feature']); ?>
+                            (<?= $featurePrice ?> credits)
+                        </label>
                     </div>
                 <?php endforeach; ?>
             </fieldset>
