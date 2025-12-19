@@ -60,7 +60,7 @@ function myCalendar(array $array): string
             <?= $i; ?>
         </div>
     <?php endfor; ?>
-
+    <div class="day"></div>
 <?php
     return $calendar;
 }
