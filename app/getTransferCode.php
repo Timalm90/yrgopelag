@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+// TO DO:
+// CHECK FOR XSS risks!
+
 require __DIR__ . '/autoload.php';
 require __DIR__ . '/config.php';
 
