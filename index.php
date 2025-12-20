@@ -2,8 +2,6 @@
 // Require in all PHP files for logic here:
 require __DIR__ . "/app/autoload.php";
 require __DIR__ . "/app/rooms.php";
-require __DIR__ . "/view/calendar.php";
-
 ?>
 
 <!DOCTYPE html>
@@ -28,6 +26,18 @@ require __DIR__ . "/view/calendar.php";
 
     <div class="background">
         <main>
+            <section class="roomToggle" role="tablist" aria-label="Välj rumstyp">
+                <button class="roomToggleBtn" data-room="0" role="tab">
+                    Budget
+                </button>
+                <button class="roomToggleBtn active" data-room="1" role="tab" aria-selected="true">
+                    Standard
+                </button>
+                <button class="roomToggleBtn" data-room="2" role="tab">
+                    Luxury
+                </button>
+            </section>
+
             <?php require __DIR__ . "/view/rooms.php"; ?>
             <?php
             require __DIR__ . "/view/form.php"
@@ -71,6 +81,8 @@ require __DIR__ . "/view/calendar.php";
     <?php
     // To do: Require in footer when built
     ?>
+
+    <script src="assets/scripts/toggleRoom.js"></script>
     <script src="assets/scripts/form.js"></script>
     <script src="assets/scripts/totalprice.js"></script>
     <script src="assets/scripts/generateTransferCode.js"></script>
