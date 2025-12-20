@@ -1,6 +1,7 @@
 <?php
 // Require in all PHP files for logic here:
 require __DIR__ . "/app/autoload.php";
+require __DIR__ . "/app/rooms.php";
 require __DIR__ . "/view/calendar.php";
 
 ?>
@@ -14,6 +15,7 @@ require __DIR__ . "/view/calendar.php";
     <title>Yrgopelag</title>
     <link rel="stylesheet" href="assets/styles/index.css">
     <link rel="stylesheet" href="assets/styles/nav.css">
+    <link rel="stylesheet" href="assets/styles/rooms.css">
     <link rel="stylesheet" href="assets/styles/form.css">
     <link rel="stylesheet" href="assets/styles/calendar.css">
 </head>
@@ -26,6 +28,7 @@ require __DIR__ . "/view/calendar.php";
 
     <div class="background">
         <main>
+            <?php require __DIR__ . "/view/rooms.php"; ?>
             <?php
             require __DIR__ . "/view/form.php"
             ?>
@@ -59,27 +62,6 @@ require __DIR__ . "/view/calendar.php";
                 }
                 ?>
             </section>
-            <div>
-
-                <article class="calendar whiteBox">
-
-                    <?php
-                    myCalendar($booked);
-                    ?>
-                </article>
-
-                <article class="calendar whiteBox">
-                    <?php
-                    myCalendar($booked);
-                    ?>
-                </article>
-
-                <article class="calendar whiteBox">
-                    <?php
-                    myCalendar($booked);
-                    ?>
-                </article>
-            </div>
             <div class="showPrice">
                 <p>Total price: <span id="totalPrice">0</span> credits</p>
             </div>
