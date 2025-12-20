@@ -1,19 +1,16 @@
 <?php
 
 declare(strict_types=1);
-require __DIR__ . "/autoload.php"; // For $client $pdo
-require __DIR__ . "/config.php"; // For API-key 
-// Also nned require vendor/autoload for guzzle to work?!
+require __DIR__ . "/autoload.php";
+require __DIR__ . "/config.php";
 
 use GuzzleHttp\Exception\RequestException;
 
-// ------------------------------------------- ERROR HANDLING ---------------------------------------------
+// ------------------------------------------- START VALUES ---------------------------------------------
+$totalRoomCost = 0;
+$totalFeatureCost = 0;
 $errors = [];
-
-// START VALUES
-$totalRoomCost = 0; // STARTVÄRDE FÖR SÄKERHET
-$totalFeatureCost = 0; // STARTVÄRDE FÖR SÄKERHET
-$selectedFeatures = []; // STARTVÄRDE
+$selectedFeatures = [];
 $checkinId = NULL;
 
 // ------------------------------------------- SANITIZE & VALIDATE ---------------------------------------------
@@ -67,6 +64,8 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
 
 // ------------------------------------------- BOOK FEATURE ---------------------------------------------
 if (isset($_POST['features'], $_POST['arrivalDate'])) {
+    $arrivalDT = new DateTime($_POST['arrivalDate'] . ' 15:00');
+    $departureDT = clone $arrivalDT; // Mandatory in receipt
     // ------------------------------------------- PAYMENT FEATURE ---------------------------------------------
     // Fetch selected features from form
     $selectedFeatures = $_POST['features'] ?? [];
@@ -105,6 +104,32 @@ try {
 }
 
 
+// ------------------------------------------- PREP FEATURES FOR RECEIPT ---------------------------------------------
+$featuresUsed = [];
+
+$specificCategory = $pdo->prepare("SELECT category FROM categories WHERE id = 4");
+$specificCategory->execute();
+$specificCategory = $specificCategory->fetch(PDO::FETCH_ASSOC);
+$specificCategory = $specificCategory['category'];
+
+$statementReceipt = $pdo->prepare("SELECT categories.category, tiers.tier FROM features INNER JOIN categories ON features.category_id = categories.id INNER JOIN tiers ON features.tier_id = tiers.id WHERE features.id = :id");
+
+foreach ($selectedFeatures as $featureId) {
+    $statementReceipt->bindParam(":id", $featureId, PDO::PARAM_INT);
+    $statementReceipt->execute();
+    $dbRow = $statementReceipt->fetch(PDO::FETCH_ASSOC);
+
+    // Mario-themed -> hotel-specific
+    if ($dbRow['category'] === $specificCategory) {
+        $dbRow['category'] = "hotel-specific";
+    };
+
+    $featuresUsed[] = [
+        'activity' => $dbRow['category'],
+        'tier'     => $dbRow['tier']
+    ];
+}
+
 // ------------------------------------------- RECEIPT ---------------------------------------------
 
 // Create a receipt and send to centralbank
@@ -116,7 +141,7 @@ try {
             'guest_name'     => $name,
             'arrival_date'   => $arrivalDT->format('Y-m-d'),
             'departure_date' => $departureDT->format('Y-m-d'),
-            'features_used'  => $selectedFeatures,
+            'features_used'  => $featuresUsed,
             'star_rating'    => 5
         ]
     ]);
