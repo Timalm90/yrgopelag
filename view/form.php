@@ -19,9 +19,7 @@
 
                 <div class="field togglable">
                     <?php
-                    $pdoRoom = $pdo->prepare("SELECT * FROM rooms");
-                    $pdoRoom->execute();
-                    $rooms = $pdoRoom->fetchAll(PDO::FETCH_ASSOC);
+                    $rooms = getRooms($pdo);
 
                     foreach ($rooms as $room): ?>
                         <div>
@@ -52,22 +50,18 @@
             <fieldset class="field features">
                 <legend>Features</legend>
                 <?php
-                $pdoFeatures = $pdo->prepare("SELECT * FROM features WHERE purchased_feature = 1");
-                $pdoFeatures->execute();
-                $features = $pdoFeatures->fetchAll(PDO::FETCH_ASSOC);
+                $features = getPurchasedFeatures($pdo);
+
+                $featurePrice = getFeaturePrices($pdo);
 
                 foreach ($features as $feature) :
                     // FETCH PRICE FOR FEATURE
-                    $featurePrice = $pdo->prepare("SELECT cost_per_feature FROM features INNER JOIN tiers ON tiers.id = features.tier_id WHERE features.id = :id");
-                    $featurePrice->bindParam(":id", $feature['id'], PDO::PARAM_INT);
-                    $featurePrice->execute();
-                    $featurePrice = $featurePrice->fetch(PDO::FETCH_ASSOC);
-                    $featurePrice = $featurePrice['cost_per_feature'];
+                    $priceFeature = $featurePrice[$feature['id']];
                 ?>
                     <div>
                         <input type="checkbox" id="feature_<?= $feature['id']; ?>" name="features[]" value="<?= $feature['id']; ?>">
                         <label for="feature_<?= $feature['id']; ?>"><?= ucwords($feature['feature']); ?>
-                            (<?= $featurePrice ?> credits)
+                            (<?= $priceFeature ?> credits)
                         </label>
                     </div>
                 <?php endforeach; ?>
