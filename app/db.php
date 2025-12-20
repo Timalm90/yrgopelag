@@ -25,6 +25,20 @@ function getFeaturePrices(PDO $pdo): array
     return $prices;
 }
 
+function getPurchasedFeatures(PDO $pdo): array
+{
+    $statement = $pdo->prepare("SELECT * FROM features WHERE purchased_feature = 1");
+    $statement->execute();
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getRooms(PDO $pdo): array
+{
+    $statement = $pdo->prepare("SELECT * FROM rooms");
+    $statement->execute();
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+};
+
 function getRoomPrices(PDO $pdo): array
 {
     $statement = $pdo->query("SELECT id, price_per_night FROM rooms");
