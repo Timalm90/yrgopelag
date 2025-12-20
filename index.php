@@ -11,8 +11,17 @@ require __DIR__ . "/app/rooms.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yrgopelag</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/styles/general.css">
     <link rel="stylesheet" href="assets/styles/index.css">
     <link rel="stylesheet" href="assets/styles/nav.css">
+    <link rel="stylesheet" href="assets/styles/togglebar.css">
     <link rel="stylesheet" href="assets/styles/rooms.css">
     <link rel="stylesheet" href="assets/styles/form.css">
     <link rel="stylesheet" href="assets/styles/calendar.css">
@@ -24,59 +33,71 @@ require __DIR__ . "/app/rooms.php";
     require __DIR__ . "/view/nav.php";
     ?>
 
-    <div class="background">
-        <main>
-            <section class="roomToggle" role="tablist" aria-label="Välj rumstyp">
-                <button class="roomToggleBtn" data-room="0" role="tab">
-                    Budget
-                </button>
-                <button class="roomToggleBtn active" data-room="1" role="tab" aria-selected="true">
-                    Standard
-                </button>
-                <button class="roomToggleBtn" data-room="2" role="tab">
-                    Luxury
-                </button>
-            </section>
+    <div class="background"></div>
 
-            <?php require __DIR__ . "/view/rooms.php"; ?>
-            <?php
-            require __DIR__ . "/view/form.php"
-            ?>
-
-            <section class="message">
-                <h1>Confirmation or Errors are shown here!</h1>
-
-                <?php
-                // Show error messages in errors-array:
-                if (!empty($_SESSION['errors'])) : ?>
-                    <ul>
-                        <?php
-                        foreach ($_SESSION['errors'] as $error) : ?>
-                            <li>
-                                <?= $error ?>
-                            </li>
-                        <?php endforeach ?>
-                    </ul>
-                <?php
-                    //Empty this session variable
-                    unset($_SESSION['errors']);
-                endif;
-
-                if (!empty($_SESSION['success'])) { ?>
-                    <p>
-                        <?= $_SESSION['success']; ?>
-                    </p>
-                <?php
-                    //Empty this session variable
-                    unset($_SESSION['success']);
-                }
-                ?>
-            </section>
-            <div class="showPrice">
-                <p>Total price: <span id="totalPrice">0</span> credits</p>
+    <main>
+        <section class="hero whiteBox">
+            <div class="hotelStars">
+                <img src="assets/images/star.png" alt="Mario star" />
+                <img src="assets/images/star.png" alt="Mario star" />
+                <img src="assets/images/star.png" alt="Mario star" />
+                <img src="assets/images/star.png" alt="Mario star" />
+                <img src="assets/images/star.png" alt="Mario star" />
             </div>
-        </main>
-    </div>
+            <h1>Welcome to Yoshi's Resort on Starlight Island</h1>
+            <h2> - where magic, adventure, and luxury meet!</h2>
+            <p>Experience a one-of-a-kind stay filled with fun, relaxation, and surprises. Whether you want to unwind in our luxurious Princess Peach Suite, challenge friends in exciting activities, or just enjoy a day at the island's most spectacular features - your next adventure awaits at Yoshi's Resort!</p>
+        </section>
+        <section class="roomToggle togglePill" role="tablist">
+            <button class="roomToggleBtn" data-room="0" role="tab">
+                Budget
+            </button>
+            <button class="roomToggleBtn active" data-room="1" role="tab" aria-selected="true">
+                Standard
+            </button>
+            <button class="roomToggleBtn" data-room="2" role="tab">
+                Luxury
+            </button>
+        </section>
+
+        <?php require __DIR__ . "/view/rooms.php"; ?>
+        <?php
+        require __DIR__ . "/view/form.php"
+        ?>
+
+        <section class="message">
+            <h1>Confirmation or Errors are shown here!</h1>
+
+            <?php
+            // Show error messages in errors-array:
+            if (!empty($_SESSION['errors'])) : ?>
+                <ul>
+                    <?php
+                    foreach ($_SESSION['errors'] as $error) : ?>
+                        <li>
+                            <?= $error ?>
+                        </li>
+                    <?php endforeach ?>
+                </ul>
+            <?php
+                //Empty this session variable
+                unset($_SESSION['errors']);
+            endif;
+
+            if (!empty($_SESSION['success'])) { ?>
+                <p>
+                    <?= $_SESSION['success']; ?>
+                </p>
+            <?php
+                //Empty this session variable
+                unset($_SESSION['success']);
+            }
+            ?>
+        </section>
+        <div class="showPrice">
+            <p>Total price: <span id="totalPrice">0</span> credits</p>
+        </div>
+    </main>
 
     <?php
     // To do: Require in footer when built
