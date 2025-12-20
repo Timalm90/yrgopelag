@@ -9,6 +9,12 @@
                 <h2><?= $room['title'] ?></h2>
                 <p><?= $room['description'] ?></p>
             </article>
-            <article class="roomCalendar calendar"><?php require __DIR__ . '/calendar.php'; ?></article>
+            <article class="roomCalendar">
+                <p>Jan 2026</p>
+                <div class="calendar">
+                    <?php
+                    require __DIR__ . '/calendar.php'; ?>
+                </div>
+            </article>
         </section>
     <?php endforeach; ?>
