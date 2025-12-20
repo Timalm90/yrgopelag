@@ -1,8 +1,7 @@
 <section class="bookingForm">
-    <form action="/app/booking.php" method="post">
-
-        <!-- Toogle: Book room/Day pass, changes form content -->
-        <div class="booking-toggle">
+    <!-- Toogle: Book room/Day pass, changes form content -->
+    <article class="toggleBooking">
+        <div class="togglePill">
             <input type="radio" id="bookRoom" name="bookingType" value="room" checked>
             <label for="bookRoom">Book Room</label>
 
@@ -11,7 +10,8 @@
 
             <div class="slider"></div>
         </div>
-
+    </article>
+    <form action="/app/booking.php" method="post">
         <!-- BOOK ROOM -->
         <fieldset id="roomSection">
             <legend class="legendRoom">Choose Room and Date</legend>
