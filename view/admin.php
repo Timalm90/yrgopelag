@@ -32,23 +32,19 @@ require __DIR__ . "/../app/config.php";
     ?>
     <div class="adminBackground">
         <main>
-            <article class="adminLoginForm">
-                <h1>Login</h1>
+            <!-- IF NOT LOGGED IN -> redirect to login page -->
+            <?php if (!isset($_SESSION['user']))
+                header("Location: login.php") ?>
 
-                <form action="/app/admin/login.php" method="post">
-                    <div>
-                        <label for="username">Username:</label>
-                        <input type="text" name="username" placeholder="Enter username" required>
-                    </div>
 
-                    <div>
-                        <label for="password">Password:</label>
-                        <input type="password" name="password" placeholder="Enter password" required>
-                    </div>
+            <!-- IF LOGGED IN: SHOW THIS DASHBOARD... ... ... -->
+            <?php
+            if (isset($_SESSION['user'])): ?>
+                <!-- DASHBOARD! -->
+                <h1>You are logged in! </h1>
 
-                    <button type="submit">Login</button>
-                </form>
-            </article>
+            <?php endif; ?>
+
         </main>
     </div>
 </body>
