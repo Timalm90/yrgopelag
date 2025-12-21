@@ -1,4 +1,5 @@
 <nav>
+    <img class="navLogo" src="assets/images/logo.png" alt="Logo Yoshi's Resort" />
     <div class="navbar">
         <a class="navLink <?php echo $_SERVER['SCRIPT_NAME'] === '/index.php' ? 'activeNav' : ''; ?>" href="/index.php">Home</a>
 
@@ -7,7 +8,7 @@
         <?php if (isset($_SESSION['user'])) { ?>
             <a class="navLink" href="/app/admin/logout.php">Logout</a>
         <?php } else { ?>
-            <a class="navLink" href="/view/admin.php">Login</a>
+            <a class="navLink <?php echo $_SERVER['SCRIPT_NAME'] === '/view/login.php' ? 'activeNav' : ''; ?>" href="/view/login.php">Login</a>
         <?php } ?>
         </ul>
     </div>
