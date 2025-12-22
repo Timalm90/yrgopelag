@@ -111,8 +111,9 @@ $luxuryRoomId = (int) $luxury->fetch(PDO::FETCH_ASSOC)['id'];
 // Fetch feature for discount
 $bowserFeature = $pdoBooking->prepare("SELECT id FROM features WHERE feature = 'Bowser’s Castle Escape'");
 $bowserFeature->execute();
-$bowserFeatureId = $bowserFeature->fetch(PDO::FETCH_ASSOC);
-$bowserFeatureId = (int) $bowserFeature['id'];
+$bowserRow = $bowserFeature->fetch(PDO::FETCH_ASSOC);
+$bowserFeatureId = (int) $bowserRow['id'];
+
 
 // -------------------- DISCOUNT LOYAL -----------------------
 // Loyal customer:
@@ -155,11 +156,23 @@ try {
     $transferCodeResult = json_decode($transferCodeResponse->getBody()->getContents(), true);
 
     if (!isset($transferCodeResult['status']) || $transferCodeResult['status'] !== 'success') {
-        $errors[] = $transferCodeResult['error'] ?? "TransferCode validation failed.";
+        $errors[] = getErrorMessage($transferCodeResult['error']);
     }
 } catch (RequestException $transferCodeException) {
-    $errors[] = $transferCodeException->getMessage();
+    if ($transferCodeException->hasResponse()) {
+        $apiError = json_decode($transferCodeException->getResponse()->getBody()->getContents(), true)['error'] ?? '';
+        $errors[] = getErrorMessage($apiError);
+    } else {
+        $errors[] = "Det gick inte att nå betalningssystemet. Försök igen senare.";
+    }
 }
+
+if (!empty($errors)) {
+    $_SESSION['errors'] = $errors;
+    header("Location: /../index.php");
+    exit;
+}
+
 
 // ------------------------------------------- PREPARE FEATURES FOR RECEIPT ---------------------------------------------
 $featuresUsed = [];
@@ -208,15 +221,49 @@ try {
         true
     );
 
-    if (!isset($receiptResult['status'])) {
-        $errors[] = $receiptResult['error']
-            ?? "Receipt registration failed.";
+    if (!isset($receiptResult['status']) || $receiptResult['status'] !== 'success') {
+        $errors[] = getErrorMessage($receiptResult['error']);
     }
 } catch (RequestException $receiptException) {
-    $errors[] = $receiptException->getMessage();
+    if ($receiptException->hasResponse()) {
+        $apiError = json_decode($receiptException->getResponse()->getBody()->getContents(), true)['error'] ?? '';
+        $errors[] = getErrorMessage($apiError);
+    } else {
+        $errors[] = "Det gick inte att genomföra betalningen. Försök igen senare.";
+    }
 }
 
-// ------------------------------------------- ERROR HANDLING ---------------------------------------------
+if (!empty($errors)) {
+    $_SESSION['errors'] = $errors;
+    header("Location: /../index.php");
+    exit;
+}
+
+
+// ------------------------------------ REQUEST CENTRALBANK DEPOSIT --------------------------------------
+// Make a request to centralbank to make a deposit
+try {
+    $depositResponse = $client->post('/centralbank/deposit', [
+        'json' => [
+            'user'         => "Emilie",
+            'transferCode' => $transferCode
+        ]
+    ]);
+
+    $depositResult = json_decode($depositResponse->getBody()->getContents(), true);
+
+    if (!isset($depositResult['status']) || $depositResult['status'] !== 'success') {
+        $errors[] = $depositResult['error'];
+    }
+} catch (RequestException $depositException) {
+    if ($depositException->hasResponse()) {
+        $apiError = json_decode($depositException->getResponse()->getBody()->getContents(), true)['error'] ?? '';
+        $errors[] = getErrorMessage($apiError);
+    } else {
+        $errors[] = "På grund av tekniskt strul kunde betalningen inte genomföras. Var god försök igen senare.";
+    }
+}
+
 if (!empty($errors)) {
     // Store errors in session to display in UI
     $_SESSION['errors'] = $errors;
@@ -249,25 +296,6 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
 if (!empty($selectedFeatures) && $checkinId !== NULL) {
     // Register chosen features on checkin_id
     registerFeatures($pdoBooking, $checkinId, $selectedFeatures);
-}
-
-// ------------------------------------ REQUEST CENTRALBANK DEPOSIT --------------------------------------
-// Make a request to centralbank to make a deposit
-try {
-    $depositResponse = $client->post('/centralbank/deposit', [
-        'json' => [
-            'user'         => "Emilie",
-            'transferCode' => $transferCode
-        ]
-    ]);
-
-    $depositResult = json_decode($depositResponse->getBody()->getContents(), true);
-
-    if (!isset($depositResult['status']) || $depositResult['status'] !== 'success') {
-        $errors[] = $depositResult['error'] ?? "Deposit failed.";
-    }
-} catch (RequestException $depositException) {
-    $errors[] = $depositException->getMessage();
 }
 
 // ----------------------------------------- USER CONFIRMATION -------------------------------------------
