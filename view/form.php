@@ -18,13 +18,13 @@
 
             <div class="field togglable">
                 <?php
-                $rooms = getRooms($pdo);
+                $rooms = getRooms($pdoBooking);
 
                 foreach ($rooms as $room): ?>
                     <div>
-                        <input type="radio" id="room_<?= $room['id'] ?>" name="room" value="<?= $room['id'] ?>">
+                        <input type="radio" id="room_<?= htmlspecialchars($room['id']) ?>" name="room" value="<?= htmlspecialchars($room['id']) ?>">
 
-                        <label for="room_<?= $room['id'] ?>"><?= ucwords($room['room']) ?> (<?= $room['price_per_night'] ?>c/night)</label>
+                        <label for="room_<?= htmlspecialchars($room['id']) ?>"><?= ucwords(htmlspecialchars($room['room'])) ?> (<?= htmlspecialchars($room['price_per_night']) ?>c/night)</label>
                     </div>
                 <?php endforeach; ?>
 
@@ -49,18 +49,18 @@
         <fieldset class="field features">
             <legend>Features</legend>
             <?php
-            $features = getPurchasedFeatures($pdo);
+            $features = getPurchasedFeatures($pdoBooking);
 
-            $featurePrice = getFeaturePrices($pdo);
+            $featurePrice = getFeaturePrices($pdoBooking);
 
             foreach ($features as $feature) :
                 // FETCH PRICE FOR FEATURE
                 $priceFeature = $featurePrice[$feature['id']];
             ?>
                 <div>
-                    <input type="checkbox" id="feature_<?= $feature['id']; ?>" name="features[]" value="<?= $feature['id']; ?>">
-                    <label for="feature_<?= $feature['id']; ?>"><?= ucwords($feature['feature']); ?>
-                        (<?= $priceFeature ?>c)
+                    <input type="checkbox" id="feature_<?= htmlspecialchars($feature['id']); ?>" name="features[]" value="<?= htmlspecialchars($feature['id']); ?>">
+                    <label for="feature_<?= htmlspecialchars($feature['id']); ?>"><?= ucwords(htmlspecialchars($feature['feature'])); ?>
+                        (<?= htmlspecialchars($priceFeature) ?>c)
                     </label>
                 </div>
             <?php endforeach; ?>
