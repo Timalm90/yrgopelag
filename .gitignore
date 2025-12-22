@@ -9,3 +9,4 @@ vendor
 TESTING
 
 bookings.sqlite3
+admin.sqlite3
