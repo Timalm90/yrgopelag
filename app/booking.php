@@ -19,9 +19,8 @@ if (!isset($_POST['name'], $_POST['transferCode']) || $_POST['name'] === '' || $
     $errors[] = "Name and transferCode is mandatory!";
 }
 
-//Sanitize & validate input, prevent XSS
-$name = sanitizeString(trim($_POST['name']));
-$transferCode = sanitizeString($_POST['transferCode']);
+$name = trim($_POST['name']);
+$transferCode = ($_POST['transferCode']);
 
 // ------------------------------------------- FETCH FEATURES (ALL CUSTOMER TYPES) ------------------------
 // Form data is always strings – cast feature IDs to int for pricing & strict comparisons
@@ -95,7 +94,7 @@ if (!isset($selectedRoomId) && isset($_POST['arrivalDate'])) {
 
 // ------------------------------------------- PAYMENT FEATURES ---------------------------------------------
 if (!empty($selectedFeatures)) {
-    // [THIS NEEDS A GOOD EXPLAINING COMMENT]
+    // Calculate total cost for all selected features
     $totalFeatureCost = countFeatureCost($pdoBooking, $selectedFeatures);
 }
 
@@ -104,42 +103,42 @@ $totalPrice = $totalRoomCost + $totalFeatureCost;
 
 // -------------------- PREPARE DISCOUNT -----------------------
 // Fetch luxury room:
-$luxury = $pdoBooking->prepare("SELECT id FROM rooms WHERE room = 'luxury'");
-$luxury->execute();
-$luxuryRoomId = (int) $luxury->fetch(PDO::FETCH_ASSOC)['id'];
+// $luxury = $pdoBooking->prepare("SELECT id FROM rooms WHERE room = 'luxury'");
+// $luxury->execute();
+// $luxuryRoomId = (int) $luxury->fetch(PDO::FETCH_ASSOC)['id'];
+$luxuryRoomId = getLuxuryRoomId($pdoBooking);
+
 
 // Fetch feature for discount
-$bowserFeature = $pdoBooking->prepare("SELECT id FROM features WHERE feature = 'Bowser’s Castle Escape'");
-$bowserFeature->execute();
-$bowserRow = $bowserFeature->fetch(PDO::FETCH_ASSOC);
-$bowserFeatureId = (int) $bowserRow['id'];
+// $bowserFeature = $pdoBooking->prepare("SELECT id FROM features WHERE feature = 'Bowser’s Castle Escape'");
+// $bowserFeature->execute();
+// $bowserRow = $bowserFeature->fetch(PDO::FETCH_ASSOC);
+// $bowserFeatureId = (int) $bowserRow['id'];
+$bowserFeatureId = getBowserFeatureId($pdoBooking);
 
 
-// -------------------- DISCOUNT LOYAL -----------------------
+// -------------------- DISCOUNTS -----------------------
 // Loyal customer:
-$isLoyal = $pdoBooking->prepare("SELECT guest_id, COUNT(guest_id) AS visits FROM checkins WHERE guest_id = :guestId GROUP BY guest_id");
-$isLoyal->bindParam(":guestId", $guestId, PDO::PARAM_INT);
-$isLoyal->execute();
-$isLoyal = $isLoyal->fetch(PDO::FETCH_ASSOC);
+// $isLoyal = $pdoBooking->prepare("SELECT guest_id, COUNT(guest_id) AS visits FROM checkins WHERE guest_id = :guestId GROUP BY guest_id");
+// $isLoyal->bindParam(":guestId", $guestId, PDO::PARAM_INT);
+// $isLoyal->execute();
+// $isLoyal = $isLoyal->fetch(PDO::FETCH_ASSOC);
+$isLoyal = checkLoyalCustomer($pdoBooking, $guestId);
 
 // Fetch discount from DB:
-$loyalDiscountStmt = $pdoAdmin->prepare("SELECT discount FROM discounts WHERE type = 'loyal'");
-$loyalDiscountStmt->execute();
-$loyalDiscountRow = $loyalDiscountStmt->fetch(PDO::FETCH_ASSOC);
-$loyalDiscount = (int) $loyalDiscountRow['discount'];
+// $loyalDiscountStmt = $pdoAdmin->prepare("SELECT discount FROM discounts WHERE type = 'loyal'");
+// $loyalDiscountStmt->execute();
+// $loyalDiscountRow = $loyalDiscountStmt->fetch(PDO::FETCH_ASSOC);
+// $loyalDiscount = (int) $loyalDiscountRow['discount'];
+$loyalDiscount = getDiscount($pdoAdmin, 'loyal');
+$comboDiscount = getDiscount($pdoAdmin, 'luxuryCombo');
 
+// Loyal offer:
 if ($isLoyal && (int)$isLoyal['visits'] >= 1 && isset($selectedRoomId) && $selectedRoomId === $luxuryRoomId) {
     $totalPrice -= $loyalDiscount;
 }
 
-// -------------------- DISCOUNT LUXURY COMBO -----------------------
 // Combo offer:
-$comboDiscountStmt = $pdoAdmin->prepare("SELECT discount FROM discounts WHERE type = 'luxuryCombo'");
-$comboDiscountStmt->execute();
-$comboDiscountRow = $comboDiscountStmt->fetch(PDO::FETCH_ASSOC);
-$comboDiscount = (int) $comboDiscountRow['discount'];
-
-// Fetch discount from DB:
 if (isset($selectedRoomId) && $selectedRoomId === $luxuryRoomId && in_array($bowserFeatureId, $selectedFeatures, true)) {
     $totalPrice -= $comboDiscount;
 }
@@ -156,49 +155,47 @@ try {
     $transferCodeResult = json_decode($transferCodeResponse->getBody()->getContents(), true);
 
     if (!isset($transferCodeResult['status']) || $transferCodeResult['status'] !== 'success') {
-        $errors[] = getErrorMessage($transferCodeResult['error']);
+        $errors[] = htmlspecialchars(getErrorMessage($transferCodeResult['error']));
     }
 } catch (RequestException $transferCodeException) {
     if ($transferCodeException->hasResponse()) {
         $apiError = json_decode($transferCodeException->getResponse()->getBody()->getContents(), true)['error'] ?? '';
-        $errors[] = getErrorMessage($apiError);
+        $errors[] = htmlspecialchars(getErrorMessage($apiError));
     } else {
-        $errors[] = "Det gick inte att nå betalningssystemet. Försök igen senare.";
+        $errors[] = htmlspecialchars("Could not reach the payment system. Please try again later.");
     }
 }
 
-if (!empty($errors)) {
-    $_SESSION['errors'] = $errors;
-    header("Location: /../index.php");
-    exit;
-}
+handleErrors($errors);
 
 
 // ------------------------------------------- PREPARE FEATURES FOR RECEIPT ---------------------------------------------
-$featuresUsed = [];
+$featuresUsed = prepareFeaturesForReceipt($pdoBooking, $selectedFeatures);
 
-// Fetch name on 4th category
-$specificCategory = $pdoBooking->prepare("SELECT category FROM categories WHERE id = 4");
-$specificCategory->execute();
-$specificCategory = $specificCategory->fetch(PDO::FETCH_ASSOC)['category'];
+// $featuresUsed = [];
 
-$statementReceipt = $pdoBooking->prepare("SELECT categories.category, tiers.tier FROM features INNER JOIN categories ON features.category_id = categories.id INNER JOIN tiers ON features.tier_id = tiers.id WHERE features.id = :id");
+// // Fetch name on 4th category
+// $specificCategory = $pdoBooking->prepare("SELECT category FROM categories WHERE id = 4");
+// $specificCategory->execute();
+// $specificCategory = $specificCategory->fetch(PDO::FETCH_ASSOC)['category'];
 
-// For every choosen feature, find its cateogry and tier level. If hotel specific category, rename it to "hotel-specific"
-foreach ($selectedFeatures as $featureId) {
-    $statementReceipt->bindParam(":id", $featureId, PDO::PARAM_INT);
-    $statementReceipt->execute();
-    $dbRow = $statementReceipt->fetch(PDO::FETCH_ASSOC);
+// $statementReceipt = $pdoBooking->prepare("SELECT categories.category, tiers.tier FROM features INNER JOIN categories ON features.category_id = categories.id INNER JOIN tiers ON features.tier_id = tiers.id WHERE features.id = :id");
 
-    if ($dbRow['category'] === $specificCategory) {
-        $dbRow['category'] = "hotel-specific";
-    }
+// // For every choosen feature, find its cateogry and tier level. If hotel specific category, rename it to "hotel-specific"
+// foreach ($selectedFeatures as $featureId) {
+//     $statementReceipt->bindParam(":id", $featureId, PDO::PARAM_INT);
+//     $statementReceipt->execute();
+//     $dbRow = $statementReceipt->fetch(PDO::FETCH_ASSOC);
 
-    $featuresUsed[] = [
-        'activity' => $dbRow['category'],
-        'tier'     => $dbRow['tier']
-    ];
-}
+//     if ($dbRow['category'] === $specificCategory) {
+//         $dbRow['category'] = "hotel-specific";
+//     }
+
+//     $featuresUsed[] = [
+//         'activity' => $dbRow['category'],
+//         'tier'     => $dbRow['tier']
+//     ];
+// }
 
 // ------------------------------------------- RECEIPT ---------------------------------------------
 
@@ -222,22 +219,24 @@ try {
     );
 
     if (!isset($receiptResult['status']) || $receiptResult['status'] !== 'success') {
-        $errors[] = getErrorMessage($receiptResult['error']);
+        $errors[] = htmlspecialchars(getErrorMessage($receiptResult['error']));
     }
 } catch (RequestException $receiptException) {
     if ($receiptException->hasResponse()) {
         $apiError = json_decode($receiptException->getResponse()->getBody()->getContents(), true)['error'] ?? '';
-        $errors[] = getErrorMessage($apiError);
+        $errors[] = htmlspecialchars(getErrorMessage($apiError));
     } else {
-        $errors[] = "Det gick inte att genomföra betalningen. Försök igen senare.";
+        $errors[] = "Could not complete the payment. Please try again later.";
     }
 }
 
-if (!empty($errors)) {
-    $_SESSION['errors'] = $errors;
-    header("Location: /../index.php");
-    exit;
-}
+// if (!empty($errors)) {
+//     $_SESSION['errors'] = $errors;
+//     header("Location: /../index.php");
+//     exit;
+// }
+handleErrors($errors);
+
 
 
 // ------------------------------------ REQUEST CENTRALBANK DEPOSIT --------------------------------------
@@ -260,16 +259,17 @@ try {
         $apiError = json_decode($depositException->getResponse()->getBody()->getContents(), true)['error'] ?? '';
         $errors[] = getErrorMessage($apiError);
     } else {
-        $errors[] = "På grund av tekniskt strul kunde betalningen inte genomföras. Var god försök igen senare.";
+        $errors[] = "Due to technical issues, the payment could not be completed. Please try again later.";
     }
 }
 
-if (!empty($errors)) {
-    // Store errors in session to display in UI
-    $_SESSION['errors'] = $errors;
-    header("Location: /../index.php");
-    exit;
-}
+// if (!empty($errors)) {
+//     // Store errors in session to display in UI
+//     $_SESSION['errors'] = $errors;
+//     header("Location: /../index.php");
+//     exit;
+// }
+handleErrors($errors);
 
 // -------------------------------------- REGISTER BOOKED ROOM IN DB ----------------------------------------
 // Requires: guest_id, room_id, arrival & departure in checkins for room
@@ -283,9 +283,10 @@ if (isset($selectedRoomId, $arrivalDT, $departureDT)) {
 if (!isset($selectedRoomId) && isset($arrivalDT)) {
     if (empty($selectedFeatures)) {
         $errors[] = "You must select at least one feature!";
-        $_SESSION['errors'] = $errors;
-        header("Location: /../index.php");
-        exit;
+        // $_SESSION['errors'] = $errors;
+        // header("Location: /../index.php");
+        // exit;
+        handleErrors($errors);
     }
     featureOnlyCheckin($pdoBooking, $guestId, $arrivalDT);
     $checkinId = findCheckinId($pdoBooking, $guestId, $arrivalDT);
@@ -299,12 +300,40 @@ if (!empty($selectedFeatures) && $checkinId !== NULL) {
 }
 
 // ----------------------------------------- USER CONFIRMATION -------------------------------------------
+
+// ------------------ DETERMINE BOOKING TYPE ------------------
+if (isset($selectedRoomId) && !empty($selectedFeatures)) {
+    $bookingType = 'Room with features';
+} elseif (isset($selectedRoomId)) {
+    $bookingType = 'Room';
+} else {
+    $bookingType = 'Day pass';
+}
+
+$featureNames = [];
+foreach ($selectedFeatures as $featureId) {
+    // $stmt = $pdoBooking->prepare("SELECT feature FROM features WHERE id = :id");
+    // $stmt->bindParam(':id', $featureId, PDO::PARAM_INT);
+    // $stmt->execute();
+    // $featureRow = $stmt->fetch(PDO::FETCH_ASSOC);
+    $featureRow = getFeatureName($pdoBooking, $featureId);
+    if ($featureRow !== NULL) {
+        $featureNames[] = $featureRow;
+    }
+}
+
+// ------------------------------------------- PREPARE CONFIRMATION DATA ---------------------------------------------
 $confirmation = [
-    'visitor' => $name,
-    'arrival' => $arrivalDT->format('Y-m-d'),
-    'departure' => $departureDT->format('Y-m-d'),
-    'features' => $selectedFeatures,
-    'totalcost' => $totalPrice
+    'visitor'      => $name,
+    'bookingType'  => $bookingType, // "Room", "Room with features", "Day pass"
+    'arrival'      => $arrivalDT->format('Y-m-d'),
+    'departure'    => $departureDT->format('Y-m-d'),
+    'checkinTime'  => '15:00',
+    'checkoutTime' => '11:00',
+    'roomName'     => isset($selectedRoomId) ? getRoomName($pdoBooking, $selectedRoomId) : null,
+    'features'     => $featureNames, // Array w feature names
+    'totalcost'    => $totalPrice,
+    'discountSum'  => ($loyalDiscountApplied ?? 0) + ($comboDiscountApplied ?? 0)
 ];
 
 $_SESSION['success'] = $confirmation;
