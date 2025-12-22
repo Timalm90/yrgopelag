@@ -3,11 +3,11 @@
     ?>
         <section class="roomSection whiteBox">
             <article class="roomImg">
-                <img src="assets/images/<?= $room['room'] ?>.jpg" alt="Picture of <?= $room['room'] ?> room" />
+                <img src="assets/images/<?= htmlspecialchars($room['room']) ?>.jpg" alt="Picture of <?= htmlspecialchars($room['room']) ?> room" />
             </article>
             <article class="roomDescription">
-                <h2><?= $room['title'] ?></h2>
-                <p><?= $room['description'] ?></p>
+                <h2><?= htmlspecialchars($room['title']) ?></h2>
+                <p><?= htmlspecialchars($room['description']) ?></p>
             </article>
             <article class="roomCalendar">
                 <p>Jan 2026</p>
