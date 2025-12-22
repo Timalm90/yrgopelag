@@ -23,6 +23,15 @@ if (!isset($_POST['name'], $_POST['transferCode']) || $_POST['name'] === '' || $
 $name = sanitizeString(trim($_POST['name']));
 $transferCode = sanitizeString($_POST['transferCode']);
 
+// ---------------------------------------- FIND/REGISTER GUEST IN DB ------------------------------------------
+// Find guest in DB if already exists
+$guestId = findGuest($pdoBooking, $name);
+
+if ($guestId === NULL) {
+    registerGuest($pdoBooking, $name);
+    $guestId = findGuest($pdoBooking, $name);
+};
+
 // ------------------------------------------- BOOK ROOM ---------------------------------------------
 if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     //Fetch input from form:
@@ -33,7 +42,7 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     $departureDT = new DateTime($_POST['departureDate'] . ' 11:00');
 
     // ------------------------------------------- AVAILABLE? ---------------------------------------------
-    $occupiedDates = checkAvailable($pdo, $selectedRoomId);
+    $occupiedDates = checkAvailable($pdoBooking, $selectedRoomId);
 
     $isAvailable = true;
 
@@ -59,7 +68,7 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
         $nights = 0;
     }
 
-    $totalRoomCost = countRoomCost($pdo, $selectedRoomId, $nights);
+    $totalRoomCost = countRoomCost($pdoBooking, $selectedRoomId, $nights);
 };
 
 // ------------------------------------------- BOOK FEATURE ---------------------------------------------
@@ -71,12 +80,60 @@ if (isset($_POST['features'], $_POST['arrivalDate'])) {
     $selectedFeatures = $_POST['features'] ?? [];
 
     // [THIS NEEDS A GOOD EXPLAINING COMMENT]
-    $totalFeatureCost = countFeatureCost($pdo, $selectedFeatures);
+    $totalFeatureCost = countFeatureCost($pdoBooking, $selectedFeatures);
 };
 
 // ------------------------------------------- TOTAL PRICE ---------------------------------------------
 
 $totalPrice = $totalRoomCost + $totalFeatureCost;
+
+// -------------------- PREPARE DISCOUNT -----------------------
+// Fetch luxury room:
+$luxury = $pdoBooking->prepare("SELECT id FROM rooms WHERE room = 'luxury'");
+$luxury->execute();
+$luxury = $luxury->fetch(PDO::FETCH_ASSOC);
+$luxuryRoomId = (int) $luxury['id'];
+
+// Fetch feature for discount
+$bowserFeature = $pdoBooking->prepare(
+    "SELECT id FROM features WHERE feature = 'Bowser’s Castle Escape'"
+);
+$bowserFeature->execute();
+$bowserFeature = $bowserFeature->fetch(PDO::FETCH_ASSOC);
+
+$bowserFeatureId = (int) $bowserFeature['id'];
+
+// -------------------- DISCOUNT LOYAL -----------------------
+// Loyal customer:
+$isLoyal = $pdoBooking->prepare("SELECT guest_id, COUNT(guest_id) AS visits FROM checkins WHERE guest_id = :guestId GROUP BY guest_id");
+$isLoyal->bindParam(":guestId", $guestId, PDO::PARAM_INT);
+$isLoyal->execute();
+$isLoyal = $isLoyal->fetch(PDO::FETCH_ASSOC);
+
+// Fetch discount from DB:
+$loyalDiscount = $pdoAdmin->prepare("SELECT * FROM discounts WHERE type = 'loyal'");
+$loyalDiscount->execute();
+$loyalDiscount = $loyalDiscount->fetch(PDO::FETCH_ASSOC);
+$loyalDiscount = $loyalDiscount['discount'];
+
+// If customer is returning AND has booked luxury Room, get loyal-discount. Find another placeholder for luxury room id 3?
+if ($isLoyal && (int)$isLoyal['visits'] >= 1 && isset($selectedRoomId) && $selectedRoomId === $luxuryRoomId) {
+    $totalPrice = $totalPrice - (int)$loyalDiscount;
+};
+
+// -------------------- DISCOUNT LUXURY COMBO -----------------------
+
+// If customer chooses luxury room AND Bowser’s Castle Escape, get LuxuryCombo discount:
+
+// Fetch discount from DB:
+$comboDiscount = $pdoAdmin->prepare("SELECT * FROM discounts WHERE type = 'luxuryCombo'");
+$comboDiscount->execute();
+$comboDiscount = $comboDiscount->fetch(PDO::FETCH_ASSOC);
+$comboDiscount = $comboDiscount['discount'];
+
+if (isset($selectedRoomId) && $selectedRoomId === $luxuryRoomId && in_array($bowserFeatureId, $selectedFeatures, true)) {
+    $totalPrice = $totalPrice - (int)$comboDiscount;
+};
 
 // ------------------------------------------- VALIDATE TRANSFERCODE ---------------------------------------------
 try {
@@ -107,12 +164,12 @@ try {
 // ------------------------------------------- PREP FEATURES FOR RECEIPT ---------------------------------------------
 $featuresUsed = [];
 
-$specificCategory = $pdo->prepare("SELECT category FROM categories WHERE id = 4");
+$specificCategory = $pdoBooking->prepare("SELECT category FROM categories WHERE id = 4");
 $specificCategory->execute();
 $specificCategory = $specificCategory->fetch(PDO::FETCH_ASSOC);
 $specificCategory = $specificCategory['category'];
 
-$statementReceipt = $pdo->prepare("SELECT categories.category, tiers.tier FROM features INNER JOIN categories ON features.category_id = categories.id INNER JOIN tiers ON features.tier_id = tiers.id WHERE features.id = :id");
+$statementReceipt = $pdoBooking->prepare("SELECT categories.category, tiers.tier FROM features INNER JOIN categories ON features.category_id = categories.id INNER JOIN tiers ON features.tier_id = tiers.id WHERE features.id = :id");
 
 foreach ($selectedFeatures as $featureId) {
     $statementReceipt->bindParam(":id", $featureId, PDO::PARAM_INT);
@@ -161,14 +218,7 @@ try {
 
 
 // ------------------------------------------- REGISTER IN DB ---------------------------------------------
-// ---------------------------------------- FIND/REGISTER GUEST IN DB ------------------------------------------
-// Find guest in DB if already exists
-$guestId = findGuest($pdo, $name);
-
-if ($guestId === NULL) {
-    registerGuest($pdo, $name);
-    $guestId = findGuest($pdo, $name);
-};
+// Moved find/register guest higher up, to be able to implement discount to returning guests!
 
 // ------------------------------------------- ERROR HANDLING ---------------------------------------------
 if (!empty($errors)) {
@@ -181,8 +231,8 @@ if (!empty($errors)) {
 // -------------------------------------- REGISTER BOOKED ROOM IN DB ----------------------------------------
 // Requires: guest_id, room_id, arrival & departure in checkins for room
 if (isset($selectedRoomId, $arrivalDT, $departureDT)) {
-    roomCheckin($pdo, $guestId, $selectedRoomId, $arrivalDT, $departureDT);
-    $checkinId = findCheckinId($pdo, $guestId, $arrivalDT);
+    roomCheckin($pdoBooking, $guestId, $selectedRoomId, $arrivalDT, $departureDT);
+    $checkinId = findCheckinId($pdoBooking, $guestId, $arrivalDT);
 }
 // ------------------------------------ REGISTER FEATURE-ONLY-CUSTOMERS --------------------------------------
 // Requires: guest_id, arrival --> customer gets checkin_id (used for registering features)
@@ -197,8 +247,8 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
         exit;
     }
 
-    featureOnlyCheckin($pdo, $guestId, $arrivalDT);
-    $checkinId = findCheckinId($pdo, $guestId, $arrivalDT);
+    featureOnlyCheckin($pdoBooking, $guestId, $arrivalDT);
+    $checkinId = findCheckinId($pdoBooking, $guestId, $arrivalDT);
 }
 
 
@@ -206,7 +256,7 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
 //Requires: checkin_id, choosen feature_id
 if (!empty($selectedFeatures) && $checkinId !== NULL) {
     // Register chosen features on checkin_id
-    registerFeatures($pdo, $checkinId, $selectedFeatures);
+    registerFeatures($pdoBooking, $checkinId, $selectedFeatures);
 };
 
 // ------------------------------------ REQUEST CENTRALBANK DEPOSIT --------------------------------------
@@ -237,7 +287,15 @@ try {
 
 // ----------------------------------------- USER CONFIRMATION -------------------------------------------
 // Show confirmation message to user!
-$_SESSION['success'] = "Booking completed successfully! Your room and features are confirmed.";
+$confirmation = [
+    'visitor' => $name,
+    'arrival' => $arrivalDT->format('Y-m-d'),
+    'departure' => $departureDT->format('Y-m-d'),
+    'features' => $selectedFeatures,
+    'totalcost' => $totalPrice
+];
+
+$_SESSION['success'] = $confirmation;
 
 // Send user back to start page
 header("Location: /../index.php");
