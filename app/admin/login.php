@@ -1,19 +1,41 @@
-<!--  Log in logics
-
-
- Plan:
- - Require in config.php
- - Hämta input via $_POST från de inputfält där admin försöker logga in. Action bör vara till kontrollpanelen.
- - Kör jämförande script, om något är fel hänvisa tillbaka till sidan där admin försöker logga in
- - Om inloggad, spara ner i session user, tweaka någon navbar med alterantivet logout.
- - Skapa en fil med logout-logics där sesssion['user'] = NULL i kombination med isset. Hänvisa tillbaka till startsidan där man då åter igen kan logga in :)-->
-
 <?php
 
 declare(strict_types=1);
+require __DIR__ . "/../autoload.php";
+// In this file we login admins.
 
-// Autoload file is required if admin fills form on view/admin.php, form directs to this file, where .env password and input password is compared, if password_verify = true -> header(location: back to view/admin)
-require __DIR__ . "/autoload.php";
+// Fetch username and password from form
+if (isset($_POST['username'], $_POST['password'])) {
+    // Fetch and trim the input values and store it in variables
+    $username = $_POST['username'];
+    $username = trim($username);
 
-// Option 2: This logic file i required into view/admin.php form action is empty, no redirection. Since view/admin already has require autoload.php, it is not necessary to have it in this file. It will probably just create more problems...
-// This is a design/architecture problem...!!!
+    $password = $_POST['password'];
+
+    // Fetch admin in database
+    $statement = $pdoAdmin->prepare("SELECT * FROM admins WHERE username = :username");
+    $statement->bindParam(":username", $username, PDO::PARAM_STR);
+    $statement->execute();
+    $dbRow = $statement->fetch(PDO::FETCH_ASSOC);
+    $dbUser = $dbRow['username'];
+    $dbPassword = $dbRow['password'];
+
+    // If admin wasn't found in the database, redirect the user back to the login page.
+    if (!$dbUser) {
+        header("location: /view/login.php");
+    };
+
+    // If admin was found in database, verify the password against the one in the database.
+    $verified = password_verify($password, $dbPassword);
+
+    // If password was valid, store the admin's username in a session variable called user.
+    if ($verified) {
+        $_SESSION['admin'] = [
+            "name" => $dbUser,
+        ];
+    } else {
+        header("Location: /view/login.php");
+    };
+};
+
+header("location: /../view/admin.php");
