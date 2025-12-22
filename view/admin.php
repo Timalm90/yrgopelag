@@ -22,6 +22,7 @@ require __DIR__ . "/../app/config.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Yrgopelag</title>
+    <link rel="stylesheet" href="../assets/styles/general.css">
     <link rel="stylesheet" href="../assets/styles/admin.css">
     <link rel="stylesheet" href="../assets/styles/nav.css">
 </head>
@@ -33,13 +34,13 @@ require __DIR__ . "/../app/config.php";
     <div class="adminBackground">
         <main>
             <!-- IF NOT LOGGED IN -> redirect to login page -->
-            <?php if (!isset($_SESSION['user']))
+            <?php if (!isset($_SESSION['admin']))
                 header("Location: login.php") ?>
 
 
             <!-- IF LOGGED IN: SHOW THIS DASHBOARD... ... ... -->
             <?php
-            if (isset($_SESSION['user'])): ?>
+            if (isset($_SESSION['admin'])): ?>
                 <!-- DASHBOARD! -->
                 <h1>You are logged in! </h1>
 
