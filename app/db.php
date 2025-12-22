@@ -108,3 +108,62 @@ function registerFeatures(PDO $pdo, int $checkinId, array $featureIds): void
         $statement->execute();
     }
 }
+
+// For Discounts
+function getLuxuryRoomId(PDO $pdoBooking): ?int
+{
+    $stmt = $pdoBooking->prepare("SELECT id FROM rooms WHERE room = 'luxury'");
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row['id'] ?? null;
+}
+function getBowserFeatureId(PDO $pdoBooking): ?int
+{
+    $stmt = $pdoBooking->prepare("SELECT id FROM features WHERE feature = 'Bowser’s Castle Escape'");
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row['id'] ?? null;
+}
+function checkLoyalCustomer(PDO $pdo, int $guestId): bool
+{
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*) AS visits 
+        FROM checkins 
+        WHERE guest_id = :guestId
+    ");
+    $stmt->bindParam(':guestId', $guestId, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return ((int) $result['visits'] ?? 0) >= 1;
+}
+function getDiscount(PDO $pdo, string $type): int
+{
+    $stmt = $pdo->prepare("SELECT discount FROM discounts WHERE type = :type LIMIT 1");
+    $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return isset($row['discount']) ? (int)$row['discount'] : 0;
+}
+
+function getFeatureName(PDO $pdo, int $featureId): ?string
+{
+    $stmt = $pdo->prepare("SELECT feature FROM features WHERE id = :id");
+    $stmt->bindParam(':id', $featureId, PDO::PARAM_INT);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row['feature'] ?? null;
+}
+
+
+
+// For Confirmation message
+function getRoomName(PDO $pdoBooking, int $roomId): ?string
+{
+    $stmt = $pdoBooking->prepare("SELECT room FROM rooms WHERE id = :id");
+    $stmt->bindParam(':id', $roomId, PDO::PARAM_INT);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row['room'] ?? null;
+}
