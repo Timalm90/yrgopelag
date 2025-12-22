@@ -4,7 +4,7 @@ declare(strict_types=1);
 // require __DIR__ . "/autoload.php"; // Access to database, functions, DB-paths. Commented out, this lead to double sessions?
 
 // Get all rooms
-$roomPresentation = $pdo->prepare("SELECT * FROM rooms");
+$roomPresentation = $pdoBooking->prepare("SELECT * FROM rooms");
 $roomPresentation->execute();
 $rooms = $roomPresentation->fetchAll(PDO::FETCH_ASSOC);
 
@@ -22,7 +22,7 @@ $bookedByRoom = [];
 
 // Fetch all checkins for the specific room
 foreach ($rooms as $room) {
-    $booked = $pdo->prepare("SELECT arrival, departure FROM checkins WHERE room_id = :id");
+    $booked = $pdoBooking->prepare("SELECT arrival, departure FROM checkins WHERE room_id = :id");
     $booked->bindParam(':id', $room['id'], PDO::PARAM_INT);
     $booked->execute();
     $bookedByRoom[$room['id']] = $booked->fetchAll(PDO::FETCH_ASSOC);
