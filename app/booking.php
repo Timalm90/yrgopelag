@@ -102,34 +102,12 @@ if (!empty($selectedFeatures)) {
 $totalPrice = $totalRoomCost + $totalFeatureCost;
 
 // -------------------- PREPARE DISCOUNT -----------------------
-// Fetch luxury room:
-// $luxury = $pdoBooking->prepare("SELECT id FROM rooms WHERE room = 'luxury'");
-// $luxury->execute();
-// $luxuryRoomId = (int) $luxury->fetch(PDO::FETCH_ASSOC)['id'];
 $luxuryRoomId = getLuxuryRoomId($pdoBooking);
 
-
-// Fetch feature for discount
-// $bowserFeature = $pdoBooking->prepare("SELECT id FROM features WHERE feature = 'Bowser’s Castle Escape'");
-// $bowserFeature->execute();
-// $bowserRow = $bowserFeature->fetch(PDO::FETCH_ASSOC);
-// $bowserFeatureId = (int) $bowserRow['id'];
 $bowserFeatureId = getBowserFeatureId($pdoBooking);
 
-
-// -------------------- DISCOUNTS -----------------------
-// Loyal customer:
-// $isLoyal = $pdoBooking->prepare("SELECT guest_id, COUNT(guest_id) AS visits FROM checkins WHERE guest_id = :guestId GROUP BY guest_id");
-// $isLoyal->bindParam(":guestId", $guestId, PDO::PARAM_INT);
-// $isLoyal->execute();
-// $isLoyal = $isLoyal->fetch(PDO::FETCH_ASSOC);
 $isLoyal = checkLoyalCustomer($pdoBooking, $guestId);
 
-// Fetch discount from DB:
-// $loyalDiscountStmt = $pdoAdmin->prepare("SELECT discount FROM discounts WHERE type = 'loyal'");
-// $loyalDiscountStmt->execute();
-// $loyalDiscountRow = $loyalDiscountStmt->fetch(PDO::FETCH_ASSOC);
-// $loyalDiscount = (int) $loyalDiscountRow['discount'];
 $loyalDiscount = getDiscount($pdoAdmin, 'loyal');
 $comboDiscount = getDiscount($pdoAdmin, 'luxuryCombo');
 
@@ -168,34 +146,8 @@ try {
 
 handleErrors($errors);
 
-
 // ------------------------------------------- PREPARE FEATURES FOR RECEIPT ---------------------------------------------
 $featuresUsed = prepareFeaturesForReceipt($pdoBooking, $selectedFeatures);
-
-// $featuresUsed = [];
-
-// // Fetch name on 4th category
-// $specificCategory = $pdoBooking->prepare("SELECT category FROM categories WHERE id = 4");
-// $specificCategory->execute();
-// $specificCategory = $specificCategory->fetch(PDO::FETCH_ASSOC)['category'];
-
-// $statementReceipt = $pdoBooking->prepare("SELECT categories.category, tiers.tier FROM features INNER JOIN categories ON features.category_id = categories.id INNER JOIN tiers ON features.tier_id = tiers.id WHERE features.id = :id");
-
-// // For every choosen feature, find its cateogry and tier level. If hotel specific category, rename it to "hotel-specific"
-// foreach ($selectedFeatures as $featureId) {
-//     $statementReceipt->bindParam(":id", $featureId, PDO::PARAM_INT);
-//     $statementReceipt->execute();
-//     $dbRow = $statementReceipt->fetch(PDO::FETCH_ASSOC);
-
-//     if ($dbRow['category'] === $specificCategory) {
-//         $dbRow['category'] = "hotel-specific";
-//     }
-
-//     $featuresUsed[] = [
-//         'activity' => $dbRow['category'],
-//         'tier'     => $dbRow['tier']
-//     ];
-// }
 
 // ------------------------------------------- RECEIPT ---------------------------------------------
 
@@ -230,11 +182,6 @@ try {
     }
 }
 
-// if (!empty($errors)) {
-//     $_SESSION['errors'] = $errors;
-//     header("Location: /../index.php");
-//     exit;
-// }
 handleErrors($errors);
 
 
@@ -263,12 +210,6 @@ try {
     }
 }
 
-// if (!empty($errors)) {
-//     // Store errors in session to display in UI
-//     $_SESSION['errors'] = $errors;
-//     header("Location: /../index.php");
-//     exit;
-// }
 handleErrors($errors);
 
 // -------------------------------------- REGISTER BOOKED ROOM IN DB ----------------------------------------
@@ -283,9 +224,6 @@ if (isset($selectedRoomId, $arrivalDT, $departureDT)) {
 if (!isset($selectedRoomId) && isset($arrivalDT)) {
     if (empty($selectedFeatures)) {
         $errors[] = "You must select at least one feature!";
-        // $_SESSION['errors'] = $errors;
-        // header("Location: /../index.php");
-        // exit;
         handleErrors($errors);
     }
     featureOnlyCheckin($pdoBooking, $guestId, $arrivalDT);
@@ -312,10 +250,6 @@ if (isset($selectedRoomId) && !empty($selectedFeatures)) {
 
 $featureNames = [];
 foreach ($selectedFeatures as $featureId) {
-    // $stmt = $pdoBooking->prepare("SELECT feature FROM features WHERE id = :id");
-    // $stmt->bindParam(':id', $featureId, PDO::PARAM_INT);
-    // $stmt->execute();
-    // $featureRow = $stmt->fetch(PDO::FETCH_ASSOC);
     $featureRow = getFeatureName($pdoBooking, $featureId);
     if ($featureRow !== NULL) {
         $featureNames[] = $featureRow;
