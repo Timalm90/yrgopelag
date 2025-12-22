@@ -22,9 +22,13 @@ require __DIR__ . "/db.php"; // [SAMLA DB-ANROP]
 // Require in config file, save to variable for later usage in files
 $config = require __DIR__ . "/config.php";
 
-// Connection to DB
-$dbPath = __DIR__ . "/database/bookings.sqlite3";
-$pdo = new PDO("sqlite:" . $dbPath);
+// Connection to booking DB
+$dbPathBooking = __DIR__ . "/database/bookings.sqlite3";
+$pdoBooking = new PDO("sqlite:" . $dbPathBooking);
+
+// Connection to admin DB
+$dbPathAdmin = __DIR__ . "/database/admin.sqlite3";
+$pdoAdmin = new PDO("sqlite:" . $dbPathAdmin);
 
 // Guzzle client
 use GuzzleHttp\Client;
