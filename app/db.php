@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 function checkAvailable(PDO $pdo, int $roomId): array
 {
-    $statement = $pdo->prepare("SELECT arrival, departure FROM checkins WHERE room_id = :room_id");
+    $statement = $pdo->prepare("SELECT arrival, departure FROM bookings WHERE room_id = :room_id");
     $statement->bindParam(":room_id", $roomId, PDO::PARAM_INT);
     $statement->execute();
     return $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -66,10 +66,10 @@ function registerGuest(PDO $pdo, string $name): void
     $statement->execute();
 }
 
-function roomCheckin(PDO $pdo, int $guestId, int $roomId, DateTime $arrivalDT, DateTime $departureDT): void
+function roomBooking(PDO $pdo, int $guestId, int $roomId, DateTime $arrivalDT, DateTime $departureDT): void
 {
     $statement = $pdo->prepare("
-        INSERT INTO checkins (guest_id, room_id, arrival, departure)
+        INSERT INTO bookings (guest_id, room_id, arrival, departure)
         VALUES (:guest_id, :room_id, :arrival, :departure)
     ");
     $statement->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
@@ -79,31 +79,31 @@ function roomCheckin(PDO $pdo, int $guestId, int $roomId, DateTime $arrivalDT, D
     $statement->execute();
 }
 
-function featureOnlyCheckin(PDO $pdo, int $guestId, DateTime $arrivalDT): void
+function featureOnlyBooking(PDO $pdo, int $guestId, DateTime $arrivalDT): void
 {
-    $statement = $pdo->prepare("INSERT INTO checkins (guest_id, arrival) VALUES (:guest_id, :arrival)
+    $statement = $pdo->prepare("INSERT INTO bookings (guest_id, arrival) VALUES (:guest_id, :arrival)
     ");
     $statement->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
     $statement->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
     $statement->execute();
 }
 
-function findCheckinId(PDO $pdo, int $guestId, DateTime $arrivalDT): int|NULL
+function findBookingId(PDO $pdo, int $guestId, DateTime $arrivalDT): int|NULL
 {
-    $statement = $pdo->prepare("SELECT id FROM checkins WHERE guest_id = :guest_id AND arrival = :arrival ORDER BY id DESC LIMIT 1");
+    $statement = $pdo->prepare("SELECT id FROM bookings WHERE guest_id = :guest_id AND arrival = :arrival ORDER BY id DESC LIMIT 1");
     $statement->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
     $statement->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
     $statement->execute();
-    $checkin = $statement->fetch(PDO::FETCH_ASSOC);
+    $booking = $statement->fetch(PDO::FETCH_ASSOC);
 
-    return $checkin['id'] ?? null;
+    return $booking['id'] ?? null;
 }
 
-function registerFeatures(PDO $pdo, int $checkinId, array $featureIds): void
+function registerFeatures(PDO $pdo, int $bookingId, array $featureIds): void
 {
-    $statement = $pdo->prepare("INSERT INTO checkin_feature (checkin_id, feature_id) VALUES (:checkin_id, :feature_id)");
+    $statement = $pdo->prepare("INSERT INTO booking_feature (booking_id, feature_id) VALUES (:booking_id, :feature_id)");
     foreach ($featureIds as $featureId) {
-        $statement->bindParam(':checkin_id', $checkinId, PDO::PARAM_INT);
+        $statement->bindParam(':booking_id', $bookingId, PDO::PARAM_INT);
         $statement->bindParam(':feature_id', $featureId, PDO::PARAM_INT);
         $statement->execute();
     }
@@ -128,7 +128,7 @@ function checkLoyalCustomer(PDO $pdo, int $guestId): bool
 {
     $stmt = $pdo->prepare("
         SELECT COUNT(*) AS visits 
-        FROM checkins 
+        FROM bookings
         WHERE guest_id = :guestId
     ");
     $stmt->bindParam(':guestId', $guestId, PDO::PARAM_INT);
