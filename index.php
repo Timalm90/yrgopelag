@@ -29,7 +29,7 @@ require __DIR__ . "/app/rooms.php";
 <body>
 
     <?php
-    require __DIR__ . "/view/nav.php";
+    require __DIR__ . "/view/components/nav.php";
     ?>
 
     <div class="background"></div>
@@ -59,10 +59,7 @@ require __DIR__ . "/app/rooms.php";
             </button>
         </section>
 
-        <?php require __DIR__ . "/view/rooms.php"; ?>
-        <?php
-        require __DIR__ . "/view/form.php"
-        ?>
+        <?php require __DIR__ . "/view/components/rooms.php"; ?>
 
         <section class="message">
             <h1>Confirmation or Errors are shown here!</h1>
@@ -74,7 +71,7 @@ require __DIR__ . "/app/rooms.php";
                     <?php
                     foreach ($_SESSION['errors'] as $error) : ?>
                         <li>
-                            <?= $error ?>
+                            <?= htmlspecialchars($error) ?>
                         </li>
                     <?php endforeach ?>
                 </ul>
@@ -85,14 +82,27 @@ require __DIR__ . "/app/rooms.php";
 
             if (!empty($_SESSION['success'])) { ?>
                 <p>
-                    <?= $_SESSION['success']; ?>
-                </p>
+                    <?php
+                    $confirmation = $_SESSION['success']; ?>
+                <div class="whitebox">
+                    <h2>Dear <?= htmlspecialchars($confirmation['visitor']) ?>,</h2>
+                    <p>Thank you for choosing Yoshi's Resort on Starlight Island. We're looking forward to your visit!</p>
+                    <p>You're visit is registered for <?= htmlspecialchars($confirmation['arrival']) ?> - <?= htmlspecialchars($confirmation['departure']) ?>. Checkin 15:00 and checkout 11:00.</p>
+                    <p>The total prize for your visit is <?= htmlspecialchars($confirmation['totalcost']) ?> credits!</p>
+                </div>
+                <!-- // var_dump($_SESSION['success']);
+                // array(5) { ["visitor"]=> string(4) "Rune" ["arrival"]=> string(10) "2026-01-28" ["departure"]=> string(10) "2026-01-28" ["features"]=> array(1) { [0]=> string(2) "16" } ["totalcost"]=> int(18) } -->
             <?php
                 //Empty this session variable
                 unset($_SESSION['success']);
             }
             ?>
         </section>
+
+        <?php
+        require __DIR__ . "/view/components/form.php"
+        ?>
+
         <div class="showPrice">
             <p>Total price: <span id="totalPrice">0</span> credits</p>
         </div>
