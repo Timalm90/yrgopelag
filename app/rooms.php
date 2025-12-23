@@ -22,7 +22,7 @@ $bookedByRoom = [];
 
 // Fetch all checkins for the specific room
 foreach ($rooms as $room) {
-    $booked = $pdoBooking->prepare("SELECT arrival, departure FROM checkins WHERE room_id = :id");
+    $booked = $pdoBooking->prepare("SELECT arrival, departure FROM bookings WHERE room_id = :id");
     $booked->bindParam(':id', $room['id'], PDO::PARAM_INT);
     $booked->execute();
     $bookedByRoom[$room['id']] = $booked->fetchAll(PDO::FETCH_ASSOC);
