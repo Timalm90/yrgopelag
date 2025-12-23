@@ -26,10 +26,6 @@ $config = require __DIR__ . "/config.php";
 $dbPathBooking = __DIR__ . "/database/bookings.sqlite3";
 $pdoBooking = new PDO("sqlite:" . $dbPathBooking);
 
-// Connection to admin DB
-$dbPathAdmin = __DIR__ . "/database/admin.sqlite3";
-$pdoAdmin = new PDO("sqlite:" . $dbPathAdmin);
-
 // Guzzle client
 use GuzzleHttp\Client;
 
