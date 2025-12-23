@@ -56,7 +56,7 @@ $bowserStmt->execute();
 $bowserFeatureId = (int)$bowserStmt->fetch(PDO::FETCH_ASSOC)['id'];
 
 // Combo discount
-$comboStmt = $pdoAdmin->prepare("SELECT discount FROM discounts WHERE type = 'luxuryCombo'");
+$comboStmt = $pdoBooking->prepare("SELECT discount FROM discounts WHERE type = 'luxuryCombo'");
 $comboStmt->execute();
 $comboDiscount = (int)$comboStmt->fetch(PDO::FETCH_ASSOC)['discount'];
 
