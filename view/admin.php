@@ -29,7 +29,7 @@ require __DIR__ . "/../app/config.php";
 
 <body>
     <?php
-    require __DIR__ . "/nav.php";
+    require __DIR__ . "/components/nav.php";
     ?>
     <div class="adminBackground">
         <main>
