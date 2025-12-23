@@ -12,22 +12,21 @@ function checkAvailable(PDO $pdo, int $roomId): array
 
 function getFeaturePrices(PDO $pdo): array
 {
-    // [NOTE COST_PER_FEATURE - NEED TO CHANGE!!!]
-    $statement = $pdo->prepare("SELECT features.id, tiers.cost_per_feature FROM features INNER JOIN tiers ON features.tier_id = tiers.id
+    $statement = $pdo->prepare("SELECT features.id, tiers.price_per_feature FROM features INNER JOIN tiers ON features.tier_id = tiers.id
     ");
     $statement->execute();
     $features = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     $prices = [];
     foreach ($features as $feature) {
-        $prices[(int)$feature['id']] = (int)$feature['cost_per_feature'];
+        $prices[(int)$feature['id']] = (int)$feature['price_per_feature'];
     }
     return $prices;
 }
 
-function getPurchasedFeatures(PDO $pdo): array
+function getActiveFeatures(PDO $pdo): array
 {
-    $statement = $pdo->prepare("SELECT * FROM features WHERE purchased_feature = 1");
+    $statement = $pdo->prepare("SELECT * FROM features WHERE is_active = 1");
     $statement->execute();
     return $statement->fetchAll(PDO::FETCH_ASSOC);
 }
