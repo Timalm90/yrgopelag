@@ -1,18 +1,6 @@
 <?php
 require __DIR__ . "/../app/autoload.php";
 require __DIR__ . "/../app/config.php";
-
-
-// To do: Build the admin site with dashboard that is shown when logged in.
-// Here admin should be able to:
-// - Change prices in database by prefabricated PDO-connection and query, through input and submit -> DB-query
-// - Change number of stars of the hotel
-// - Be able to buy more features, connect to API & DB
-// - Change avaiable features on booking site
-// - Change discounts
-// - Show saldo at bank (API connection)
-
-// Require in all files from app/admin
 ?>
 
 <!DOCTYPE html>
@@ -22,13 +10,14 @@ require __DIR__ . "/../app/config.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Yrgopelag</title>
+    <link rel="stylesheet" href="../assets/styles/general.css">
     <link rel="stylesheet" href="../assets/styles/admin.css">
     <link rel="stylesheet" href="../assets/styles/nav.css">
 </head>
 
 <body>
     <?php
-    require __DIR__ . "/nav.php";
+    require __DIR__ . "/components/nav.php";
     ?>
     <div class="adminBackground">
         <main>
