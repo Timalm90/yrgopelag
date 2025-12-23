@@ -11,7 +11,7 @@ $totalRoomCost = 0;
 $totalFeatureCost = 0;
 $errors = [];
 $selectedFeatures = [];
-$checkinId = NULL;
+$bookingId = NULL;
 
 // ------------------------------------------- SANITIZE & VALIDATE ---------------------------------------------
 //Check if mandatory information is provided (name & transferCode)
@@ -108,8 +108,8 @@ $bowserFeatureId = getBowserFeatureId($pdoBooking);
 
 $isLoyal = checkLoyalCustomer($pdoBooking, $guestId);
 
-$loyalDiscount = getDiscount($pdoAdmin, 'loyal');
-$comboDiscount = getDiscount($pdoAdmin, 'luxuryCombo');
+$loyalDiscount = getDiscount($pdoBooking, 'loyal');
+$comboDiscount = getDiscount($pdoBooking, 'luxuryCombo');
 
 // Loyal offer:
 if ($isLoyal && (int)$isLoyal['visits'] >= 1 && isset($selectedRoomId) && $selectedRoomId === $luxuryRoomId) {
@@ -215,8 +215,8 @@ handleErrors($errors);
 // -------------------------------------- REGISTER BOOKED ROOM IN DB ----------------------------------------
 // Requires: guest_id, room_id, arrival & departure in checkins for room
 if (isset($selectedRoomId, $arrivalDT, $departureDT)) {
-    roomCheckin($pdoBooking, $guestId, $selectedRoomId, $arrivalDT, $departureDT);
-    $checkinId = findCheckinId($pdoBooking, $guestId, $arrivalDT);
+    roomBooking($pdoBooking, $guestId, $selectedRoomId, $arrivalDT, $departureDT);
+    $BookingId = findBookingId($pdoBooking, $guestId, $arrivalDT);
 }
 
 // ------------------------------------ REGISTER FEATURE-ONLY CUSTOMERS --------------------------------------
@@ -226,15 +226,15 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
         $errors[] = "You must select at least one feature!";
         handleErrors($errors);
     }
-    featureOnlyCheckin($pdoBooking, $guestId, $arrivalDT);
-    $checkinId = findCheckinId($pdoBooking, $guestId, $arrivalDT);
+    featureOnlyBooking($pdoBooking, $guestId, $arrivalDT);
+    $bookingId = findBookingId($pdoBooking, $guestId, $arrivalDT);
 }
 
 // -------------------------------------- REGISTER BOOKED FEATURE IN DB ----------------------------------------
 //Requires: checkin_id, choosen feature_id
-if (!empty($selectedFeatures) && $checkinId !== NULL) {
+if (!empty($selectedFeatures) && $bookingId !== NULL) {
     // Register chosen features on checkin_id
-    registerFeatures($pdoBooking, $checkinId, $selectedFeatures);
+    registerFeatures($pdoBooking, $bookingId, $selectedFeatures);
 }
 
 // ----------------------------------------- USER CONFIRMATION -------------------------------------------
