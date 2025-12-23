@@ -34,7 +34,7 @@ function countFeatureCost(PDO $pdo, array $selectedFeatures): int
 }
 
 // Calculate discounts
-function calculateDiscount(PDO $pdoBooking, PDO $pdoAdmin, int $guestId, ?int $selectedRoomId = null, array $selectedFeatures = []): int
+function calculateDiscount(PDO $pdoBooking, int $guestId, ?int $selectedRoomId = null, array $selectedFeatures = []): int
 {
     $discountSum = 0;
 
@@ -43,13 +43,13 @@ function calculateDiscount(PDO $pdoBooking, PDO $pdoAdmin, int $guestId, ?int $s
     if (!$luxuryRoomId) return 0;
 
     // Lojal-discount
-    $stmt = $pdoBooking->prepare("SELECT COUNT(guest_id) AS visits FROM checkins WHERE guest_id = :guestId GROUP BY guest_id");
+    $stmt = $pdoBooking->prepare("SELECT COUNT(guest_id) AS visits FROM bookings WHERE guest_id = :guestId GROUP BY guest_id");
     $stmt->bindParam(":guestId", $guestId, PDO::PARAM_INT);
     $stmt->execute();
     $loyal = $stmt->fetch(PDO::FETCH_ASSOC);
 
     $loyalDiscount = 0;
-    $stmt = $pdoAdmin->prepare("SELECT discount FROM discounts WHERE type = 'loyal'");
+    $stmt = $pdoBooking->prepare("SELECT discount FROM discounts WHERE type = 'loyal'");
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($row) $loyalDiscount = (int)$row['discount'];
@@ -60,7 +60,7 @@ function calculateDiscount(PDO $pdoBooking, PDO $pdoAdmin, int $guestId, ?int $s
 
     // Combo-discount
     $comboDiscount = 0;
-    $stmt = $pdoAdmin->prepare("SELECT discount FROM discounts WHERE type = 'luxuryCombo'");
+    $stmt = $pdoBooking->prepare("SELECT discount FROM discounts WHERE type = 'luxuryCombo'");
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($row) $comboDiscount = (int)$row['discount'];
