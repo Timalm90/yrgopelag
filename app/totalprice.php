@@ -29,14 +29,10 @@ if ($bookingType === 'room' && $selectedRoomId && $arrivalInput && $departureInp
 
     $nights = countNights($arrivalDT, $departureDT);
     if ($nights < 0) {
-        // $errors[] = "Check your dates for arrival and departure.";
         $nights = 0;
     }
 
     $totalRoomCost = countRoomCost($pdoBooking, $selectedRoomId, $nights);
-    // } catch (Exception $e) {
-    //     $errors[] = "Invalid date format.";
-    // }
 }
 
 // ------------------ FEATURES COST ------------------
@@ -46,19 +42,13 @@ if (!empty($selectedFeatures)) {
 
 // //  ------------------ APPLY DISCOUNT ------------------
 // Luxury room ID
-$luxuryStmt = $pdoBooking->prepare("SELECT id FROM rooms WHERE room = 'luxury'");
-$luxuryStmt->execute();
-$luxuryRoomId = (int)$luxuryStmt->fetch(PDO::FETCH_ASSOC)['id'];
+$luxuryRoomId = (int)getLuxuryRoomId($pdoBooking);
 
 // Bowser feature ID
-$bowserStmt = $pdoBooking->prepare("SELECT id FROM features WHERE feature = 'Bowser’s Castle Escape'");
-$bowserStmt->execute();
-$bowserFeatureId = (int)$bowserStmt->fetch(PDO::FETCH_ASSOC)['id'];
+$bowserFeatureId = (int)getBowserFeatureId($pdoBooking);
 
 // Combo discount
-$comboStmt = $pdoBooking->prepare("SELECT discount FROM discounts WHERE type = 'luxuryCombo'");
-$comboStmt->execute();
-$comboDiscount = (int)$comboStmt->fetch(PDO::FETCH_ASSOC)['discount'];
+$comboDiscount = getDiscount($pdoBooking, 'luxuryCombo');
 
 // ------------------ TOTAL PRICE ------------------
 $totalPrice = $totalRoomCost + $totalFeatureCost;
