@@ -2,6 +2,12 @@
 require __DIR__ . "/../app/autoload.php";
 require __DIR__ . "/../app/config.php";
 
+//  IF NOT LOGGED IN -> redirect to login page 
+if (!isset($_SESSION['admin'])) {
+    // header("Location: /login.php");
+    header("Location: /toadtest/view/login.php");
+    exit;
+}
 
 // To do: Build the admin site with dashboard that is shown when logged in.
 // Here admin should be able to:
@@ -33,13 +39,6 @@ require __DIR__ . "/../app/config.php";
     ?>
     <div class="adminBackground">
         <main>
-            <!-- IF NOT LOGGED IN -> redirect to login page -->
-            <?php if (!isset($_SESSION['admin'])) {
-                // header("Location: /login.php");
-                header("Location: /toadtest/view/login.php");
-            } ?>
-
-
             <!-- IF LOGGED IN: SHOW THIS DASHBOARD... ... ... -->
             <?php
             if (isset($_SESSION['admin'])): ?>
