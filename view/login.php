@@ -24,7 +24,7 @@ require __DIR__ . "/../app/config.php";
             <article class="adminLoginForm">
                 <h1>Login</h1>
 
-                <form action="/app/admin/login.php" method="post">
+                <form action="../app/admin/login.php" method="post">
                     <div>
                         <label for="username">Username:</label>
                         <input type="text" name="username" placeholder="Enter username" required>

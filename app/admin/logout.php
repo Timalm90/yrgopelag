@@ -8,4 +8,4 @@ require __DIR__ . "/../autoload.php";
 // In this file we logout users.
 
 $_SESSION['admin'] = NULL;
-header("Location: /../index.php");
+header("Location: /toadtest/index.php");

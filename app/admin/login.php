@@ -22,7 +22,8 @@ if (isset($_POST['username'], $_POST['password'])) {
 
     // If admin wasn't found in the database, redirect the user back to the login page.
     if (!$dbUser) {
-        header("location: /view/login.php");
+        header("Location: ../../view/login.php");
+        exit;
     };
 
     // If admin was found in database, verify the password against the one in the database.
@@ -34,8 +35,9 @@ if (isset($_POST['username'], $_POST['password'])) {
             "name" => $dbUser,
         ];
     } else {
-        header("Location: /view/login.php");
+        header("Location: ../../view/login.php");
+        exit;
     };
 };
 
-header("location: /../view/admin.php");
+header("Location: ../../view/admin.php");

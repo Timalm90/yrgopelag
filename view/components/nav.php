@@ -1,15 +1,23 @@
 <nav>
-    <img class="navLogo" src="assets/images/logo.png" alt="Logo Yoshi's Resort" />
-    <div class="navbar">
-        <a class="navLink <?php echo $_SERVER['SCRIPT_NAME'] === '/index.php' ? 'activeNav' : ''; ?>" href="index.php">Home</a>
+    <img class="navLogo"
+        src="/toadtest/assets/images/logo.png"
+        alt="Logo Yoshi's Resort" />
 
-        <a class="navLink <?php echo $_SERVER['SCRIPT_NAME'] === '/view/admin.php' ? 'activeNav' : ''; ?>" href="view/admin.php">Admin</a>
+    <div class="navbar">
+        <a class="navLink <?= $_SERVER['SCRIPT_NAME'] === '/index.php' ? 'activeNav' : ''; ?>"
+            href="/toadtest/index.php">Home</a>
+
+        <a class="navLink <?= $_SERVER['SCRIPT_NAME'] === '/view/admin.php' ? 'activeNav' : ''; ?>"
+            href="/toadtest/view/admin.php">Admin</a>
 
         <?php if (isset($_SESSION['admin'])) { ?>
-            <a class="navLink" href="app/admin/logout.php">Logout</a>
+            <a class="navLink"
+                href="<?= dirname($_SERVER['SCRIPT_NAME']) === '/view' ? '../app/admin/logout.php' : 'app/admin/logout.php'; ?>">
+                Logout
+            </a>
         <?php } else { ?>
-            <a class="navLink <?php echo $_SERVER['SCRIPT_NAME'] === '/view/login.php' ? 'activeNav' : ''; ?>" href="view/login.php">Login</a>
+            <a class="navLink <?= $_SERVER['SCRIPT_NAME'] === '/view/login.php' ? 'activeNav' : ''; ?>"
+                href="/toadtest/view/login.php">Login</a>
         <?php } ?>
-        </ul>
     </div>
 </nav>
