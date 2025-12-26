@@ -1,4 +1,4 @@
-article.form {
+.bookingForm {
   background-color: rgba(255, 255, 255, 0.9);
   padding: 4%;
   border: 5px dashed grey;
@@ -18,4 +18,21 @@ div.features {
 
 .hidden {
   display: none;
+}
+
+.hint {
+  font-size: 0.9rem; /* lite mindre text */
+  color: #b00020; /* diskret röd för fel */
+  background-color: #ffeaea; /* svagt röd bakgrund */
+  padding: 6px 10px; /* lite luft runt texten */
+  margin-top: 4px; /* avstånd från input / knapp */
+  border-radius: 4px; /* mjuka hörn */
+  display: inline-block; /* behåll inline-block layout */
+  transition: opacity 0.3s ease; /* smidig fade-in */
+  opacity: 0; /* startar dold */
+}
+
+/* När vi vill visa text, lägg till denna klass */
+.hint.visible {
+  opacity: 1;
 }

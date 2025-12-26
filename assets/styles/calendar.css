@@ -5,23 +5,25 @@ body {
 
 .whiteBox {
   background-color: rgba(255, 255, 255, 0.9);
-  margin-top: 20vh;
   border-radius: 20px;
   border: 5px dashed grey;
-  /* padding: 10%; */
-  text-align: center;
   z-index: 5;
 }
 
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-rows: repeat(6, 1fr);
   gap: 4px;
   width: fit-content;
   margin: 1rem auto;
   font-family: system-ui, sans-serif;
   padding: 2%;
+  margin-top: 0;
+}
+
+span {
+  text-align: center;
 }
 
 .day {

@@ -1,8 +1,18 @@
 nav {
+  width: 100vw;
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   align-items: center;
-  height: 5vh;
+  height: 8vh;
+  background-color: darkgray;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navLogo {
+  height: 100%;
+  margin: 1%;
 }
 
 .navbar {
@@ -17,6 +27,22 @@ nav {
   color: black;
 }
 
-.active {
+.activeNav {
   font-weight: bold;
+}
+
+.stickyOffers {
+  position: sticky;
+  top: 8vh;
+  background-color: #ffecb3;
+  border: 3px solid #f39c12;
+  padding: 0;
+  text-align: center;
+  z-index: 1000;
+  font-weight: 700;
+}
+
+.stickyOffers p {
+  padding: 0;
+  margin: 0;
 }

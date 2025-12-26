@@ -1,0 +1,85 @@
+/* ===============================
+   BASE TOGGLE PILL
+================================ */
+.togglePill {
+  display: inline-flex;
+  background: #f0f0f0;
+  padding: 4px;
+  border-radius: 999px;
+  gap: 2px;
+  font-family: inherit;
+}
+
+.toggleBooking {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* ===============================
+   HIDE RADIO INPUTS
+================================ */
+.togglePill input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ===============================
+   TOGGLE ITEMS
+   (buttons & labels)
+================================ */
+.togglePill button,
+.togglePill label {
+  border: none;
+  background: transparent;
+  padding: 10px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #444;
+  transition: background 0.25s ease, color 0.25s ease;
+  white-space: nowrap;
+}
+
+/* Hover */
+.togglePill button:hover,
+.togglePill label:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ===============================
+   ACTIVE STATES
+================================ */
+
+/* Button-based toggle */
+.togglePill button.active {
+  background: #111;
+  color: #fff;
+}
+
+/* Radio-based toggle */
+.togglePill input:checked + label {
+  background: #111;
+  color: #fff;
+}
+
+/* ===============================
+   FOCUS (ACCESSIBILITY)
+================================ */
+.togglePill button:focus-visible,
+.togglePill label:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+/* ===============================
+   OPTIONAL VARIANTS
+================================ */
+.togglePill .muted {
+  opacity: 0.75;
+}
+
+.togglePill .spaced {
+  letter-spacing: 0.4px;
+}
