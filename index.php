@@ -30,6 +30,7 @@ require __DIR__ . "/app/rooms.php";
 
     <?php
     require __DIR__ . "/view/components/nav.php";
+    require __DIR__ . "/view/components/offers.php";
     ?>
 
     <div class="background"></div>
@@ -100,7 +101,7 @@ require __DIR__ . "/app/rooms.php";
         </section>
 
         <?php
-        require __DIR__ . "/view/components/form.php"
+        require __DIR__ . "/view/components/form.php";
         ?>
 
         <div class="showPrice">
