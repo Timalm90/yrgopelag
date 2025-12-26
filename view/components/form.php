@@ -11,7 +11,7 @@
             <div class="slider"></div>
         </div>
     </article>
-    <form action="/app/booking.php" method="post">
+    <form action="app/booking.php" method="post">
         <!-- BOOK ROOM -->
         <fieldset id="roomSection">
             <legend class="legendRoom">Choose Room and Date</legend>

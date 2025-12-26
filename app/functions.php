@@ -40,11 +40,11 @@ function getErrorMessage(string $apiError): string
         : 'Unknown error from central bank.';
 }
 
-function handleErrors(array $errors, string $redirect = '/../index.php'): void
+function handleErrors(array $errors, string $redirect = '../index.php'): void
 {
     if (!empty($errors)) {
         $_SESSION['errors'] = $errors;
-        header("Location: " . $redirect);
+        header("Location: $redirect");
         exit;
     }
 }

@@ -35,7 +35,7 @@ getButton.addEventListener("click", () => {
   }
 
   // --- Send request to backend ---
-  fetch("/app/getTransferCode.php", {
+  fetch("app/getTransferCode.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, apiKey, amount: totalCost }),

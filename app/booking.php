@@ -271,5 +271,5 @@ $confirmation = [
 ];
 
 $_SESSION['success'] = $confirmation;
-header("Location: /../index.php");
+header("Location: ../index.php"); //Removed /, works for confirmation, but not for error...
 exit;
