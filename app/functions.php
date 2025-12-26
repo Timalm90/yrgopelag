@@ -33,47 +33,6 @@ function countFeatureCost(PDO $pdo, array $selectedFeatures): int
     return $total;
 }
 
-// Calculate discounts
-function calculateDiscount(PDO $pdoBooking, int $guestId, ?int $selectedRoomId = null, array $selectedFeatures = []): int
-{
-    $discountSum = 0;
-
-    // Hämta luxury room ID
-    $luxuryRoomId = getLuxuryRoomId($pdoBooking);
-    if (!$luxuryRoomId) return 0;
-
-    // Lojal-discount
-    $stmt = $pdoBooking->prepare("SELECT COUNT(guest_id) AS visits FROM bookings WHERE guest_id = :guestId GROUP BY guest_id");
-    $stmt->bindParam(":guestId", $guestId, PDO::PARAM_INT);
-    $stmt->execute();
-    $loyal = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    $loyalDiscount = 0;
-    $stmt = $pdoBooking->prepare("SELECT discount FROM discounts WHERE type = 'loyal'");
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($row) $loyalDiscount = (int)$row['discount'];
-
-    if ($loyal && (int)$loyal['visits'] >= 1 && $selectedRoomId === $luxuryRoomId) {
-        $discountSum += $loyalDiscount;
-    }
-
-    // Combo-discount
-    $comboDiscount = 0;
-    $stmt = $pdoBooking->prepare("SELECT discount FROM discounts WHERE type = 'luxuryCombo'");
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($row) $comboDiscount = (int)$row['discount'];
-
-    $bowserFeatureId = getBowserFeatureId($pdoBooking);
-
-    if ($selectedRoomId === $luxuryRoomId && in_array($bowserFeatureId, $selectedFeatures, true)) {
-        $discountSum += $comboDiscount;
-    }
-
-    return $discountSum;
-}
-
 function getErrorMessage(string $apiError): string
 {
     return $apiError !== ''
