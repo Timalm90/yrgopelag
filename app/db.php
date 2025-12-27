@@ -24,6 +24,14 @@ function getFeaturePrices(PDO $pdo): array
     return $prices;
 }
 
+function getTierLevels(PDO $pdo): array
+{
+    $statement = $pdo->prepare("SELECT tier FROM tiers");
+    $statement->execute();
+    $tierLevels = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $tierLevels;
+}
+
 function getActiveFeatures(PDO $pdo): array
 {
     $statement = $pdo->prepare("SELECT * FROM features WHERE is_active = 1");
@@ -67,10 +75,7 @@ function registerGuest(PDO $pdo, string $name): void
 
 function roomBooking(PDO $pdo, int $guestId, int $roomId, DateTime $arrivalDT, DateTime $departureDT): void
 {
-    $statement = $pdo->prepare("
-        INSERT INTO bookings (guest_id, room_id, arrival, departure)
-        VALUES (:guest_id, :room_id, :arrival, :departure)
-    ");
+    $statement = $pdo->prepare("INSERT INTO bookings (guest_id, room_id, arrival, departure) VALUES (:guest_id, :room_id, :arrival, :departure)");
     $statement->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
     $statement->bindParam(":room_id", $roomId, PDO::PARAM_INT);
     $statement->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
@@ -109,16 +114,16 @@ function registerFeatures(PDO $pdo, int $bookingId, array $featureIds): void
 }
 
 // For Discounts
-function getLuxuryRoomId(PDO $pdoBooking): ?int
+function getLuxuryRoomId(PDO $pdo): ?int
 {
-    $stmt = $pdoBooking->prepare("SELECT id FROM rooms WHERE room = 'luxury'");
+    $stmt = $pdo->prepare("SELECT id FROM rooms WHERE room = 'luxury'");
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     return $row['id'] ?? null;
 }
-function getBowserFeatureId(PDO $pdoBooking): ?int
+function getBowserFeatureId(PDO $pdo): ?int
 {
-    $stmt = $pdoBooking->prepare("SELECT id FROM features WHERE feature = 'Bowser’s Castle Escape'");
+    $stmt = $pdo->prepare("SELECT id FROM features WHERE feature = 'Bowser’s Castle Escape'");
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     return $row['id'] ?? null;
@@ -153,12 +158,29 @@ function getFeatureName(PDO $pdo, int $featureId): ?string
 
 
 
-// For Confirmation message
-function getRoomName(PDO $pdoBooking, int $roomId): ?string
+// For Confirmation message in bookings
+function getRoomName(PDO $pdo, int $roomId): ?string
 {
-    $stmt = $pdoBooking->prepare("SELECT room FROM rooms WHERE id = :id");
+    $stmt = $pdo->prepare("SELECT room FROM rooms WHERE id = :id");
     $stmt->bindParam(':id', $roomId, PDO::PARAM_INT);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     return $row['room'] ?? null;
+}
+
+
+// Update prices
+function updateRoomPrice(PDO $pdo, string $room, int $price): void
+{
+    $stmt = $pdo->prepare("UPDATE rooms SET price_per_night = :price WHERE room = :room");
+    $stmt->bindParam(':price', $price, PDO::PARAM_INT);
+    $stmt->bindParam(':room', $room, PDO::PARAM_STR);
+    $stmt->execute();
+}
+
+function updateTierPrice(PDO $pdo, string $tierName, int $price): void
+{
+    $stmt = $pdo->prepare("UPDATE tiers SET price_per_feature = :price WHERE tier = :tierName");
+    $stmt->bindParam(":price", $price, PDO::PARAM_INT);
+    $stmt->bindParam(":tierName", $tierName, PDO::PARAM_STR);
 }
