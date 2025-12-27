@@ -112,7 +112,7 @@ $loyalDiscount = getDiscount($pdoBooking, 'loyal');
 $comboDiscount = getDiscount($pdoBooking, 'luxuryCombo');
 
 // Loyal offer:
-if ($isLoyal && (int)$isLoyal['visits'] >= 1 && isset($selectedRoomId) && $selectedRoomId === $luxuryRoomId) {
+if ($isLoyal && isset($selectedRoomId) && $selectedRoomId === $luxuryRoomId) {
     $totalPrice -= $loyalDiscount;
 }
 
