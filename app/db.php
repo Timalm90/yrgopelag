@@ -125,11 +125,7 @@ function getBowserFeatureId(PDO $pdoBooking): ?int
 }
 function checkLoyalCustomer(PDO $pdo, int $guestId): bool
 {
-    $stmt = $pdo->prepare("
-        SELECT COUNT(*) AS visits 
-        FROM bookings
-        WHERE guest_id = :guestId
-    ");
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS visits FROM bookings WHERE guest_id = :guestId");
     $stmt->bindParam(':guestId', $guestId, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
