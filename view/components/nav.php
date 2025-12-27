@@ -5,10 +5,11 @@
 
     <div class="navbar">
         <a class="navLink <?= $_SERVER['SCRIPT_NAME'] === '/index.php' ? 'activeNav' : ''; ?>"
-            href="/toadtest/index.php">Home</a>
+            href="index.php">
+            Home</a>
 
         <a class="navLink <?= $_SERVER['SCRIPT_NAME'] === '/view/admin.php' ? 'activeNav' : ''; ?>"
-            href="/toadtest/view/admin.php">Admin</a>
+            href="view/admin.php">Admin</a>
 
         <?php if (isset($_SESSION['admin'])) { ?>
             <a class="navLink"
@@ -17,7 +18,12 @@
             </a>
         <?php } else { ?>
             <a class="navLink <?= $_SERVER['SCRIPT_NAME'] === '/view/login.php' ? 'activeNav' : ''; ?>"
-                href="/toadtest/view/login.php">Login</a>
+                href="view/login.php">Login</a>
         <?php } ?>
     </div>
 </nav>
+
+<!-- In deploy:
+ href = /toadtest/index.php", /toadtest/view/admin.php, /toadtest/view/login.php
+ 
+ In localhost: index.php-->
