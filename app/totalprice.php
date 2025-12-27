@@ -13,6 +13,7 @@ $bookingType = $_POST['bookingType'] ?? 'room';
 $selectedRoomId = isset($_POST['room']) ? (int)$_POST['room'] : null;
 $arrivalInput = $_POST['arrivalDate'] ?? null;
 $departureInput = $_POST['departureDate'] ?? null;
+$name = $_POST['name'] ?? null;
 
 $selectedFeatures = [];
 if (isset($_POST['features'])) {
@@ -40,7 +41,10 @@ if (!empty($selectedFeatures)) {
     $totalFeatureCost = countFeatureCost($pdoBooking, $selectedFeatures);
 }
 
-// //  ------------------ APPLY DISCOUNT ------------------
+// ------------------ TOTAL PRICE ------------------
+$totalPrice = $totalRoomCost + $totalFeatureCost;
+
+// //  ------------------ COMBO DISCOUNT ------------------
 // Luxury room ID
 $luxuryRoomId = (int)getLuxuryRoomId($pdoBooking);
 
@@ -50,16 +54,31 @@ $bowserFeatureId = (int)getBowserFeatureId($pdoBooking);
 // Combo discount
 $comboDiscount = getDiscount($pdoBooking, 'luxuryCombo');
 
-// ------------------ TOTAL PRICE ------------------
-$totalPrice = $totalRoomCost + $totalFeatureCost;
-
-// ------------------ APPLY COMBO DISCOUNT ------------------
 if ($selectedRoomId === $luxuryRoomId && in_array($bowserFeatureId, $selectedFeatures, true)) {
     $totalPrice -= $comboDiscount;
 }
+// -----------------------------------------------------------------
+$name = trim($name);
+$isLoyal = false;
+$loyalDiscount = 0;
+
+if (isset($name) || $name !== '') {
+    // Find guest
+    $guestId = findGuest($pdoBooking, $name);
+
+    if ($guestId !== null) {
+        $isLoyal = checkLoyalCustomer($pdoBooking, $guestId);
+        $loyalDiscount = getDiscount($pdoBooking, 'loyal');
+    };
+}
+
+if ($isLoyal && $selectedRoomId === $luxuryRoomId) {
+    $totalPrice -= $loyalDiscount;
+};
+//  ---------------------------------------------------------------
 
 // ------------------ RETURN JSON ------------------
 echo json_encode([
     'totalPrice' => $totalPrice,
-    // 'errors' => $errors
+    'isLoyal' => $isLoyal
 ]);
