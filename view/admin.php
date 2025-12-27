@@ -43,10 +43,11 @@ if (!isset($_SESSION['admin'])) {
             <?php
             if (isset($_SESSION['admin'])): ?>
                 <!-- DASHBOARD! -->
-                <h1>You are logged in! </h1>
+                <h1>Welcome, <?= ucwords(htmlspecialchars(($_SESSION['admin']['name']))) ?>!</h1>
 
             <?php endif; ?>
 
+            <?php require __DIR__ . "/components/checkAccount.php"; ?>
         </main>
     </div>
 </body>
