@@ -53,6 +53,7 @@
 
         <?php if (isset($_SESSION['updatePrice'])) {
             echo $_SESSION['updatePrice'];
+            $_SESSION['updatePrice'] = NULL;
         }
 
         if (isset($_SESSION['adminErrors'])): ?>
@@ -63,6 +64,7 @@
                     </li>
                 <?php endforeach ?>
             </ul>
-        <?php endif ?>
+        <?php $_SESSION['adminErrors'] = NULL;
+        endif ?>
     </form>
 </section>
