@@ -48,8 +48,12 @@ if (!isset($_SESSION['admin'])) {
             <?php endif; ?>
 
             <?php require __DIR__ . "/components/checkAccount.php"; ?>
+
+
+            <?php require __DIR__ . "/components/changePrice.php"; ?>
         </main>
     </div>
+    <script src="../assets/scripts/changePrice.js"></script>
 </body>
 
 </html>
