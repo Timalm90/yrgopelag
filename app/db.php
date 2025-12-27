@@ -184,3 +184,14 @@ function updateTierPrice(PDO $pdo, string $tierName, int $price): void
     $stmt->bindParam(":price", $price, PDO::PARAM_INT);
     $stmt->bindParam(":tierName", $tierName, PDO::PARAM_STR);
 }
+
+
+// Buy/Add features
+function findNonActiveFeatures(PDO $pdo): array
+{
+    $statement = $pdo->prepare("SELECT * FROM features INNER JOIN tiers ON features.tier_id = tiers.id
+    WHERE is_active = 0");
+    $statement->execute();
+    $nonActiveFeatures = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $nonActiveFeatures;
+};
