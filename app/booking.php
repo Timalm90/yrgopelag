@@ -13,6 +13,13 @@ $errors = [];
 $selectedFeatures = [];
 $bookingId = NULL;
 
+$islandName = getSettingsValue($pdoBooking, "island_name"); // Starlight Island
+$hotelName = getSettingsValue($pdoBooking, "hotel_name"); // Yoshi's Resort
+$starRating = getSettingsValue($pdoBooking, "star_rating"); // 5
+$starRating = (int)$starRating; // int 5
+$hotelOwner = getSettingsValue($pdoBooking, "hotel_owner"); // Emilie
+$url = getSettingsValue($pdoBooking, "webpage"); // https://developedbyemilie.se/yrgopelag
+
 // ------------------------------------------- SANITIZE & VALIDATE ---------------------------------------------
 //Check if mandatory information is provided (name & transferCode)
 if (!isset($_POST['name'], $_POST['transferCode']) || $_POST['name'] === '' || $_POST['transferCode'] === '') {
@@ -155,13 +162,13 @@ $featuresUsed = prepareFeaturesForReceipt($pdoBooking, $selectedFeatures);
 try {
     $receiptResponse = $client->post('/centralbank/receipt', [
         'json' => [
-            'user'           => "Emilie",
+            'user'           => $hotelOwner,
             'api_key'        => $apiKey,
             'guest_name'     => $name,
             'arrival_date'   => $arrivalDT->format('Y-m-d'),
             'departure_date' => $departureDT->format('Y-m-d'),
             'features_used'  => $featuresUsed,
-            'star_rating'    => 5
+            'star_rating'    => $starRating
         ]
     ]);
 
@@ -191,7 +198,7 @@ handleErrors($errors);
 try {
     $depositResponse = $client->post('/centralbank/deposit', [
         'json' => [
-            'user'         => "Emilie",
+            'user'         => $hotelOwner,
             'transferCode' => $transferCode
         ]
     ]);
