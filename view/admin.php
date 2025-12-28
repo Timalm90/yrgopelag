@@ -47,10 +47,12 @@ if (!isset($_SESSION['admin'])) {
 
             <?php endif; ?>
 
-            <?php require __DIR__ . "/components/checkAccount.php"; ?>
-
+            <?php require __DIR__ . "/components/checkBalance.php"; ?>
 
             <?php require __DIR__ . "/components/changePrice.php"; ?>
+
+            <?php require __DIR__ . "/components/addFeatures.php"; ?>
+
         </main>
     </div>
     <script src="../assets/scripts/changePrice.js"></script>
