@@ -77,6 +77,7 @@ function findGuest(PDO $pdo, string $name): int|NULL
 
 function registerGuest(PDO $pdo, string $name): void
 {
+    $name = strtolower($name);
     $statement = $pdo->prepare("INSERT INTO guests (name) VALUES (:name)");
     $statement->bindParam(":name", $name, PDO::PARAM_STR);
     $statement->execute();
@@ -156,6 +157,14 @@ function getDiscount(PDO $pdo, string $type): int
     return isset($row['discount']) ? (int)$row['discount'] : 0;
 }
 
+function getDiscountInfo(PDO $pdo): array
+{
+    $stmt = $pdo->prepare("SELECT * FROM discounts");
+    $stmt->execute();
+    $stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $stmt;
+}
+
 function getFeatureName(PDO $pdo, int $featureId): ?string
 {
     $stmt = $pdo->prepare("SELECT feature FROM features WHERE id = :id");
@@ -198,8 +207,8 @@ function updateTierPrice(PDO $pdo, string $tierName, int $price): void
 // Buy/Add features
 function findNonActiveFeatures(PDO $pdo): array
 {
-    $statement = $pdo->prepare("SELECT * FROM features INNER JOIN tiers ON features.tier_id = tiers.id
-    WHERE is_active = 0");
+    $statement = $pdo->prepare("SELECT features.id, features.feature, features.is_active, categories.category, tiers.tier, tiers.cost_per_tier FROM features INNER JOIN categories ON features.category_id = categories.id INNER JOIN tiers ON features.tier_id = tiers.id
+    WHERE features.is_active = 0");
     $statement->execute();
     $nonActiveFeatures = $statement->fetchAll(PDO::FETCH_ASSOC);
     return $nonActiveFeatures;
