@@ -8,13 +8,13 @@ require __DIR__ . "/../config.php"; // -> $apiKey
 use GuzzleHttp\Exception\RequestException;
 
 $adminErrors = [];
-$user = getSettingsValue($pdoBooking, "hotel_owner");
+$hotelOwner = getSettingsValue($pdoBooking, "hotel_owner");
 
 
 try {
     $accountResponse = $client->post('/centralbank/accountInfo', [
         'json' => [
-            'user' => $user,
+            'user' => $hotelOwner,
             'api_key' => $apiKey
         ]
     ]);
