@@ -7,6 +7,13 @@ require __DIR__ . "/../config.php";
 
 use GuzzleHttp\Exception\RequestException;
 
+// Start values
+$islandName = getSettingsValue($pdoBooking, "island_name");
+$hotelName = getSettingsValue($pdoBooking, "hotel_name");
+$starRating = getSettingsValue($pdoBooking, "star_rating");
+$starRating = (int)$starRating;
+$hotelOwner = getSettingsValue($pdoBooking, "hotel_owner");
+$url = getSettingsValue($pdoBooking, "webpage");
 $addFeatureErrors = [];
 
 // Validate input
@@ -24,6 +31,9 @@ $newFeature = null;
 foreach ($allFeatures as $feature) {
     if ((int)$feature['id'] === $featureId) {
         $newFeature = $feature;
+
+        // To match request to centralbank/island
+        $newFeature['activity'] = $newFeature['category'];
         break;
     }
 }
@@ -35,27 +45,49 @@ if (!$newFeature) {
     exit;
 }
 
-$featureCost = (int) $newFeature['cost_per_tier'];
-$user = 'Emilie';  // Hotel owner
-$transferCode = NULL;
+// Fetch active features from Centralbank
+try {
+    $activeResponse = $client->post('/centralbank/islandFeatures', [
+        'json' => [
+            'user' => $hotelOwner,
+            'api_key' => $apiKey
+        ]
+    ]);
+
+    $activeResult = json_decode($activeResponse->getBody()->getContents(), true);
+
+    $activeFeatures = $activeResult['features'] ?? [];
+} catch (RequestException $activeException) {
+    $addFeatureErrors[] = "Could not fetch active features";
+
+    if (!empty($addFeatureErrors)) {
+        $_SESSION['adminError'] = $addFeatureErrors;
+        header("Location: ../../view/admin.php");
+        exit;
+    }
+};
+
+// Convert active features to right format for "/centralbank/islands"
+$featureToRegister = [];
+foreach ($activeFeatures as $feature) {
+    $featureToRegister[$feature['activity']][$feature['tier']] = $feature['feature'];
+}
 
 // Register bought feature in Centralbank
 try {
-    $featuresToRegister = [
-        $newFeature['activity'] => [
-            $newFeature['tier'] => $newFeature['feature']
-        ]
-    ];
+    $featureToRegister[$newFeature['activity']][$newFeature['tier']] = $newFeature['feature'];
 
+    // islandName, hotelName, url, stars, user, api_key, hotel_specific_name (optional), features[activity][tier]=name...
     $registerResponse = $client->post('/centralbank/islands', [
         'json' => [
-            'islandName' => "Starlight Island",
-            'hotelName' => "Yoshi's Resort",
-            'url' => "https://developedbyemilie/yrgopelag",
-            'stars' => 5,
-            'user' => $user,
+            'islandName' => $islandName,
+            'hotelName' => $hotelName,
+            'url' => $url,
+            'stars' => $starRating,
+            'user' => $hotelOwner,
             'api_key' => $apiKey,
-            'features' => $featuresToRegister
+            'hotel_specific_name' => 'mario-themed',
+            'features' => $featureToRegister
         ]
     ]);
 
