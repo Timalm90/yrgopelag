@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+function getSettingsValue(PDO $pdo, string $key): string
+{
+    $statement = $pdo->prepare("SELECT value FROM settings WHERE key = :key");
+    $statement->bindParam(":key", $key, PDO::PARAM_STR);
+    $statement->execute();
+    $statement = $statement->fetch(PDO::FETCH_ASSOC);
+    return $statement['value'];
+}
+
 function checkAvailable(PDO $pdo, int $roomId): array
 {
     $statement = $pdo->prepare("SELECT arrival, departure FROM bookings WHERE room_id = :room_id");
