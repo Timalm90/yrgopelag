@@ -2,6 +2,9 @@
 // Require in all PHP files for logic here:
 require __DIR__ . "/app/autoload.php";
 require __DIR__ . "/app/rooms.php";
+
+$starRating = getSettingsValue($pdoBooking, 'star_rating');
+$starRating = (int) $starRating;
 ?>
 
 <!DOCTYPE html>
@@ -38,13 +41,11 @@ require __DIR__ . "/app/rooms.php";
     <main>
         <section class="hero whiteBox">
             <div class="hotelStars">
-                <img src="assets/images/star.png" alt="Mario star" />
-                <img src="assets/images/star.png" alt="Mario star" />
-                <img src="assets/images/star.png" alt="Mario star" />
-                <img src="assets/images/star.png" alt="Mario star" />
-                <img src="assets/images/star.png" alt="Mario star" />
+                <?php for ($i = 0; $i < $starRating; $i++): ?>
+                    <img src="assets/images/star.png" alt="Mario star" />
+                <?php endfor ?>
             </div>
-            <h1>Welcome to Yoshi's Resort on Starlight Island</h1>
+            <h1>Welcome to <?= ucwords(htmlspecialchars(getSettingsValue($pdoBooking, 'hotel_name'))) ?> on <?= ucwords(htmlspecialchars(getSettingsValue($pdoBooking, 'island_name'))) ?></h1>
             <h2> - where magic, adventure, and luxury meet!</h2>
             <p>Experience a one-of-a-kind stay filled with fun, relaxation, and surprises. Whether you want to unwind in our luxurious Princess Peach Suite, challenge friends in exciting activities, or just enjoy a day at the island's most spectacular features - your next adventure awaits at Yoshi's Resort!</p>
         </section>
