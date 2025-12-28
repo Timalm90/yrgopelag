@@ -37,24 +37,23 @@ if (!isset($_SESSION['admin'])) {
     <?php
     require __DIR__ . "/components/nav.php";
     ?>
-    <div class="adminBackground">
-        <main>
-            <!-- IF LOGGED IN: SHOW THIS DASHBOARD... ... ... -->
-            <?php
-            if (isset($_SESSION['admin'])): ?>
-                <!-- DASHBOARD! -->
-                <h1>Welcome, <?= ucwords(htmlspecialchars(($_SESSION['admin']['name']))) ?>!</h1>
+    <div class="adminBackground"></div>
+    <main>
+        <!-- IF LOGGED IN: SHOW THIS DASHBOARD... ... ... -->
+        <?php
+        if (isset($_SESSION['admin'])): ?>
+            <!-- DASHBOARD! -->
+            <h1>Welcome, <?= ucwords(htmlspecialchars(($_SESSION['admin']['name']))) ?>!</h1>
 
-            <?php endif; ?>
+        <?php endif; ?>
 
-            <?php require __DIR__ . "/components/checkBalance.php"; ?>
+        <?php require __DIR__ . "/components/checkBalance.php"; ?>
 
-            <?php require __DIR__ . "/components/changePrice.php"; ?>
+        <?php require __DIR__ . "/components/changePrice.php"; ?>
 
-            <?php require __DIR__ . "/components/addFeatures.php"; ?>
+        <?php require __DIR__ . "/components/addFeatures.php"; ?>
 
-        </main>
-    </div>
+    </main>
     <script src="../assets/scripts/changePrice.js"></script>
 </body>
 
