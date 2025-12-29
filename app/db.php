@@ -201,6 +201,7 @@ function updateTierPrice(PDO $pdo, string $tierName, int $price): void
     $stmt = $pdo->prepare("UPDATE tiers SET price_per_feature = :price WHERE tier = :tierName");
     $stmt->bindParam(":price", $price, PDO::PARAM_INT);
     $stmt->bindParam(":tierName", $tierName, PDO::PARAM_STR);
+    $stmt->execute();
 }
 
 
