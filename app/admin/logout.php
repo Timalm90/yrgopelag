@@ -8,4 +8,5 @@ require __DIR__ . "/../autoload.php";
 // In this file we logout users.
 
 $_SESSION['admin'] = NULL;
-header("Location: /toadtest/index.php");
+header("Location: /index.php"); // IN LOCALHOST
+// header("Location: ../../index.php"); // IN DEPLOY
