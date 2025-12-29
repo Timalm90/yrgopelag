@@ -4,11 +4,11 @@
         alt="Logo Yoshi's Resort" />
 
     <div class="navbar">
-        <a class="navLink <?= $_SERVER['SCRIPT_NAME'] === '/index.php' ? 'activeNav' : ''; ?>"
+        <a class="navLink <?= basename($_SERVER['SCRIPT_NAME']) === 'index.php' ? 'activeNav' : ''; ?>"
             href="/index.php">
             Home</a>
 
-        <a class="navLink <?= $_SERVER['SCRIPT_NAME'] === '/view/admin.php' ? 'activeNav' : ''; ?>"
+        <a class="navLink <?= basename($_SERVER['SCRIPT_NAME']) === 'admin.php' ? 'activeNav' : ''; ?>"
             href="/view/admin.php">Admin</a>
 
         <?php if (isset($_SESSION['admin'])) { ?>
@@ -17,14 +17,18 @@
                 Logout
             </a>
         <?php } else { ?>
-            <a class="navLink <?= $_SERVER['SCRIPT_NAME'] === '/view/login.php' ? 'activeNav' : ''; ?>"
+            <a class="navLink <?= basename($_SERVER['SCRIPT_NAME']) === 'login.php' ? 'activeNav' : ''; ?>"
                 href="/view/login.php">Login</a>
         <?php } ?>
     </div>
 </nav>
 
 <!-- In deploy:
- img logo src = /toadtest/assets/images/logo.png
+ img logo src = /MAPP/assets/images/logo.png
+ Home href = /MAPP/index.php
+ Admin href = /MAPP/view/admin.php
+ Logout href = /MAPP/app/admin/logout.php
+ Login href = /toadtest2/view/login.php
 
- href = /toadtest/index.php", /toadtest/view/admin.php, /toadtest/view/login.php
+ 2025-12-29 Added basename() for activeNav to work in deploy? Works!
         -->
