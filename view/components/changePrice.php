@@ -1,6 +1,6 @@
 <section class="whiteBox">
     <h2>Change hotel prices</h2>
-    <form action="app/admin/changePrice.php" method="post">
+    <form action="../app/admin/changePrice.php" method="post">
         <!-- Select category (room or tier) -->
         <div>
             <label for="category">Would you like to change a room price or price of tier level?</label>
