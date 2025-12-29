@@ -4,8 +4,8 @@ require __DIR__ . "/../app/config.php";
 
 //  IF NOT LOGGED IN -> redirect to login page 
 if (!isset($_SESSION['admin'])) {
-    // header("Location: /login.php");
-    header("Location: /toadtest/view/login.php");
+    header("Location: login.php"); //IN LOCALHOST
+    // header("Location: /MAPP/view/login.php"); //IN DEPLOY
     exit;
 }
 
