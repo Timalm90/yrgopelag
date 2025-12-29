@@ -25,8 +25,10 @@ $starRating = (int) $starRating;
     <link rel="stylesheet" href="assets/styles/nav.css">
     <link rel="stylesheet" href="assets/styles/togglebar.css">
     <link rel="stylesheet" href="assets/styles/rooms.css">
+    <link rel="stylesheet" href="assets/styles/error.css">
     <link rel="stylesheet" href="assets/styles/form.css">
     <link rel="stylesheet" href="assets/styles/calendar.css">
+    <link rel="stylesheet" href="assets/styles/modal.css">
 </head>
 
 <body>
@@ -63,12 +65,11 @@ $starRating = (int) $starRating;
 
         <?php require __DIR__ . "/view/components/rooms.php"; ?>
 
-        <section class="message">
-            <h1>Confirmation or Errors are shown here!</h1>
-
-            <?php
-            // Show error messages in errors-array:
-            if (!empty($_SESSION['errors'])) : ?>
+        <?php
+        // Show error messages in errors-array:
+        if (!empty($_SESSION['errors'])) : ?>
+            <section class="errorMessage">
+                <h2>Error!</h2>
                 <ul>
                     <?php
                     foreach ($_SESSION['errors'] as $error) : ?>
@@ -77,35 +78,18 @@ $starRating = (int) $starRating;
                         </li>
                     <?php endforeach ?>
                 </ul>
-            <?php
-                //Empty this session variable
-                unset($_SESSION['errors']);
-            endif;
-
-            if (!empty($_SESSION['success'])) { ?>
-                <p>
-                    <?php
-                    $confirmation = $_SESSION['success']; ?>
-                <div class="whitebox">
-                    <h2>Dear <?= htmlspecialchars($confirmation['visitor']) ?>,</h2>
-                    <p>Thank you for choosing Yoshi's Resort on Starlight Island. We're looking forward to your visit!</p>
-                    <p>You're visit is registered for <?= htmlspecialchars($confirmation['arrival']) ?> - <?= htmlspecialchars($confirmation['departure']) ?>. Checkin 15:00 and checkout 11:00.</p>
-                    <p>The total prize for your visit is <?= htmlspecialchars($confirmation['totalcost']) ?> credits!</p>
-                </div>
-                <!-- // var_dump($_SESSION['success']);
-                // array(5) { ["visitor"]=> string(4) "Rune" ["arrival"]=> string(10) "2026-01-28" ["departure"]=> string(10) "2026-01-28" ["features"]=> array(1) { [0]=> string(2) "16" } ["totalcost"]=> int(18) } -->
-            <?php
-                //Empty this session variable
-                unset($_SESSION['success']);
-            }
-            ?>
-        </section>
+            </section>
+        <?php
+            //Empty this session variable
+            $_SESSION['errors'] = NULL;
+        endif; ?>
 
         <?php
         require __DIR__ . "/view/components/form.php";
         ?>
 
         <div class="showPrice">
+            <img src="assets/images/coin.png" alt="golden coin" />
             <p>Total price: <span id="totalPrice">0</span> credits</p>
         </div>
     </main>
@@ -113,11 +97,72 @@ $starRating = (int) $starRating;
     <?php
     // To do: Require in footer when built
     ?>
+    <!-- ------------------------------------------ SUCCESS MODAL ------------------------------------------ -->
+    <?php
+    if (!empty($_SESSION['success'])) { ?>
+        <section class="modal">
+            <article class="whiteBox">
+                <?php $confirmation = $_SESSION['success']; ?>
+                <h2>Dear <?= ucwords(htmlspecialchars($confirmation['visitor'])) ?>,</h2>
+                <p>Thank you for choosing <?= ucwords(htmlspecialchars(getSettingsValue($pdoBooking, 'hotel_name'))) ?> on <?= ucwords(htmlspecialchars(getSettingsValue($pdoBooking, 'island_name'))) ?>. We're looking forward to your visit!</p>
+
+                <!-- Date info -->
+                <?php if ($confirmation['bookingType'] === "Day pass"): ?>
+                    <p>
+                        Your Day pass is valid for <strong><?= htmlspecialchars($confirmation['arrival']) ?></strong>.
+                    </p>
+
+                <?php else: ?>
+                    <p>
+                        Your visit is registered for <?= htmlspecialchars($confirmation['arrival']) ?> - <?= htmlspecialchars($confirmation['departure']) ?>.<br>
+                        Check-in: <?= htmlspecialchars($confirmation['checkinTime']) ?><br>
+                        Checkout: <?= htmlspecialchars($confirmation['checkoutTime']) ?>
+                    </p>
+                <?php endif ?>
+
+                <!-- Room info -->
+                <?php if ($confirmation['roomName']): ?>
+                    <p>
+                        Your room: <strong><?= ucwords(htmlspecialchars($confirmation['roomName'])) ?></strong>
+                    </p>
+                <?php endif ?>
+
+                <!-- Features -->
+                <?php if (!empty($confirmation['features'])): ?>
+                    <p>Included features: </p>
+                    <ul>
+                        <?php foreach ($confirmation['features'] as $feature): ?>
+                            <li>
+                                <?= ucwords(htmlspecialchars($feature)) ?>
+                            </li>
+                        <?php endforeach ?>
+                    </ul>
+                <?php endif ?>
+
+                <!-- Price -->
+                <p>Total price: <?= htmlspecialchars($confirmation['totalcost']) ?> credits</p>
+                <?php if (!empty($confirmation['discountSum'])): ?>
+                    <p>
+                        You saved <?= htmlspecialchars($confirmation['discountSum']) ?> credits.
+                    </p>
+                <?php endif ?>
+
+                <button class="modalClose">&times;</button>
+
+            </article>
+        </section>
+
+    <?php
+        //Empty this session variable
+        $_SESSION['success'] = NULL;
+    }
+    ?>
 
     <script src="assets/scripts/toggleRoom.js"></script>
     <script src="assets/scripts/form.js"></script>
     <script src="assets/scripts/totalprice.js"></script>
     <script src="assets/scripts/generateTransferCode.js"></script>
+    <script src="assets/scripts/modal.js"></script>
 </body>
 
 </html>
