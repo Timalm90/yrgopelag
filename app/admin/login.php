@@ -13,7 +13,7 @@ if (isset($_POST['username'], $_POST['password'])) {
     $password = $_POST['password'];
 
     // Fetch admin in database
-    $statement = $pdoBooking->prepare("SELECT * FROM admins WHERE username = :username");
+    $statement = $pdoBooking->prepare("SELECT * FROM admins WHERE username = :username AND is_active = 1");
     $statement->bindParam(":username", $username, PDO::PARAM_STR);
     $statement->execute();
     $dbRow = $statement->fetch(PDO::FETCH_ASSOC);
