@@ -223,7 +223,7 @@ handleErrors($errors);
 // Requires: guest_id, room_id, arrival & departure in checkins for room
 if (isset($selectedRoomId, $arrivalDT, $departureDT)) {
     roomBooking($pdoBooking, $guestId, $selectedRoomId, $arrivalDT, $departureDT);
-    $BookingId = findBookingId($pdoBooking, $guestId, $arrivalDT);
+    $bookingId = findBookingId($pdoBooking, $guestId, $arrivalDT);
 }
 
 // ------------------------------------ REGISTER FEATURE-ONLY CUSTOMERS --------------------------------------
