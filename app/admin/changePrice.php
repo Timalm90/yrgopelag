@@ -36,7 +36,7 @@ switch ($category) {
         updateRoomPrice($pdoBooking, $item, $price);
         break;
 
-    case 'featureTier':
+    case 'tier':
         updateTierPrice($pdoBooking, $item, $price);
         break;
 
