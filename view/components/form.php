@@ -28,7 +28,7 @@
                             <div>
                                 <input type="radio" id="room_<?= htmlspecialchars($room['id']) ?>" name="room" value="<?= htmlspecialchars($room['id']) ?>">
 
-                                <label for="room_<?= htmlspecialchars($room['id']) ?>"><?= ucwords(htmlspecialchars($room['room'])) ?> (<?= htmlspecialchars($room['price_per_night']) ?>c/night)</label>
+                                <label for="room_<?= htmlspecialchars($room['id']) ?>"><?= ucwords(htmlspecialchars($room['room'])) ?> <span class="priceSpan">(<?= htmlspecialchars($room['price_per_night']) ?>c/night)</span></label>
                             </div>
                         <?php endforeach; ?>
 
@@ -73,7 +73,7 @@
                 <div>
                     <input type="checkbox" id="feature_<?= htmlspecialchars($feature['id']); ?>" name="features[]" value="<?= htmlspecialchars($feature['id']); ?>">
                     <label for="feature_<?= htmlspecialchars($feature['id']); ?>"><?= ucwords(htmlspecialchars($feature['feature'])); ?>
-                        (<?= htmlspecialchars($priceFeature) ?>c)
+                        <span class="priceSpan">(<?= htmlspecialchars($priceFeature) ?>c)</span>
                     </label>
                 </div>
             <?php endforeach; ?>
@@ -82,34 +82,35 @@
         <!-- GUEST INFO & PAYMENT -->
         <fieldset>
             <legend>Guest info & Payment</legend>
-            <div class="field">
-                <!-- Name -->
-                <label for="name">Name:</label>
-                <br>
-                <input type="text" id="name" name="name" placeholder="Enter your name" autocomplete="name">
-            </div>
-
-            <div class="field">
-                <!-- API-key for transferCode service -->
-                <label for="apiKey">API Key: *</label><br>
-                <input type="password" id="apiKey" name="apiKey" placeholder="Enter your API key">
-            </div>
-            <div class="field">
-                <button type="button" id="getTransferCode">Get Transfer Code</button>
-            </div>
-
-            <div class="field">
+            <article class="paymentSection">
                 <div class="field">
-                    <p class="APIkeyForm">*Don't want to enter your API key? Visit the
-                        <a href="https://www.yrgopelag.se/centralbank" target="_blank">
-                            Central Bank
-                        </a> to retrieve your transfer code, and enter it below:
-                    </p>
-                    <!-- transferCode (manually or through service) -->
-                    <label for="transferCode">Transfer Code:</label><br>
-                    <input type="password" id="transferCode" name="transferCode" placeholder="Enter your transfer code">
+                    <!-- Name -->
+                    <label for="name">Name:</label>
+                    <br>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" autocomplete="name">
                 </div>
+
+                <div class="field">
+                    <!-- API-key for transferCode service -->
+                    <label for="apiKey">API Key: *</label><br>
+                    <input type="password" id="apiKey" name="apiKey" placeholder="Enter your API key">
+                </div>
+                <div class="field">
+                    <button type="button" id="getTransferCode">Get Transfer Code</button>
+                </div>
+            </article>
+            <p class="APIkeyForm">*Don't want to enter your API key? Visit the
+                <a href="https://www.yrgopelag.se/centralbank" target="_blank">
+                    Central Bank
+                </a> to retrieve your transfer code, and enter it below:
+            </p>
+
+            <div class="field transferCodeInput">
+                <!-- transferCode (manually or through service) -->
+                <label for="transferCode">Transfer Code:</label><br>
+                <input type="password" id="transferCode" name="transferCode" placeholder="Enter your transfer code">
             </div>
+
         </fieldset>
 
         <div class="field bookButton">
