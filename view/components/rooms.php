@@ -15,6 +15,9 @@
                     <?php
                     require __DIR__ . '/calendar.php'; ?>
                 </div>
+                <div class="calendarGuide">
+                    <div class="calendarDot"></div> <span> = occupied</span>
+                </div>
             </article>
         </section>
     <?php endforeach; ?>
