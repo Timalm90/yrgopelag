@@ -75,6 +75,10 @@ if (isset($name) || $name !== '') {
 if ($isLoyal && $selectedRoomId === $luxuryRoomId) {
     $totalPrice -= $loyalDiscount;
 };
+
+if ($totalPrice < 0) {
+    $totalPrice = 0;
+}
 //  ---------------------------------------------------------------
 
 // ------------------ RETURN JSON ------------------
