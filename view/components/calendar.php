@@ -1,14 +1,14 @@
-<span>Mo</span>
-<span>Tu</span>
-<span>We</span>
-<span>Th</span>
-<span>Fr</span>
-<span>Sa</span>
-<span>Su</span>
+<span class="weekday">Mo</span>
+<span class="weekday">Tu</span>
+<span class="weekday">We</span>
+<span class="weekday">Th</span>
+<span class="weekday">Fr</span>
+<span class="weekday">Sa</span>
+<span class="weekday">Su</span>
 
-<div class="day"></div>
-<div class="day"></div>
-<div class="day"></div>
+<div class="day emptyDay"></div>
+<div class="day emptyDay"></div>
+<div class="day emptyDay"></div>
 
 <?php
 for ($i = 1; $i <= 31; $i++) : ?>
@@ -27,4 +27,4 @@ for ($i = 1; $i <= 31; $i++) : ?>
         <?= $i; ?>
     </div>
 <?php endfor; ?>
-<div class="day"></div>
+<div class="day emptyDay"></div>
