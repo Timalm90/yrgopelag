@@ -2,11 +2,12 @@
 :root {
   /* BACKGROUNDS */
   /* Overlay on background images */
-  /* --bg-app: rgb(245, 246, 244); */
-  --bg-app: rgba(245, 246, 244, 0.2);
+  /* --bg-app: rgba(245, 246, 244, 0.2); */
+  --bg-app: rgba(250, 245, 239, 0.2);
 
   /* Background color on whiteBox-div's */
-  --bg-panel: rgba(255, 255, 255, 0.94);
+  /* --bg-panel: rgba(255, 255, 255, 0.94); */
+  --bg-panel: rgba(250, 245, 239, 0.94);
 
   --border-subtle: #cfcfcf;
 
@@ -15,7 +16,8 @@
   --text-main: #1f1f1f;
 
   /* Text color for label, legend, explaining texts under input, dates, week days in calendar, "hjälptexter" such as =occupied under calendar */
-  --text-muted: #4f4f4f;
+  /* --text-muted: #4f4f4f; */
+  --text-muted: #6b6b6b;
 
   /* For disabled buttons, inputs, inactive choices, will not be commonly used */
   --text-disabled: #9e9e9e;
@@ -27,11 +29,9 @@
   /* Background color on button:hover, active anchors  */
   --accent-primary-hover: #3e7f61;
 
-  /* Not commonly used. Use when user tabs on keyboard and clicks on input/button through keyboard */
-  /* --accent-focus: #2d6a4f; */
-
-  /* Not commonly used. For informationsrutor, secondary info (not warnings or errors), admin info */
-  /* --accent-info: #4a90e2; */
+  /* Background color on CTA */
+  --CTA: #f4c75e;
+  --CTA-hover: #f0a531;
 
   /* STATUS - ERROR */
   --status-error-text: #b00020;
@@ -42,11 +42,6 @@
   --status-success-text: #1b7f4b;
   --status-success-bg: #e8f5ee;
   --status-success-border: #1b7f4b;
-
-  /* STATUS - WARNING */
-  --status-warning-text: #c77700;
-  --status-warning-bg: #fff4e5;
-  --status-warning-border: #c77700;
 
   /* Colors for navbar */
   --nav-bg: #e6e8e4; /* varm ljusgrå */
