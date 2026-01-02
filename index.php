@@ -84,19 +84,23 @@ $starRating = (int) $starRating;
             $_SESSION['errors'] = NULL;
         endif; ?>
 
+
         <?php
         require __DIR__ . "/view/components/form.php";
         ?>
 
-        <div class="showPrice">
+        <!-- <div class="showPrice">
             <img src="assets/images/coin.png" alt="golden coin" />
             <p>Total price: <span id="totalPrice">0</span> credits</p>
-        </div>
+        </div> -->
+
     </main>
 
     <?php
     // To do: Require in footer when built
     ?>
+
+    <?php require __DIR__ . "/view/components/featureModal.php"; ?>
     <!-- ------------------------------------------ SUCCESS MODAL ------------------------------------------ -->
     <?php
     if (!empty($_SESSION['success'])) { ?>
