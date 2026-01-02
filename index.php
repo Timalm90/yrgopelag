@@ -50,7 +50,9 @@ $starRating = (int) $starRating;
             <h1>Welcome to <?= ucwords(htmlspecialchars(getSettingsValue($pdoBooking, 'hotel_name'))) ?> on <?= ucwords(htmlspecialchars(getSettingsValue($pdoBooking, 'island_name'))) ?></h1>
             <h2> - where magic, adventure, and luxury meet!</h2>
             <p>Experience a one-of-a-kind stay filled with fun, relaxation, and surprises. Whether you want to unwind in our luxurious Princess Peach Suite, challenge friends in exciting activities, or just enjoy a day at the island's most spectacular features - your next adventure awaits at Yoshi's Resort!</p>
+            <img class="heroImg" src="assets/images/yoshiLeft.png" alt="Walking happy Yoshi" />
         </section>
+
         <section class="roomToggle togglePill" role="tablist">
             <button class="roomToggleBtn" data-room="0" role="tab">
                 Budget
@@ -68,7 +70,7 @@ $starRating = (int) $starRating;
         <?php
         // Show error messages in errors-array:
         if (!empty($_SESSION['errors'])) : ?>
-            <section class="errorMessage">
+            <section class="errorMessage" id="errors">
                 <h2>Error!</h2>
                 <ul>
                     <?php
