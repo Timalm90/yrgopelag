@@ -1,30 +1,30 @@
 // Booking confirmation modal
-const confirmationModal = document.querySelector(".modal");
+const confirmationModal = document.querySelector(".confirmationModal");
 
 if (confirmationModal) {
   // Close button
-  const closeButton = modal.querySelector(".modalClose");
+  const closeButton = confirmationModal.querySelector(".modalClose");
   if (closeButton) {
-    closeButton.addEventListener("click", () => modal.remove());
+    closeButton.addEventListener("click", () => confirmationModal.remove());
   }
 
   // ESC
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") modal.remove();
+    if (e.key === "Escape") confirmationModal.remove();
   });
 }
 
 // Feature description modal
-const modal = document.querySelector("#featureModal");
+const featureModal = document.querySelector("#featureModal");
 const openBtn = document.querySelector(".secretBox");
-const closeBtn = document.querySelector(".modalClose");
+const closeBtn = document.querySelector(".modalCloseFeature");
 
 openBtn.onclick = () => {
-  modal.style.display = "block";
+  featureModal.style.display = "block";
 };
 closeBtn.onclick = () => {
-  modal.style.display = "none";
+  featureModal.style.display = "none";
 };
 window.onclick = (e) => {
-  if (e.target == modal) modal.style.display = "none";
+  if (e.target == featureModal) featureModal.style.display = "none";
 };
