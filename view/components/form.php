@@ -1,4 +1,4 @@
-<section class="bookingForm">
+<section class="bookingForm whiteBox">
     <!-- Toogle: Book room/Day pass, changes form content -->
     <article class="toggleBooking">
         <div class="togglePill">
@@ -15,46 +15,59 @@
         <!-- BOOK ROOM -->
         <fieldset id="roomSection">
             <legend class="legendRoom">Choose Room and Date</legend>
+            <article class="roomSection">
 
-            <div class="field togglable">
-                <?php
-                $rooms = getRooms($pdoBooking);
+                <div class="field rooms togglable">
+                    <div class="innerContainer">
 
-                foreach ($rooms as $room): ?>
-                    <div>
-                        <input type="radio" id="room_<?= htmlspecialchars($room['id']) ?>" name="room" value="<?= htmlspecialchars($room['id']) ?>">
+                        <p>Rooms: </p>
+                        <?php
+                        $rooms = getRooms($pdoBooking);
 
-                        <label for="room_<?= htmlspecialchars($room['id']) ?>"><?= ucwords(htmlspecialchars($room['room'])) ?> (<?= htmlspecialchars($room['price_per_night']) ?>c/night)</label>
+                        foreach ($rooms as $room): ?>
+                            <div>
+                                <input type="radio" id="room_<?= htmlspecialchars($room['id']) ?>" name="room" value="<?= htmlspecialchars($room['id']) ?>">
+
+                                <label for="room_<?= htmlspecialchars($room['id']) ?>"><?= ucwords(htmlspecialchars($room['room'])) ?> (<?= htmlspecialchars($room['price_per_night']) ?>c/night)</label>
+                            </div>
+                        <?php endforeach; ?>
+
                     </div>
-                <?php endforeach; ?>
+                </div>
 
-            </div>
+                <div class="field arrival">
+                    <div class="innerContainer">
+                        <!-- Choose arrival date -->
+                        <label class="arrivalLabel" for="arrivalDate">Arrival:</label>
+                        <br>
+                        <input type="date" id="arrivalDate" name="arrivalDate" min="2026-01-01" max="2026-01-31">
+                    </div>
+                </div>
 
-            <div class="field">
-                <!-- Choose arrival date -->
-                <label class="arrivalLabel" for="arrivalDate">Arrival:</label>
-                <br>
-                <input type="date" id="arrivalDate" name="arrivalDate" min="2026-01-01" max="2026-01-31">
-            </div>
-
-            <div class="field togglable">
-                <!-- Choose departure date -->
-                <label for="departureDate">Departure:</label>
-                <br>
-                <input type="date" id="departureDate" name="departureDate" min="2026-01-01" max="2026-01-31">
-            </div>
+                <div class="field departure togglable departureBox">
+                    <div class="innerContainer">
+                        <!-- Choose departure date -->
+                        <label for="departureDate">Departure:</label>
+                        <br>
+                        <input type="date" id="departureDate" name="departureDate" min="2026-01-01" max="2026-01-31">
+                    </div>
+                </div>
+            </article>
         </fieldset>
 
         <!-- BOOK FEATURES -->
         <fieldset class="field features">
-            <legend>Features</legend>
+            <legend>Features
+                <img class="secretBox" src="assets/images/secretBox.png" />
+            </legend>
             <?php
             $features = getActiveFeatures($pdoBooking);
 
             $featurePrice = getFeaturePrices($pdoBooking);
 
+            // Present all avaiable feautures
             foreach ($features as $feature) :
-                // FETCH PRICE FOR FEATURE
+                // Fetch price for feature
                 $priceFeature = $featurePrice[$feature['id']];
             ?>
                 <div>
@@ -78,7 +91,7 @@
 
             <div class="field">
                 <!-- API-key for transferCode service -->
-                <label for="apiKey">API Key:</label><br>
+                <label for="apiKey">API Key: *</label><br>
                 <input type="password" id="apiKey" name="apiKey" placeholder="Enter your API key">
             </div>
             <div class="field">
@@ -87,20 +100,25 @@
 
             <div class="field">
                 <div class="field">
-                    <p>Don't want to enter your API key? Visit the
+                    <p class="APIkeyForm">*Don't want to enter your API key? Visit the
                         <a href="https://www.yrgopelag.se/centralbank" target="_blank">
                             Central Bank
                         </a> to retrieve your transfer code, and enter it below:
                     </p>
                     <!-- transferCode (manually or through service) -->
-                    <label for="transferCode">Transfer Code (optional):</label><br>
+                    <label for="transferCode">Transfer Code:</label><br>
                     <input type="password" id="transferCode" name="transferCode" placeholder="Enter your transfer code">
                 </div>
             </div>
         </fieldset>
 
-        <div class="field">
-            <input type="submit" value="Book!">
+        <div class="field bookButton">
+            <input type="submit" id="bookButton" value="Book!">
         </div>
     </form>
+
+    <div class="showPrice">
+        <img src="assets/images/coin.png" alt="golden coin" />
+        <p>Total price: <span id="totalPrice">0</span> credits</p>
+    </div>
 </section>
