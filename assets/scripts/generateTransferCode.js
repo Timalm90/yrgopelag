@@ -9,8 +9,8 @@ getButton.addEventListener("click", () => {
   if (!transferError) {
     transferError = document.createElement("div");
     transferError.id = "transferError";
-    transferError.className = "hint"; // Same styling as arrival > departure
-    getButton.insertAdjacentElement("afterend", transferError);
+    transferError.className = "hint";
+    getButton.parentNode.appendChild(transferError);
   }
 
   // --- Remove if error ---
