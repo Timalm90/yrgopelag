@@ -10,6 +10,12 @@ form .field {
   margin-bottom: 4%;
 }
 
+.priceSpan {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 .roomSection .field {
   margin-top: 0;
   margin-bottom: 0;
@@ -19,6 +25,7 @@ article.roomSection {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 1fr, minmax(3rem 1fr);
+  margin-top: 2%;
   margin-bottom: 2%;
 }
 
@@ -72,32 +79,71 @@ div.features {
   flex-direction: column;
 }
 
+.paymentSection {
+  display: flex;
+  align-items: end;
+  gap: 40px;
+  padding-left: 4%;
+}
+
+.paymentSection .field {
+  margin-top: 2%;
+  margin-bottom: 1%;
+}
+
 .APIkeyForm {
   color: var(--text-muted);
   font-style: italic;
+  padding-left: 4%;
+  font-size: 0.9rem;
+  margin-top: 0;
 }
 
-#getTransferCode,
 #bookButton {
+  aspect-ratio: 7/2;
+  border-radius: 8px;
+}
+
+#bookButton {
+  background-color: var(--CTA);
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+#getTransferCode {
   background-color: var(--accent-primary);
 }
 
 #getTransferCode:hover,
 #bookButton:hover {
-  background-color: var(--accent-primary-hover);
   cursor: pointer;
   transform: scale(1.1);
 }
 
+#getTransferCode:hover {
+  background-color: var(--accent-primary-hover);
+}
+
+#bookButton:hover {
+  background-color: var(--CTA-hover);
+}
+
+.transferCodeInput {
+  padding-left: 4%;
+}
+
 .bookButton {
-  width: 100%;
   display: flex;
   justify-content: center;
 }
 
 #bookButton {
-  width: 10vw;
-  aspect-ratio: 7/2;
+  width: 15vw;
+}
+
+#getTransferCode {
+  width: fit-content;
+  aspect-ratio: 7/1;
   border-radius: 8px;
 }
 
