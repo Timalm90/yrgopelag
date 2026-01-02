@@ -101,7 +101,7 @@ div.features {
   border-radius: 8px;
 }
 
-.hidden {
+.bookingForm .field.hidden {
   display: none;
 }
 
