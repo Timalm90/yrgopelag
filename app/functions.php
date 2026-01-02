@@ -44,7 +44,7 @@ function handleErrors(array $errors): void
 {
     if (!empty($errors)) {
         $_SESSION['errors'] = $errors;
-        header("Location: ../index.php");
+        header("Location: ../index.php#errors");
         exit;
     }
 }
