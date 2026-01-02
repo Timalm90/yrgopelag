@@ -37,22 +37,26 @@ updateForm();
 // HINT TO USER WHEN ARRIVAL > DEPARTURE
 const arrivalInput = document.querySelector('input[name="arrivalDate"]');
 const departureInput = document.querySelector('input[name="departureDate"]');
+const departureBox = document.querySelector(".departureBox");
+
 const dateHint = document.createElement("div");
-dateHint.style.color = "red";
-dateHint.style.fontSize = "0.9em";
-departureInput.parentNode.appendChild(dateHint);
+dateHint.className = "hint departureHint";
+departureBox.appendChild(dateHint);
 
 function checkDates() {
   const arrival = new Date(arrivalInput.value);
   const departure = new Date(departureInput.value);
 
+  // Reset error
+  dateHint.textContent = "";
+  dateHint.classList.remove("visible");
+
   if (arrivalInput.value && departureInput.value && arrival > departure) {
     dateHint.textContent = "Arrival date cannot be later than departure date.";
-  } else {
-    dateHint.textContent = "";
+    dateHint.classList.add("visible");
   }
 }
 
-// Kör vid ändring
+// When changes are made in form:
 arrivalInput.addEventListener("change", checkDates);
 departureInput.addEventListener("change", checkDates);
