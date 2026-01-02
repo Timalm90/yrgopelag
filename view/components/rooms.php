@@ -3,7 +3,7 @@
     ?>
         <section class="roomSection whiteBox">
             <article class="roomImg">
-                <img src="assets/images/<?= htmlspecialchars($room['room']) ?>.jpeg" alt="Picture of <?= htmlspecialchars($room['room']) ?> room" />
+                <img class="roomImg" src="assets/images/<?= htmlspecialchars($room['room']) ?>.png" alt="Picture of <?= htmlspecialchars($room['room']) ?> room" />
             </article>
             <article class="roomDescription">
                 <h2><?= htmlspecialchars($room['title']) ?></h2>
