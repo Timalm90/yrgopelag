@@ -1,4 +1,4 @@
-<section class="modal">
+<section class="confirmationModal">
     <article class="whiteBox">
         <div>
             <h2>Dear <?= ucwords(htmlspecialchars($confirmation['visitor'])) ?>,</h2>
