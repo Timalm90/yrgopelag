@@ -5,7 +5,7 @@ $features = getActiveFeatures($pdoBooking);
 
 <section id="featureModal">
     <article class=" whiteBox modalContent">
-        <span class="modalClose" id="closeModal">&times;</span>
+        <span class="modalCloseFeature" id="closeModalFeature">&times;</span>
         <h2>Our features:</h2>
         <ul>
             <?php foreach ($features as $feature): ?>
@@ -15,5 +15,5 @@ $features = getActiveFeatures($pdoBooking);
                 </li>
             <?php endforeach; ?>
         </ul>
-        </div>
-        </div>
+    </article>
+</section>
