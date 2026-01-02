@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="field departure togglable departureBox">
+                <div class="field departure departureBox togglable">
                     <div class="innerContainer">
                         <!-- Choose departure date -->
                         <label for="departureDate">Departure:</label>
