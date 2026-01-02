@@ -1,9 +1,8 @@
 .bookingForm {
-  background-color: rgba(255, 255, 255, 0.9);
   padding: 4%;
-  border: 5px dashed grey;
   border-radius: 20px;
-  width: 50vw;
+  width: 100%;
+  position: relative;
 }
 
 form .field {
@@ -11,9 +10,95 @@ form .field {
   margin-bottom: 4%;
 }
 
+.roomSection .field {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+article.roomSection {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr, minmax(3rem 1fr);
+  margin-bottom: 2%;
+}
+
+.roomSection .field.rooms {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+.roomSection .field.arrival {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.roomSection .field.departure {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.departureHint {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+article.roomSection .field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+  height: 100%;
+}
+
+.field p {
+  margin: 0;
+}
+
+.secretBox {
+  width: 1.3rem;
+  height: 1.3rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #000;
+  margin-left: 1vw;
+}
+
+.secretBox:hover {
+  transform: translateY(-1px);
+}
+
 div.features {
   display: flex;
   flex-direction: column;
+}
+
+.APIkeyForm {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+#getTransferCode,
+#bookButton {
+  background-color: var(--accent-primary);
+}
+
+#getTransferCode:hover,
+#bookButton:hover {
+  background-color: var(--accent-primary-hover);
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.bookButton {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#bookButton {
+  width: 10vw;
+  aspect-ratio: 7/2;
+  border-radius: 8px;
 }
 
 .hidden {
@@ -21,18 +106,21 @@ div.features {
 }
 
 .hint {
-  font-size: 0.9rem; /* lite mindre text */
-  color: #b00020; /* diskret röd för fel */
-  background-color: #ffeaea; /* svagt röd bakgrund */
-  padding: 6px 10px; /* lite luft runt texten */
-  margin-top: 4px; /* avstånd från input / knapp */
-  border-radius: 4px; /* mjuka hörn */
-  display: inline-block; /* behåll inline-block layout */
-  transition: opacity 0.3s ease; /* smidig fade-in */
-  opacity: 0; /* startar dold */
+  display: flex;
+  justify-content: center;
+  max-width: 70%;
+  font-size: 0.9rem;
+  padding: 2%;
+  margin-top: 0.3rem;
+  margin-bottom: 0;
+  border-radius: 4px;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  background-color: var(--status-error-bg);
+  color: var(--status-error-text);
+  height: 3rem;
 }
 
-/* När vi vill visa text, lägg till denna klass */
 .hint.visible {
   opacity: 1;
 }
