@@ -11,7 +11,7 @@ $adminErrors = [];
 
 // Check if mandatory data is given
 if (!isset($category, $item, $price)) {
-    $adminErrors[] = "Category, item and price required";
+    $adminErrors[] = "Change price: Category, item and price required";
 };
 
 // Trim whitespace, check if price is an integer
@@ -20,7 +20,7 @@ $item = trim($item);
 $price = filter_var($price, FILTER_VALIDATE_INT);
 
 if ($price === FALSE  || $price <= 0) {
-    $adminErrors[] = "Price is not valid (must be a positive integer)";
+    $adminErrors[] = "Change price: Price is not valid (must be a positive integer)";
 };
 
 // If error, don't update database, redirect and exit script
@@ -41,7 +41,7 @@ switch ($category) {
         break;
 
     default:
-        $adminErrors[] = "Could not update price. Try again later";
+        $adminErrors[] = "Change price: Could not update price. Try again later";
 }
 
 if (!empty($adminErrors)) {
@@ -50,7 +50,10 @@ if (!empty($adminErrors)) {
     exit;
 };
 
-$adminSuccess = "Price updated successfully";
-$_SESSION['updatePrice'] = $adminSuccess;
+
+$item = ucwords($item);
+
+$adminSuccess = "Change price: Price for the $category $item was updated successfully";
+$_SESSION['adminSuccess'] = $adminSuccess;
 header("Location: ../../view/admin.php");
 exit;
