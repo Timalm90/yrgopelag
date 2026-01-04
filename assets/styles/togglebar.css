@@ -1,13 +1,10 @@
-/* ===============================
-   BASE TOGGLE PILL
-================================ */
+/*  BASE TOGGLE PILL */
 .togglePill {
   display: inline-flex;
   background: #f0f0f0;
   padding: 4px;
   border-radius: 999px;
   gap: 2px;
-  font-family: inherit;
 }
 
 .toggleBooking {
@@ -16,19 +13,14 @@
   justify-content: center;
 }
 
-/* ===============================
-   HIDE RADIO INPUTS
-================================ */
+/* HIDE RADIO INPUTS */
 .togglePill input[type="radio"] {
   position: absolute;
   opacity: 0;
   pointer-events: none;
 }
 
-/* ===============================
-   TOGGLE ITEMS
-   (buttons & labels)
-================================ */
+/* TOGGLE ITEMS (buttons & labels) */
 .togglePill button,
 .togglePill label {
   border: none;
@@ -48,9 +40,7 @@
   background: rgba(0, 0, 0, 0.05);
 }
 
-/* ===============================
-   ACTIVE STATES
-================================ */
+/* ACTIVE STATES */
 
 /* Button-based toggle */
 .togglePill button.active {
@@ -64,18 +54,14 @@
   color: #fff;
 }
 
-/* ===============================
-   FOCUS (ACCESSIBILITY)
-================================ */
+/* FOCUS (ACCESSIBILITY) */
 .togglePill button:focus-visible,
 .togglePill label:focus-visible {
   outline: 2px solid #111;
   outline-offset: 2px;
 }
 
-/* ===============================
-   OPTIONAL VARIANTS
-================================ */
+/*  OPTIONAL VARIANTS */
 .togglePill .muted {
   opacity: 0.75;
 }

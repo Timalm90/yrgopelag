@@ -4,7 +4,7 @@
   width: 100%;
   align-items: center;
   min-height: 10vh;
-  border-radius: 10px;
+  border-radius: 16px;
   margin-bottom: 5%;
 }
 
@@ -14,8 +14,8 @@
 
 /* ROOM PRESENTATION BLOCKS */
 article.roomImg {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
   aspect-ratio: 1;
   max-width: 30%;
   overflow: hidden;

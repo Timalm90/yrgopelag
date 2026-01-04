@@ -4,10 +4,13 @@ nav {
   justify-content: space-between;
   align-items: center;
   height: 8vh;
-  background-color: darkgray;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   z-index: 1000;
+  background-color: var(--nav-bg);
+  border: 1px solid var(--nav-border);
+  color: var(--nav-text);
 }
 
 .navLogo {
@@ -32,14 +35,17 @@ nav {
 }
 
 .stickyOffers {
-  position: sticky;
+  position: fixed;
+  width: 100vw;
   top: 8vh;
-  background-color: #ffecb3;
-  border: 3px solid #f39c12;
+  left: 0;
   padding: 0;
   text-align: center;
   z-index: 1000;
   font-weight: 700;
+  background-color: var(--offer-bg);
+  border: 2px solid var(--offer-border);
+  color: var(--offer-text);
 }
 
 .stickyOffers p {

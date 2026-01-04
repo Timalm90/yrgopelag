@@ -11,6 +11,4 @@ bookings.sqlite3
 TESTING
 startup.php
 
-addFeatures.php
-changePrice.php
 createAdmin.php

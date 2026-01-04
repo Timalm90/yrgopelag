@@ -79,7 +79,7 @@ h6 {
 
 .whiteBox {
   background-color: var(--bg-panel);
-  border-radius: 20px;
+  border-radius: 16px;
   border: 4px dashed var(--border-subtle);
   z-index: 5;
 }

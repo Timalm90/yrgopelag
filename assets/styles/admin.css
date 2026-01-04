@@ -1,22 +1,16 @@
-body {
-  width: 100vw;
-  height: 100vh;
-}
-
 .adminBackground {
+  position: fixed;
+  inset: 0;
   background-image: url("../images/adminBackground.jpeg");
   background-size: cover;
   background-position: top;
-  margin: 0 auto;
-  width: 100%;
-  height: 100%;
-  position: relative;
+  z-index: -1;
 }
 
 main {
-  margin-left: 20vw;
-  margin-right: 20vw;
-  height: fit-content;
+  margin-top: 15vh;
+  margin-left: 10vw;
+  margin-right: 10vw;
 }
 
 .adminBackground::before {
@@ -28,18 +22,102 @@ main {
   z-index: 1;
 }
 
-.adminBackground > * {
-  position: relative;
-  z-index: 2;
+section {
+  margin-bottom: 5vh;
 }
 
 .adminLoginForm {
   background-color: rgba(255, 255, 255, 0.9);
   width: fit-content;
-  /* margin-top: 20vh; */
   border-radius: 20px;
   border: 5px dashed grey;
   padding: 4%;
-  /* text-align: center; */
   z-index: 5;
+}
+
+.menuDashboard {
+  width: 100%;
+  padding: 2% 0;
+  display: flex;
+  justify-content: space-around;
+  background-color: var(--nav-bg);
+  border: 1px solid var(--nav-border);
+}
+
+.menuDashboard button {
+  color: var(--nav-text);
+  background-color: var(--nav-bg);
+  font-weight: 700;
+  border: none;
+}
+
+.menuDashboard button:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.menuDashboard button.active {
+  border-bottom: 3px solid var(--nav-text);
+  transform: scale(1.05);
+}
+
+.confirmationAdminBox {
+  margin: 0 10%;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
+  border: 1px solid var(--status-success-border);
+  transition: background 0.2s ease;
+}
+
+.errorAdminBox {
+  margin: 0 10%;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  background: var(--status-error-bg);
+  border: 1px solid var(--status-error-border);
+  color: var(--status-error-text);
+  transition: background 0.2s ease;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: space-around;
+  padding: 2%;
+}
+
+.dashboardBox {
+  background-color: var(--bg-panel);
+  padding: 2%;
+  border: 2px dashed var(--border-subtle);
+  border-radius: 16px;
+  z-index: 5;
+}
+
+.addFeatureButton {
+  display: flex;
+  justify-content: center;
+}
+
+.adminButton {
+  margin-top: 1.5rem;
+  background-color: var(--accent-primary);
+  aspect-ratio: 7/2;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.adminButton:hover {
+  background-color: var(--accent-primary-hover);
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+/* Put this last due to cascading! */
+.adminHidden {
+  display: none;
 }

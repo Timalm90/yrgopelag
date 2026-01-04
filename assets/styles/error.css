@@ -1,12 +1,13 @@
 .errorMessage {
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 1rem 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   background: var(--status-error-bg);
   border: 1px solid var(--status-error-border);
   color: var(--status-error-text);
   transition: background 0.2s ease;
   scroll-margin-top: 16vh; /* To get below fixed navbar */
+  position: relative;
 }
 
 .errorMessage h2 {
@@ -24,4 +25,21 @@
 
 .errorMessage li {
   margin-bottom: 0.3rem;
+}
+
+.errorImg {
+  height: 10vw;
+  width: auto;
+}
+
+.errorPiranha {
+  position: absolute;
+  top: -10%;
+  left: -50%;
+}
+
+.errorBoo {
+  position: absolute;
+  top: -10%;
+  right: -50%;
 }
