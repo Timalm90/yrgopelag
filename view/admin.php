@@ -2,23 +2,13 @@
 require __DIR__ . "/../app/autoload.php";
 require __DIR__ . "/../app/config.php";
 
+
 //  IF NOT LOGGED IN -> redirect to login page 
 if (!isset($_SESSION['admin'])) {
     header("Location: login.php"); //IN LOCALHOST
     // header("Location: /MAPP/view/login.php"); //IN DEPLOY
     exit;
 }
-
-// To do: Build the admin site with dashboard that is shown when logged in.
-// Here admin should be able to:
-// - Change prices in database by prefabricated PDO-connection and query, through input and submit -> DB-query
-// - Change number of stars of the hotel
-// - Be able to buy more features, connect to API & DB
-// - Change avaiable features on booking site
-// - Change discounts
-// - Show saldo at bank (API connection)
-
-// Require in all files from app/admin
 ?>
 
 <!DOCTYPE html>
@@ -29,8 +19,8 @@ if (!isset($_SESSION['admin'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Yrgopelag</title>
     <link rel="stylesheet" href="../assets/styles/general.css">
-    <link rel="stylesheet" href="../assets/styles/admin.css">
     <link rel="stylesheet" href="../assets/styles/nav.css">
+    <link rel="stylesheet" href="../assets/styles/admin.css">
 </head>
 
 <body>
@@ -38,22 +28,75 @@ if (!isset($_SESSION['admin'])) {
     require __DIR__ . "/components/nav.php";
     ?>
     <div class="adminBackground"></div>
+
     <main>
-        <!-- IF LOGGED IN: SHOW THIS DASHBOARD... ... ... -->
-        <?php
-        if (isset($_SESSION['admin'])): ?>
-            <!-- DASHBOARD! -->
-            <h1>Welcome, <?= ucwords(htmlspecialchars(($_SESSION['admin']['name']))) ?>!</h1>
+        <section class="whiteBox">
 
-        <?php endif; ?>
+            <!-- IF LOGGED IN: SHOW THIS DASHBOARD... ... ... -->
+            <?php
+            if (isset($_SESSION['admin'])): ?>
+                <!-- DASHBOARD! -->
+                <h1>Welcome, <?= ucwords(htmlspecialchars(($_SESSION['admin']['name']))) ?>!</h1>
 
-        <?php require __DIR__ . "/components/checkBalance.php"; ?>
+                <!-- Mini nav-bar -->
+                <section class="menuDashboard">
+                    <button class="dashboardButton">Settings</button>
+                    <button class="dashboardButton">Statistics</button>
+                    <button class="dashboardButton">Financial</button>
+                    <button class="dashboardButton">Admin</button>
+                </section>
 
-        <?php require __DIR__ . "/components/changePrice.php"; ?>
+                <section class="adminMessage">
+                    <!-- Show confirmation or error messages here! -->
+                    <?php if (isset($_SESSION['adminSuccess'])): ?>
+                        <article class="confirmationAdminBox">
+                            <?= $_SESSION['adminSuccess']; ?>
+                        </article>
+                    <?php $_SESSION['adminSuccess'] = NULL;
+                    endif; ?>
 
-        <?php require __DIR__ . "/components/addFeatures.php"; ?>
+                    <?php
+                    // ERROR-MESSAGE
+                    if (isset($_SESSION['adminErrors'])): ?>
+                        <article class="errorAdminBox">
+                            <ul>
+                                <?php foreach ($_SESSION['adminErrors'] as $error): ?>
+                                    <li>
+                                        <?= htmlspecialchars($error) ?>
+                                    </li>
+                                <?php endforeach ?>
+                            </ul>
+                        </article>
+                    <?php $_SESSION['adminErrors'] = NULL;
+                    endif ?>
+                </section>
 
+                <section class="dashboard settingsDashboard">
+                    <!-- Info about hotel [owner, hotel name, island name, numb of stars] -->
+                    <?php require __DIR__ . "/components/adminSettings.php"; ?>
+
+                </section>
+
+                <section class="dashboard statisticsDashboard adminHidden">
+                    <!-- Top 5 popular features, Number of booked roms/Day pass -->
+                    <?php require __DIR__ . "/components/adminStatistics.php"; ?>
+                </section>
+
+                <section class="dashboard financialsDashboard adminHidden">
+                    <!-- Check balance. Change price on room/features. Discounts -->
+                    <?php require __DIR__ . "/components/adminFinancials.php"; ?>
+                </section>
+
+                <section class="dashboard adminDashboard adminHidden">
+                    <!-- Control admins -->
+                    <h2>This is the admin dashboard</h2>
+                </section>
+
+            <?php endif; ?>
+        </section>
     </main>
+    <script src="../assets/scripts/admin.js"></script>
+    <!-- Shows current room/feature price when admin attempts to change it -->
     <script src="../assets/scripts/changePrice.js"></script>
 </body>
 
