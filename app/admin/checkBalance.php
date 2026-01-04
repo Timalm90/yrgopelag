@@ -7,9 +7,9 @@ require __DIR__ . "/../config.php"; // -> $apiKey
 
 use GuzzleHttp\Exception\RequestException;
 
-$adminErrors = [];
-$hotelOwner = getSettingsValue($pdoBooking, "hotel_owner");
+header('Content-Type: application/json');
 
+$hotelOwner = getSettingsValue($pdoBooking, "hotel_owner");
 
 try {
     $accountResponse = $client->post('/centralbank/accountInfo', [
@@ -22,26 +22,11 @@ try {
     $accountResult = json_decode($accountResponse->getBody()->getContents(), true);
 
     if (!isset($accountResult['credit'])) {
-        $adminErrors[] = getErrorMessage($accountResult['error'] ?? '');
+        echo json_encode(['error' => 'No credit info returned']);
+        exit;
     }
-} catch (RequestException $accountException) {
-    if ($accountException->hasResponse()) {
-        $apiError = json_decode($accountException->getResponse()->getBody()->getContents(), true)['error'] ?? '';
-        $adminErrors[] = getErrorMessage($apiError);
-    } else {
-        $adminErrors[] = "Could not reach the Centralbank. Please try again later.";
-    }
+
+    echo json_encode(['credit' => (int)$accountResult['credit']]);
+} catch (RequestException $e) {
+    echo json_encode(['error' => 'Could not reach centralbank']);
 }
-
-if (!empty($adminErrors)) {
-    $_SESSION['adminErrors'] = $adminErrors;
-    header("Location: ../../view/admin.php");
-    exit;
-}
-
-$_SESSION['accountInfo'] = [
-    'credit' => (int) $accountResult['credit']
-];
-
-header("Location: ../../view/admin.php");
-exit;
