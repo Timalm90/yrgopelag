@@ -80,6 +80,8 @@ $starRating = (int) $starRating;
                         </li>
                     <?php endforeach ?>
                 </ul>
+                <img class="errorImg errorGoomba" src="assets/images/goombaLeft.png" alt="Walking Goomba" />
+                <img class="errorImg errorPiranha" src="assets/images/piranha.png" alt="Piranha plant" />
             </section>
         <?php
             //Empty this session variable
