@@ -18,8 +18,8 @@ $addFeatureErrors = [];
 
 // Validate input
 if (!isset($_POST['item']) || empty($_POST['item'])) {
-    $addFeatureErrors[] = "No feature selected";
-    $_SESSION['adminError'] = $addFeatureErrors;
+    $addFeatureErrors[] = "Add feature: No feature selected";
+    $_SESSION['adminErrors'] = $addFeatureErrors;
     header("Location: ../../view/admin.php");
     exit;
 }
@@ -39,8 +39,8 @@ foreach ($allFeatures as $feature) {
 }
 
 if (!$newFeature) {
-    $addFeatureErrors[] = "Invalid selection";
-    $_SESSION['adminError'] = $addFeatureErrors;
+    $addFeatureErrors[] = "Add feature: Invalid selection";
+    $_SESSION['adminErrors'] = $addFeatureErrors;
     header("Location: ../../view/admin.php");
     exit;
 }
@@ -58,10 +58,10 @@ try {
 
     $activeFeatures = $activeResult['features'] ?? [];
 } catch (RequestException $activeException) {
-    $addFeatureErrors[] = "Could not fetch active features";
+    $addFeatureErrors[] = "Add feature: Could not fetch active features";
 
     if (!empty($addFeatureErrors)) {
-        $_SESSION['adminError'] = $addFeatureErrors;
+        $_SESSION['adminErrors'] = $addFeatureErrors;
         header("Location: ../../view/admin.php");
         exit;
     }
@@ -101,13 +101,13 @@ try {
         $apiError = json_decode($registerException->getResponse()->getBody()->getContents(), true)['error'] ?? '';
         $addFeatureErrors[] = getErrorMessage($apiError);
     } else {
-        $addFeatureErrors[] = "Could not register feature at Centralbank.";
+        $addFeatureErrors[] = "Add feature: Could not register feature at Centralbank.";
     }
 }
 
 //Error handling if anything goes wrong in connection to API
 if (!empty($addFeatureErrors)) {
-    $_SESSION['adminError'] = $addFeatureErrors;
+    $_SESSION['adminErrors'] = $addFeatureErrors;
     header("Location: ../../view/admin.php");
     exit;
 }
@@ -117,7 +117,9 @@ $stmt = $pdoBooking->prepare("UPDATE features SET is_active = 1 WHERE id = :id")
 $stmt->bindParam(":id", $featureId, PDO::PARAM_INT);
 $stmt->execute();
 
-$adminSuccess = "Feature added successfully";
+// $item = $feature['activity'];
+$item = ucwords($newFeature['feature']);
+$adminSuccess = "Add feature: $item was added successfully";
 $_SESSION['addFeature'] = $adminSuccess;
 header("Location: ../../view/admin.php");
 exit;
