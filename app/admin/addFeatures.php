@@ -120,6 +120,6 @@ $stmt->execute();
 // $item = $feature['activity'];
 $item = ucwords($newFeature['feature']);
 $adminSuccess = "Add feature: $item was added successfully";
-$_SESSION['addFeature'] = $adminSuccess;
+$_SESSION['adminSuccess'] = $adminSuccess;
 header("Location: ../../view/admin.php");
 exit;
