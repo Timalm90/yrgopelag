@@ -9,7 +9,7 @@ use GuzzleHttp\Exception\RequestException;
 
 header('Content-Type: application/json');
 
-$hotelOwner = getSettingsValue($pdoBooking, "hotel_owner");
+// $hotelOwner = getSettingsValue($pdoBooking, "hotel_owner"); //
 
 try {
     $accountResponse = $client->post('/centralbank/accountInfo', [
