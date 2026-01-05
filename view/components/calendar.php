@@ -23,7 +23,11 @@ for ($i = 1; $i <= 31; $i++) : ?>
                 if ($i === $date) {
                     echo " booked";
                 }
-            } ?>">
+            } ?>"
+
+        data-room="<?= $room['id'] ?>"
+        data-date="2026-01-<?= str_pad($i, 2, "0", STR_PAD_LEFT) ?>">
+
         <?= $i; ?>
     </div>
 <?php endfor; ?>
