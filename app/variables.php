@@ -16,6 +16,13 @@ $rooms = getRooms($pdoBooking);
 $tiers = getTierLevels($pdoBooking);
 $allFeatures = findNonActiveFeatures($pdoBooking);
 
+$topFeatures = topFeatures($pdoBooking);
+$daypassCount = countDayPass($pdoBooking);
+$bookedRoomCount = countRoomBookings($pdoBooking);
+
+$activeFeatures = getActiveFeatures($pdoBooking);
+
+$showOffers = getDiscountInfo($pdoBooking);
 
 // // DISCOUNT VARIABLES in booking.php
 // $luxuryRoomId = getLuxuryRoomId($pdoBooking); //int in FE

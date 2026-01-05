@@ -1,0 +1,18 @@
+.siteFooter {
+  width: 100vw;
+  margin-top: 5%;
+  background-color: #222;
+  color: white;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.siteFooter img {
+  width: 32px;
+  margin: 0 0.5rem;
+  vertical-align: middle;
+}
+
+.siteFooter p {
+  margin: 0.5rem 0;
+}

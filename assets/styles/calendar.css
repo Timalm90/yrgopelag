@@ -51,3 +51,9 @@ span.weekday {
   transform: scale(1);
   cursor: default;
 }
+
+.day.selected {
+  border: 2px solid gold;
+  background-color: #fffbe0;
+  border-radius: 50%;
+}

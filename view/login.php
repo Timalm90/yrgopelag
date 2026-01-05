@@ -24,6 +24,12 @@ require __DIR__ . "/../app/config.php";
             <article class="adminLoginForm">
                 <h1>Login</h1>
 
+                <?php if (isset($_SESSION['loginError'])) {
+                    echo ($_SESSION['loginError']);
+                    $_SESSION['loginError'] = NULL;
+                }
+                ?>
+
                 <form action="../app/admin/login.php" method="post">
                     <div>
                         <label for="username">Username:</label>

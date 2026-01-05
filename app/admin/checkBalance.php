@@ -29,4 +29,5 @@ try {
     echo json_encode(['credit' => (int)$accountResult['credit']]);
 } catch (RequestException $e) {
     echo json_encode(['error' => 'Could not reach centralbank']);
+    exit;
 }

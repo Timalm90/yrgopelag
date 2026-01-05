@@ -44,16 +44,16 @@
   --status-success-border: #1b7f4b;
 
   /* Colors for navbar */
-  --nav-bg: #e6e8e4; /* varm ljusgrå */
-  --nav-border: #cfd4cf; /* subtil avgränsning */
-  --nav-text: #1f1f1f; /* huvudtext */
+  --nav-bg: #e6e8e4;
+  --nav-border: #cfd4cf;
+  --nav-text: #1f1f1f;
   --nav-text-muted: #4f4f4f;
-  --nav-active: #2d6a4f; /* samma som accent-focus */
+  --nav-active: #2d6a4f;
 
   /* Colors for offers/discounts */
-  --offer-bg: #fff6e5; /* mycket ljus varm gul */
-  --offer-border: #f0c36d; /* dämpad guld */
-  --offer-text: #5c3a00; /* mörk brun/guld */
+  --offer-bg: #fff6e5;
+  --offer-border: #f0c36d;
+  --offer-text: #5c3a00;
 
   /* Colors for total price in frontend */
   --price-bg: #ffffff;

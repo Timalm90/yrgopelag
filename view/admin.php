@@ -38,14 +38,6 @@ if (!isset($_SESSION['admin'])) {
                 <!-- DASHBOARD! -->
                 <h1>Welcome, <?= ucwords(htmlspecialchars(($_SESSION['admin']['name']))) ?>!</h1>
 
-                <!-- Mini nav-bar -->
-                <section class="menuDashboard">
-                    <button class="dashboardButton">Settings</button>
-                    <button class="dashboardButton">Statistics</button>
-                    <button class="dashboardButton">Financial</button>
-                    <button class="dashboardButton">Admin</button>
-                </section>
-
                 <section class="adminMessage">
                     <!-- Show confirmation or error messages here! -->
                     <?php if (isset($_SESSION['adminSuccess'])): ?>
@@ -71,23 +63,19 @@ if (!isset($_SESSION['admin'])) {
                     endif ?>
                 </section>
 
-                <section class="dashboard settingsDashboard">
-                    <!-- Info about hotel [owner, hotel name, island name, numb of stars] -->
-                    <?php require __DIR__ . "/components/adminSettings.php"; ?>
-
-                </section>
-
-                <section class="dashboard statisticsDashboard adminHidden">
-                    <!-- Top 5 popular features, Number of booked roms/Day pass -->
+                <section class="dashboard">
+                    <?php require __DIR__ . "/components/aboutHotel.php"; ?>
                     <?php require __DIR__ . "/components/adminStatistics.php"; ?>
                 </section>
 
-                <section class="dashboard financialsDashboard adminHidden">
-                    <!-- Check balance. Change price on room/features. Discounts -->
+                <section class="dashboard settingsDashboard">
+                    <?php require __DIR__ . "/components/checkBalance.php"; ?>
+                    <?php require __DIR__ . "/components/adminSettings.php"; ?>
                     <?php require __DIR__ . "/components/adminFinancials.php"; ?>
+
                 </section>
 
-                <section class="dashboard adminDashboard adminHidden">
+                <section class="dashboard adminDashboard">
                     <!-- Control admins -->
                     <h2>This is the admin dashboard</h2>
                 </section>

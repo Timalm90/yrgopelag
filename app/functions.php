@@ -73,6 +73,22 @@ function handleErrors(array $errors): void
     }
 }
 
+function handleLoginError(): void
+{
+    $_SESSION['loginError'] = "Invalid username or password";
+    header("Location: ../../view/login.php");
+    exit;
+};
+
+function handleAdminErrors(array $errors): void
+{
+    if (!empty($errors)) {
+        $_SESSION['adminErrors'] = $errors;
+        header("Location: ../../view/admin.php");
+        exit;
+    }
+}
+
 // Prepare features for receipt. Returns an array with keys activity and tier.
 function prepareFeaturesForReceipt(PDO $pdo, array $selectedFeatures): array
 {

@@ -2,7 +2,7 @@
     <article class="whiteBox">
         <div>
             <h2>Dear <?= ucwords(htmlspecialchars($confirmation['visitor'])) ?>,</h2>
-            <p>Thank you for choosing <?= ucwords(htmlspecialchars(getSettingsValue($pdoBooking, 'hotel_name'))) ?> on <?= ucwords(htmlspecialchars(getSettingsValue($pdoBooking, 'island_name'))) ?>. We're looking forward to your visit!</p>
+            <p>Thank you for choosing <?= ucwords(htmlspecialchars($hotelName)) ?> on <?= ucwords(htmlspecialchars($islandName)) ?>. We're looking forward to your visit!</p>
 
             <!-- Date info -->
             <?php if ($confirmation['bookingType'] === "Day pass"): ?>

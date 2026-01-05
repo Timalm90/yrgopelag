@@ -1,3 +1,9 @@
+<?php
+$rooms = getRooms($pdoBooking);
+$features = getActiveFeatures($pdoBooking);
+$featurePrice = getFeaturePrices($pdoBooking);
+?>
+
 <section class="bookingForm whiteBox">
     <!-- Toogle: Book room/Day pass, changes form content -->
     <article class="toggleBooking">
@@ -22,8 +28,6 @@
 
                         <p>Rooms: </p>
                         <?php
-                        $rooms = getRooms($pdoBooking);
-
                         foreach ($rooms as $room): ?>
                             <div>
                                 <input type="radio" id="room_<?= htmlspecialchars($room['id']) ?>" name="room" value="<?= htmlspecialchars($room['id']) ?>">
@@ -61,10 +65,6 @@
                 <img class="secretBox" src="assets/images/secretBox.png" />
             </legend>
             <?php
-            $features = getActiveFeatures($pdoBooking);
-
-            $featurePrice = getFeaturePrices($pdoBooking);
-
             // Present all avaiable feautures
             foreach ($features as $feature) :
                 // Fetch price for feature

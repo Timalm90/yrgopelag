@@ -41,3 +41,4 @@ echo json_encode([
     'success' => true,
     'price' => (int)$price
 ]);
+exit;

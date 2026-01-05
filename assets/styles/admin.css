@@ -7,12 +7,6 @@
   z-index: -1;
 }
 
-main {
-  margin-top: 15vh;
-  margin-left: 10vw;
-  margin-right: 10vw;
-}
-
 .adminBackground::before {
   content: "";
   position: absolute;
@@ -22,8 +16,19 @@ main {
   z-index: 1;
 }
 
-section {
-  margin-bottom: 5vh;
+main {
+  margin-top: 15vh;
+  margin-left: 10vw;
+  margin-right: 10vw;
+}
+
+section.whiteBox {
+  padding-left: 8%;
+  padding-right: 8%;
+}
+
+h1 {
+  text-align: center;
 }
 
 .adminLoginForm {
@@ -35,31 +40,31 @@ section {
   z-index: 5;
 }
 
-.menuDashboard {
+/* .menuDashboard {
   width: 100%;
   padding: 2% 0;
   display: flex;
   justify-content: space-around;
   background-color: var(--nav-bg);
   border: 1px solid var(--nav-border);
-}
+} */
 
-.menuDashboard button {
+/* .menuDashboard button {
   color: var(--nav-text);
   background-color: var(--nav-bg);
   font-weight: 700;
   border: none;
-}
+} */
 
-.menuDashboard button:hover {
+/* .menuDashboard button:hover {
   transform: scale(1.1);
   cursor: pointer;
-}
+} */
 
-.menuDashboard button.active {
+/* .menuDashboard button.active {
   border-bottom: 3px solid var(--nav-text);
   transform: scale(1.05);
-}
+} */
 
 .confirmationAdminBox {
   margin: 0 10%;
@@ -85,8 +90,9 @@ section {
 
 .dashboard {
   display: flex;
-  justify-content: space-around;
-  padding: 2%;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 8%;
 }
 
 .dashboardBox {
@@ -97,7 +103,11 @@ section {
   z-index: 5;
 }
 
-.addFeatureButton {
+/* .boxContent {
+  height: 100%;
+} */
+
+.centerButton {
   display: flex;
   justify-content: center;
 }
@@ -117,7 +127,25 @@ section {
   transform: scale(1.1);
 }
 
-/* Put this last due to cascading! */
-.adminHidden {
-  display: none;
+#balanceOutput {
+  height: 1rem;
 }
+
+.checkBalanceBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 2%;
+}
+
+/* form.addFeatureForm {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+} */
+
+/* Put this last due to cascading! */
+/* .adminHidden {
+  display: none;
+} */

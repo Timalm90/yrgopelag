@@ -53,6 +53,10 @@ $guestId = findGuest($pdoBooking, $name);
 if ($guestId === NULL) {
     registerGuest($pdoBooking, $name);
     $guestId = findGuest($pdoBooking, $name);
+    if ($guestId === NULL) {
+        $errors[] = "Could not register guest. Please try again.";
+        handleErrors($errors);
+    }
 }
 
 // ------------------------------------------- BOOK ROOM ---------------------------------------------

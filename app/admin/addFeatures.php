@@ -19,9 +19,11 @@ $addFeatureErrors = [];
 // Validate input
 if (!isset($_POST['item']) || empty($_POST['item'])) {
     $addFeatureErrors[] = "Add feature: No feature selected";
-    $_SESSION['adminErrors'] = $addFeatureErrors;
-    header("Location: ../../view/admin.php");
-    exit;
+
+    handleAdminErrors($addFeatureErrors);
+    // $_SESSION['adminErrors'] = $addFeatureErrors;
+    // header("Location: ../../view/admin.php");
+    // exit;
 }
 
 // Find selected non-active feature
@@ -40,9 +42,11 @@ foreach ($allFeatures as $feature) {
 
 if (!$newFeature) {
     $addFeatureErrors[] = "Add feature: Invalid selection";
-    $_SESSION['adminErrors'] = $addFeatureErrors;
-    header("Location: ../../view/admin.php");
-    exit;
+
+    handleAdminErrors($addFeatureErrors);
+    // $_SESSION['adminErrors'] = $addFeatureErrors;
+    // header("Location: ../../view/admin.php");
+    // exit;
 }
 
 // Fetch active features from Centralbank
@@ -60,11 +64,12 @@ try {
 } catch (RequestException $activeException) {
     $addFeatureErrors[] = "Add feature: Could not fetch active features";
 
-    if (!empty($addFeatureErrors)) {
-        $_SESSION['adminErrors'] = $addFeatureErrors;
-        header("Location: ../../view/admin.php");
-        exit;
-    }
+    handleAdminErrors($addFeatureErrors);
+    // if (!empty($addFeatureErrors)) {
+    //     $_SESSION['adminErrors'] = $addFeatureErrors;
+    //     header("Location: ../../view/admin.php");
+    //     exit;
+    // }
 };
 
 // Convert active features to right format for "/centralbank/islands"
@@ -106,11 +111,12 @@ try {
 }
 
 //Error handling if anything goes wrong in connection to API
-if (!empty($addFeatureErrors)) {
-    $_SESSION['adminErrors'] = $addFeatureErrors;
-    header("Location: ../../view/admin.php");
-    exit;
-}
+handleAdminErrors($addFeatureErrors);
+// if (!empty($addFeatureErrors)) {
+//     $_SESSION['adminErrors'] = $addFeatureErrors;
+//     header("Location: ../../view/admin.php");
+//     exit;
+// }
 
 // Set feature to active in database
 // $stmt = $pdoBooking->prepare("UPDATE features SET is_active = 1 WHERE id = :id");
