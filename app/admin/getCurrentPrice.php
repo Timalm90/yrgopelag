@@ -20,19 +20,11 @@ if (!$category || !$item) {
 
 switch ($category) {
     case 'room':
-        $stmt = $pdoBooking->prepare(
-            "SELECT price_per_night FROM rooms WHERE room = :room"
-        );
-        $stmt->execute(['room' => $item]);
-        $price = $stmt->fetchColumn();
+        $price = getRoomPriceByName($pdoBooking, $item);
         break;
 
     case 'tier':
-        $stmt = $pdoBooking->prepare(
-            "SELECT price_per_feature FROM tiers WHERE tier = :tier"
-        );
-        $stmt->execute(['tier' => $item]);
-        $price = $stmt->fetchColumn();
+        $price = getTierPriceByName($pdoBooking, $item);
         break;
 
     default:
@@ -40,7 +32,7 @@ switch ($category) {
         exit;
 }
 
-if ($price === false) {
+if ($price === null) {
     echo json_encode(['success' => false]);
     exit;
 }
