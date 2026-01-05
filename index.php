@@ -3,7 +3,7 @@
 require __DIR__ . "/app/autoload.php";
 require __DIR__ . "/app/rooms.php";
 
-$starRating = getSettingsValue($pdoBooking, 'star_rating');
+// $starRating = getSettingsValue($pdoBooking, 'star_rating'); //
 $starRating = (int) $starRating;
 ?>
 
@@ -28,6 +28,7 @@ $starRating = (int) $starRating;
     <link rel="stylesheet" href="assets/styles/error.css">
     <link rel="stylesheet" href="assets/styles/form.css">
     <link rel="stylesheet" href="assets/styles/calendar.css">
+    <link rel="stylesheet" href="assets/styles/footer.css">
     <link rel="stylesheet" href="assets/styles/modal.css">
 </head>
 
@@ -93,15 +94,10 @@ $starRating = (int) $starRating;
         require __DIR__ . "/view/components/form.php";
         ?>
 
-        <!-- <div class="showPrice">
-            <img src="assets/images/coin.png" alt="golden coin" />
-            <p>Total price: <span id="totalPrice">0</span> credits</p>
-        </div> -->
-
     </main>
 
     <?php
-    // To do: Require in footer when built
+    require __DIR__ . "/view/components/footer.php";
     ?>
 
     <?php require __DIR__ . "/view/components/featureModal.php"; ?>
@@ -118,6 +114,7 @@ $starRating = (int) $starRating;
     ?>
 
     <script src="assets/scripts/toggleRoom.js"></script>
+    <script src="assets/scripts/calendar.js"></script>
     <script src="assets/scripts/form.js"></script>
     <script src="assets/scripts/totalprice.js"></script>
     <script src="assets/scripts/generateTransferCode.js"></script>
