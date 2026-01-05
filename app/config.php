@@ -17,10 +17,6 @@ $dotenv->load();
 // Save result to variable apiKey
 $apiKey = $_ENV['API_KEY'] ?? null;
 
-// Save result for admin
-$adminuser = $_ENV['adminuser'];
-$adminpassword = $_ENV['password'];
-
 
 // ------------------------------------- LOG -------------------------------------
 // Extra code lines from example/lesson, unnecessary? 
