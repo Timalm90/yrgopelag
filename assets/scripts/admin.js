@@ -1,24 +1,25 @@
-const dashboardButtons = document.querySelectorAll(".dashboardButton");
-const dashboards = document.querySelectorAll(".dashboard");
+// // SWITCH DASHBOARD
+// const dashboardButtons = document.querySelectorAll(".dashboardButton");
+// const dashboards = document.querySelectorAll(".dashboard");
 
-function activateDashboard(index) {
-  dashboardButtons.forEach((button, i) => {
-    button.classList.toggle("active", i === index);
-  });
+// function activateDashboard(index) {
+//   dashboardButtons.forEach((button, i) => {
+//     button.classList.toggle("active", i === index);
+//   });
 
-  dashboards.forEach((dashboard, i) => {
-    dashboard.classList.toggle("adminHidden", i !== index);
-  });
-}
+//   dashboards.forEach((dashboard, i) => {
+//     dashboard.classList.toggle("adminHidden", i !== index);
+//   });
+// }
 
-// Default: Settings
-activateDashboard(0);
+// // Default: Settings
+// activateDashboard(0);
 
-dashboardButtons.forEach((button, index) => {
-  button.addEventListener("click", () => {
-    activateDashboard(index);
-  });
-});
+// dashboardButtons.forEach((button, index) => {
+//   button.addEventListener("click", () => {
+//     activateDashboard(index);
+//   });
+// });
 
 // ---------- CHECK BALANCE ----------
 const checkBalanceBtn = document.getElementById("checkBalanceBtn");
