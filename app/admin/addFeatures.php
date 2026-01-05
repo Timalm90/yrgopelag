@@ -8,12 +8,12 @@ require __DIR__ . "/../config.php";
 use GuzzleHttp\Exception\RequestException;
 
 // Start values
-$islandName = getSettingsValue($pdoBooking, "island_name");
-$hotelName = getSettingsValue($pdoBooking, "hotel_name");
-$starRating = getSettingsValue($pdoBooking, "star_rating");
+// $islandName = getSettingsValue($pdoBooking, "island_name"); //
+// $hotelName = getSettingsValue($pdoBooking, "hotel_name"); //
+// $starRating = getSettingsValue($pdoBooking, "star_rating"); //
 $starRating = (int)$starRating;
-$hotelOwner = getSettingsValue($pdoBooking, "hotel_owner");
-$url = getSettingsValue($pdoBooking, "webpage");
+// $hotelOwner = getSettingsValue($pdoBooking, "hotel_owner"); //
+// $url = getSettingsValue($pdoBooking, "webpage"); //
 $addFeatureErrors = [];
 
 // Validate input
@@ -26,7 +26,7 @@ if (!isset($_POST['item']) || empty($_POST['item'])) {
 
 // Find selected non-active feature
 $featureId = (int) $_POST['item'];
-$allFeatures = findNonActiveFeatures($pdoBooking);
+// $allFeatures = findNonActiveFeatures($pdoBooking);
 $newFeature = null;
 foreach ($allFeatures as $feature) {
     if ((int)$feature['id'] === $featureId) {
@@ -113,9 +113,11 @@ if (!empty($addFeatureErrors)) {
 }
 
 // Set feature to active in database
-$stmt = $pdoBooking->prepare("UPDATE features SET is_active = 1 WHERE id = :id");
-$stmt->bindParam(":id", $featureId, PDO::PARAM_INT);
-$stmt->execute();
+// $stmt = $pdoBooking->prepare("UPDATE features SET is_active = 1 WHERE id = :id");
+// $stmt->bindParam(":id", $featureId, PDO::PARAM_INT);
+// $stmt->execute();
+
+activateFeature($pdoBooking, $featureId);
 
 // $item = $feature['activity'];
 $item = ucwords($newFeature['feature']);
