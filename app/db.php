@@ -4,27 +4,38 @@ declare(strict_types=1);
 
 function getSettingsValue(PDO $pdo, string $key): string
 {
-    $statement = $pdo->prepare("SELECT value FROM settings WHERE key = :key");
-    $statement->bindParam(":key", $key, PDO::PARAM_STR);
-    $statement->execute();
-    $statement = $statement->fetch(PDO::FETCH_ASSOC);
-    return $statement['value'];
+    $stmt = $pdo->prepare("SELECT value FROM settings WHERE key = :key");
+    $stmt->bindParam(":key", $key, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['value'];
+}
+
+//Find admin in DB
+function findAdmin(PDO $pdo, string $username): array
+{
+    $stmt = $pdo->prepare("SELECT * FROM admins WHERE username = :username AND is_active = 1");
+    $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
 }
 
 function checkAvailable(PDO $pdo, int $roomId): array
 {
-    $statement = $pdo->prepare("SELECT arrival, departure FROM bookings WHERE room_id = :room_id");
-    $statement->bindParam(":room_id", $roomId, PDO::PARAM_INT);
-    $statement->execute();
-    return $statement->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare("SELECT arrival, departure FROM bookings WHERE room_id = :room_id");
+    $stmt->bindParam(":room_id", $roomId, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
 }
 
 function getFeaturePrices(PDO $pdo): array
 {
-    $statement = $pdo->prepare("SELECT features.id, tiers.price_per_feature FROM features INNER JOIN tiers ON features.tier_id = tiers.id
+    $stmt = $pdo->prepare("SELECT features.id, tiers.price_per_feature FROM features INNER JOIN tiers ON features.tier_id = tiers.id
     ");
-    $statement->execute();
-    $features = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->execute();
+    $features = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $prices = [];
     foreach ($features as $feature) {
@@ -35,30 +46,33 @@ function getFeaturePrices(PDO $pdo): array
 
 function getTierLevels(PDO $pdo): array
 {
-    $statement = $pdo->prepare("SELECT tier FROM tiers");
-    $statement->execute();
-    $tierLevels = $statement->fetchAll(PDO::FETCH_ASSOC);
-    return $tierLevels;
+    $stmt = $pdo->prepare("SELECT tier FROM tiers");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
 }
 
 function getActiveFeatures(PDO $pdo): array
 {
-    $statement = $pdo->prepare("SELECT * FROM features WHERE is_active = 1");
-    $statement->execute();
-    return $statement->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare("SELECT * FROM features WHERE is_active = 1");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
 }
 
 function getRooms(PDO $pdo): array
 {
-    $statement = $pdo->prepare("SELECT * FROM rooms");
-    $statement->execute();
-    return $statement->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare("SELECT * FROM rooms");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
 };
 
 function getRoomPrices(PDO $pdo): array
 {
-    $statement = $pdo->query("SELECT id, price_per_night FROM rooms");
-    $rooms = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare("SELECT id, price_per_night FROM rooms");
+    $stmt->execute();
+    $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $prices = [];
     foreach ($rooms as $room) {
         $prices[$room['id']] = (int)$room['price_per_night'];
@@ -66,60 +80,81 @@ function getRoomPrices(PDO $pdo): array
     return $prices;
 }
 
-function findGuest(PDO $pdo, string $name): int|NULL
+function getRoomPriceByName(PDO $pdo, string $room): ?int
 {
-    $statement = $pdo->prepare("SELECT id FROM guests WHERE name = :name");
-    $statement->bindParam(":name", $name, PDO::PARAM_STR);
-    $statement->execute();
-    $guest = $statement->fetch(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare("SELECT price_per_night FROM rooms WHERE room = :room LIMIT 1");
+    $stmt->bindParam(':room', $room, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result['price_per_night'] ?? null;
+}
+
+function getTierPriceByName(PDO $pdo, string $tier): ?int
+{
+    $stmt = $pdo->prepare("SELECT price_per_feature FROM tiers WHERE tier = :tier LIMIT 1");
+    $stmt->bindParam(':tier', $tier, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result['price_per_feature'] ?? null;
+}
+
+
+function findGuest(PDO $pdo, string $name): ?int
+{
+    $stmt = $pdo->prepare("SELECT id FROM guests WHERE name = :name");
+    $stmt->bindParam(":name", $name, PDO::PARAM_STR);
+    $stmt->execute();
+    $guest = $stmt->fetch(PDO::FETCH_ASSOC);
     return $guest['id'] ?? NULL;
 };
 
 function registerGuest(PDO $pdo, string $name): void
 {
     $name = strtolower($name);
-    $statement = $pdo->prepare("INSERT INTO guests (name) VALUES (:name)");
-    $statement->bindParam(":name", $name, PDO::PARAM_STR);
-    $statement->execute();
+    $stmt = $pdo->prepare("INSERT INTO guests (name) VALUES (:name)");
+    $stmt->bindParam(":name", $name, PDO::PARAM_STR);
+    $stmt->execute();
 }
 
 function roomBooking(PDO $pdo, int $guestId, int $roomId, DateTime $arrivalDT, DateTime $departureDT): void
 {
-    $statement = $pdo->prepare("INSERT INTO bookings (guest_id, room_id, arrival, departure) VALUES (:guest_id, :room_id, :arrival, :departure)");
-    $statement->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
-    $statement->bindParam(":room_id", $roomId, PDO::PARAM_INT);
-    $statement->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
-    $statement->bindParam(":departure", $departureDT->format('Y-m-d H:i'), PDO::PARAM_STR);
-    $statement->execute();
+    $stmt = $pdo->prepare("INSERT INTO bookings (guest_id, room_id, arrival, departure) VALUES (:guest_id, :room_id, :arrival, :departure)");
+    $stmt->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
+    $stmt->bindParam(":room_id", $roomId, PDO::PARAM_INT);
+    $stmt->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
+    $stmt->bindParam(":departure", $departureDT->format('Y-m-d H:i'), PDO::PARAM_STR);
+    $stmt->execute();
 }
 
 function featureOnlyBooking(PDO $pdo, int $guestId, DateTime $arrivalDT): void
 {
-    $statement = $pdo->prepare("INSERT INTO bookings (guest_id, arrival) VALUES (:guest_id, :arrival)
+    $stmt = $pdo->prepare("INSERT INTO bookings (guest_id, arrival) VALUES (:guest_id, :arrival)
     ");
-    $statement->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
-    $statement->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
-    $statement->execute();
+    $stmt->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
+    $stmt->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
+    $stmt->execute();
 }
 
 function findBookingId(PDO $pdo, int $guestId, DateTime $arrivalDT): int|NULL
 {
-    $statement = $pdo->prepare("SELECT id FROM bookings WHERE guest_id = :guest_id AND arrival = :arrival ORDER BY id DESC LIMIT 1");
-    $statement->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
-    $statement->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
-    $statement->execute();
-    $booking = $statement->fetch(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare("SELECT id FROM bookings WHERE guest_id = :guest_id AND arrival = :arrival ORDER BY id DESC LIMIT 1");
+    $stmt->bindParam(":guest_id", $guestId, PDO::PARAM_INT);
+    $stmt->bindParam(":arrival", $arrivalDT->format('Y-m-d H:i'), PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    return $booking['id'] ?? null;
+    return $result['id'] ?? null;
 }
 
 function registerFeatures(PDO $pdo, int $bookingId, array $featureIds): void
 {
-    $statement = $pdo->prepare("INSERT INTO booking_feature (booking_id, feature_id) VALUES (:booking_id, :feature_id)");
+    $stmt = $pdo->prepare("INSERT INTO booking_feature (booking_id, feature_id) VALUES (:booking_id, :feature_id)");
     foreach ($featureIds as $featureId) {
-        $statement->bindParam(':booking_id', $bookingId, PDO::PARAM_INT);
-        $statement->bindParam(':feature_id', $featureId, PDO::PARAM_INT);
-        $statement->execute();
+        $stmt->bindParam(':booking_id', $bookingId, PDO::PARAM_INT);
+        $stmt->bindParam(':feature_id', $featureId, PDO::PARAM_INT);
+        $stmt->execute();
     }
 }
 
@@ -128,15 +163,15 @@ function getLuxuryRoomId(PDO $pdo): ?int
 {
     $stmt = $pdo->prepare("SELECT id FROM rooms WHERE room = 'luxury'");
     $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $row['id'] ?? null;
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['id'] ?? null;
 }
 function getBowserFeatureId(PDO $pdo): ?int
 {
     $stmt = $pdo->prepare("SELECT id FROM features WHERE feature = 'Bowser’s Castle Escape'");
     $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $row['id'] ?? null;
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['id'] ?? null;
 }
 function checkLoyalCustomer(PDO $pdo, int $guestId): bool
 {
@@ -152,17 +187,17 @@ function getDiscount(PDO $pdo, string $type): int
     $stmt = $pdo->prepare("SELECT discount FROM discounts WHERE type = :type LIMIT 1");
     $stmt->bindParam(':type', $type, PDO::PARAM_STR);
     $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    return isset($row['discount']) ? (int)$row['discount'] : 0;
+    return isset($result['discount']) ? (int)$result['discount'] : 0;
 }
 
 function getDiscountInfo(PDO $pdo): array
 {
     $stmt = $pdo->prepare("SELECT * FROM discounts");
     $stmt->execute();
-    $stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return $stmt;
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
 }
 
 function getFeatureName(PDO $pdo, int $featureId): ?string
@@ -170,8 +205,8 @@ function getFeatureName(PDO $pdo, int $featureId): ?string
     $stmt = $pdo->prepare("SELECT feature FROM features WHERE id = :id");
     $stmt->bindParam(':id', $featureId, PDO::PARAM_INT);
     $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $row['feature'] ?? null;
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['feature'] ?? null;
 }
 
 
@@ -182,8 +217,8 @@ function getRoomName(PDO $pdo, int $roomId): ?string
     $stmt = $pdo->prepare("SELECT room FROM rooms WHERE id = :id");
     $stmt->bindParam(':id', $roomId, PDO::PARAM_INT);
     $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $row['room'] ?? null;
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['room'] ?? null;
 }
 
 
@@ -208,9 +243,41 @@ function updateTierPrice(PDO $pdo, string $tierName, int $price): void
 // Buy/Add features
 function findNonActiveFeatures(PDO $pdo): array
 {
-    $statement = $pdo->prepare("SELECT features.id, features.feature, features.is_active, categories.category, tiers.tier, tiers.cost_per_tier FROM features INNER JOIN categories ON features.category_id = categories.id INNER JOIN tiers ON features.tier_id = tiers.id
+    $stmt = $pdo->prepare("SELECT features.id, features.feature, features.is_active, categories.category, tiers.tier, tiers.cost_per_tier FROM features INNER JOIN categories ON features.category_id = categories.id INNER JOIN tiers ON features.tier_id = tiers.id
     WHERE features.is_active = 0");
-    $statement->execute();
-    $nonActiveFeatures = $statement->fetchAll(PDO::FETCH_ASSOC);
-    return $nonActiveFeatures;
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
 };
+
+function activateFeature(PDO $pdo, int $id): void
+{
+    $stmt = $pdo->prepare("UPDATE features SET is_active = 1 WHERE id = :id");
+    $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+    $stmt->execute();
+}
+
+//Statistics
+function topFeatures(PDO $pdo): array
+{
+    $stmt = $pdo->prepare("SELECT booking_feature.feature_id, features.feature, COUNT (feature_id) AS counts FROM booking_feature INNER JOIN features ON features.id = feature_id GROUP BY feature_id ORDER BY counts DESC LIMIT 5");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
+}
+
+function countDayPass(PDO $pdo): array
+{
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS daypass FROM bookings WHERE room_id IS NULL");
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
+}
+
+function countRoomBookings(PDO $pdo): array
+{
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS booked FROM bookings WHERE room_id IS NOT NULL");
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
+}
