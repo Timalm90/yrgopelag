@@ -26,6 +26,9 @@ $config = require __DIR__ . "/config.php";
 $dbPathBooking = __DIR__ . "/database/bookings.sqlite3";
 $pdoBooking = new PDO("sqlite:" . $dbPathBooking);
 
+//Variables
+require __DIR__ . "/variables.php";
+
 // Guzzle client
 use GuzzleHttp\Client;
 
