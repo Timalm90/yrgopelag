@@ -16,17 +16,3 @@ $dotenv->load();
 
 // Save result to variable apiKey
 $apiKey = $_ENV['API_KEY'] ?? null;
-
-
-// ------------------------------------- LOG -------------------------------------
-// Extra code lines from example/lesson, unnecessary? 
-// header("Content-type: application/json");
-// echo json_encode(['api_key' => $apiKey]);
-// var_dump(json_encode(['api_key' => $apiKey]));
-
-//2025-12-13: Checked if connected correctly. Result: YES!
-// var_dump($apiKey);
-// var_dump($adminuser);
-// var_dump($password);
-
-//2025-12-13: These variables should be ready to use now :)
