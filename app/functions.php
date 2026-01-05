@@ -2,6 +2,30 @@
 
 declare(strict_types=1);
 
+// Booked dates in calendars
+function bookedDays(array $bookings): array
+{
+    $days = [];
+
+    foreach ($bookings as $b) {
+        // DB returns string, convert to DateTime 
+        $startDT = new DateTime($b['arrival']);
+        $endDT   = new DateTime($b['departure']);
+
+        // Extract day, convert to int
+        $startDay = (int)$startDT->format('j');
+        $endDay   = (int)$endDT->format('j');
+
+        // Loop through all occupied dates, exclude checkout day
+        for ($i = $startDay; $i < $endDay; $i++) {
+            $days[] = $i;
+        }
+    }
+
+    return $days;
+}
+
+
 // Count number of nights
 function countNights(DateTime $arrival, DateTime $departure): int
 {
@@ -50,27 +74,21 @@ function handleErrors(array $errors): void
 }
 
 // Prepare features for receipt. Returns an array with keys activity and tier.
-function prepareFeaturesForReceipt(PDO $pdoBooking, array $selectedFeatures): array
+function prepareFeaturesForReceipt(PDO $pdo, array $selectedFeatures): array
 {
     $featuresUsed = [];
 
     // Fetch category name for ID 4 (hotel-specific)
-    $stmtCategory = $pdoBooking->prepare("SELECT category FROM categories WHERE id = 4");
-    $stmtCategory->execute();
-    $specificCategory = $stmtCategory->fetch(PDO::FETCH_ASSOC)['category'];
+    $stmt = $pdo->prepare("SELECT category FROM categories WHERE id = 4");
+    $stmt->execute();
+    $specificCategory = $stmt->fetch(PDO::FETCH_ASSOC)['category'];
 
-    $stmtFeature = $pdoBooking->prepare("
-        SELECT categories.category, tiers.tier 
-        FROM features 
-        INNER JOIN categories ON features.category_id = categories.id 
-        INNER JOIN tiers ON features.tier_id = tiers.id 
-        WHERE features.id = :id
-    ");
+    $statment = $pdo->prepare("SELECT categories.category, tiers.tier FROM features INNER JOIN categories ON features.category_id = categories.id INNER JOIN tiers ON features.tier_id = tiers.id WHERE features.id = :id");
 
     foreach ($selectedFeatures as $featureId) {
-        $stmtFeature->bindParam(":id", $featureId, PDO::PARAM_INT);
-        $stmtFeature->execute();
-        $dbRow = $stmtFeature->fetch(PDO::FETCH_ASSOC);
+        $statment->bindParam(":id", $featureId, PDO::PARAM_INT);
+        $statment->execute();
+        $dbRow = $statment->fetch(PDO::FETCH_ASSOC);
 
         if (!$dbRow) continue;
 
