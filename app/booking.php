@@ -13,12 +13,12 @@ $errors = [];
 $selectedFeatures = [];
 $bookingId = NULL;
 
-$islandName = getSettingsValue($pdoBooking, "island_name"); // Starlight Island
-$hotelName = getSettingsValue($pdoBooking, "hotel_name"); // Yoshi's Resort
-$starRating = getSettingsValue($pdoBooking, "star_rating"); // 5
+// $islandName = getSettingsValue($pdoBooking, "island_name"); // Starlight Island
+// $hotelName = getSettingsValue($pdoBooking, "hotel_name"); // Yoshi's Resort
+// $starRating = getSettingsValue($pdoBooking, "star_rating"); // 5
 $starRating = (int)$starRating; // int 5
-$hotelOwner = getSettingsValue($pdoBooking, "hotel_owner"); // Emilie
-$url = getSettingsValue($pdoBooking, "webpage"); // https://developedbyemilie.se/yrgopelag
+// $hotelOwner = getSettingsValue($pdoBooking, "hotel_owner"); // Emilie
+// $url = getSettingsValue($pdoBooking, "webpage"); // https://developedbyemilie.se/yrgopelag
 
 // ------------------------------------------- SANITIZE & VALIDATE ---------------------------------------------
 //Check if mandatory information is provided (name & transferCode)
