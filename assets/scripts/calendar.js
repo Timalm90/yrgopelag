@@ -49,6 +49,9 @@ document.querySelectorAll(".roomWrapper .day").forEach((day) => {
       selectedArrivalDay.classList.add("selected");
       selectedDepartureDay.classList.add("selected");
 
+      // Update dynamic total price (without eventListener change)
+      updateTotalPrice();
+
       // Scroll to form
       const form = document.querySelector(".bookingForm");
       if (form) form.scrollIntoView({ behavior: "smooth" });
