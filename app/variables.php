@@ -24,6 +24,8 @@ $activeFeatures = getActiveFeatures($pdoBooking);
 
 $showOffers = getDiscountInfo($pdoBooking);
 
+$featurePrice = getFeaturePrices($pdoBooking);
+
 // // DISCOUNT VARIABLES in booking.php
 // $luxuryRoomId = getLuxuryRoomId($pdoBooking); //int in FE
 
