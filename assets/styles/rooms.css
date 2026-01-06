@@ -1,7 +1,8 @@
 /* SHOW CHOOSEN ROOM BLOCK ONLY */
 .roomSection {
   display: none;
-  width: 100%;
+  /* width: 100%; */
+  width: 70vw;
   align-items: center;
   min-height: 10vh;
   border-radius: 16px;
