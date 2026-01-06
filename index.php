@@ -71,17 +71,21 @@ require __DIR__ . "/app/rooms.php";
         <?php
         // Show error messages in errors-array:
         if (!empty($_SESSION['errors'])) : ?>
-            <section class="errorMessage" id="errors">
-                <h2>Error!</h2>
-                <ul>
-                    <?php
-                    foreach ($_SESSION['errors'] as $error) : ?>
-                        <li>
-                            <?= htmlspecialchars($error) ?>
-                        </li>
-                    <?php endforeach ?>
-                </ul>
+            <section class="sectionError">
                 <img class="errorImg errorGoomba" src="assets/images/goombaLeft.png" alt="Walking Goomba" />
+
+                <article class="errorMessage" id="errors">
+                    <h2>Error!</h2>
+                    <ul>
+                        <?php
+                        foreach ($_SESSION['errors'] as $error) : ?>
+                            <li>
+                                <?= htmlspecialchars($error) ?>
+                            </li>
+                        <?php endforeach ?>
+                    </ul>
+                </article>
+
                 <img class="errorImg errorPiranha" src="assets/images/piranha.png" alt="Piranha plant" />
             </section>
         <?php
