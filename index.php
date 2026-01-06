@@ -114,9 +114,9 @@ require __DIR__ . "/app/rooms.php";
     ?>
 
     <script src="assets/scripts/toggleRoom.js"></script>
+    <script src="assets/scripts/totalprice.js"></script>
     <script src="assets/scripts/calendar.js"></script>
     <script src="assets/scripts/form.js"></script>
-    <script src="assets/scripts/totalprice.js"></script>
     <script src="assets/scripts/generateTransferCode.js"></script>
     <script src="assets/scripts/modal.js"></script>
 </body>
