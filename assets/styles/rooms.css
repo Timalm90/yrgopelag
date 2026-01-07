@@ -78,15 +78,21 @@ div.calendarDot {
 
 /* For png character */
 .roomWrapper {
-  position: relative;
+  width: 100vw;
+  display: flex;
+  justify-content: end;
 }
 
-.roomCharacter {
-  max-height: 30vh;
-  object-fit: contain;
-  position: absolute;
-  right: -18%;
-  top: 10%;
+article.roomCharacters {
+  width: 15vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5%;
+}
+
+img.roomCharacter {
+  width: 70%;
 }
 
 .hiddenCharacter {
