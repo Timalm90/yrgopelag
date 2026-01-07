@@ -19,6 +19,14 @@
                 <div class="calendarGuide">
                     <div class="calendarDot"></div> <span> = occupied</span>
                 </div>
+                <div class="hintWrapper">
+                    <p class="tooltip">
+                        Click to select arrival & <br> departure dates for this <br> room. Or fill the form below.
+                    </p>
+                    <img src="assets/images/secretBox.png" alt="Hint to calendar" class="calendarHint secretBox">
+                </div>
+
+
             </article>
         </section>
     <?php endforeach; ?>
