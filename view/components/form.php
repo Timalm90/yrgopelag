@@ -112,6 +112,7 @@
                         Central Bank
                     </a> to retrieve your transfer code, and enter it below:
                 </p>
+                <p id="transferCodeError"></p>
 
                 <div class="field transferCodeInput">
                     <!-- transferCode (manually or through service) -->
