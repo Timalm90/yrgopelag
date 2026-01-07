@@ -25,12 +25,23 @@ main {
   position: relative;
 }
 
+.heroWrapper {
+  width: 100vw;
+  display: flex;
+}
+
+article.heroImg {
+  width: 15vw;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+}
+
 .hero {
-  /* width: 100%; */
   width: 70vw;
   padding: 2% 5%;
   text-align: center;
-  position: relative;
 }
 
 .hotelStars {
@@ -43,12 +54,12 @@ main {
   width: 5%;
 }
 
-.heroImg {
+img.heroImg {
   width: 10vw;
   height: auto;
   position: absolute;
-  left: -10%;
-  top: 15%;
+  right: 2%;
+  z-index: 5;
 }
 
 section.roomToggle {
