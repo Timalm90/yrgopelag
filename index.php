@@ -1,10 +1,6 @@
 <?php
-// Require in all PHP files for logic here:
 require __DIR__ . "/app/autoload.php";
 require __DIR__ . "/app/rooms.php";
-
-// $starRating = getSettingsValue($pdoBooking, 'star_rating'); //
-// $starRating = (int) $starRating;
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +29,6 @@ require __DIR__ . "/app/rooms.php";
 </head>
 
 <body>
-
     <?php
     require __DIR__ . "/view/components/nav.php";
     require __DIR__ . "/view/components/offers.php";
@@ -97,10 +92,9 @@ require __DIR__ . "/app/rooms.php";
                 </article>
             </section>
         <?php
-            //Empty this session variable
+            //Empty session variable
             $_SESSION['errors'] = NULL;
         endif; ?>
-
 
         <?php
         require __DIR__ . "/view/components/form.php";
@@ -110,27 +104,27 @@ require __DIR__ . "/app/rooms.php";
 
     <?php
     require __DIR__ . "/view/components/footer.php";
-    ?>
 
-    <?php require __DIR__ . "/view/components/featureModal.php"; ?>
-    <!-- ------------------------------------------ CONFIRMATION MODAL ------------------------------------------ -->
-    <?php
+    // Modals
+    require __DIR__ . "/view/components/featureModal.php";
+
     if (!empty($_SESSION['success'])) {
         $confirmation = $_SESSION['success'];
 
         require __DIR__ . "/view/components/confirmationModal.php";
 
-        //Empty this session variable
+        //Empty session variable
         $_SESSION['success'] = NULL;
     }
     ?>
 
-    <script src="assets/scripts/toggleRoom.js"></script>
-    <script src="assets/scripts/totalprice.js"></script>
-    <script src="assets/scripts/calendar.js"></script>
-    <script src="assets/scripts/form.js"></script>
-    <script src="assets/scripts/generateTransferCode.js"></script>
-    <script src="assets/scripts/modal.js"></script>
+    <script src="assets/scripts/functions.js"></script>
+    <script src="assets/scripts//index/toggleRoom.js"></script>
+    <script src="assets/scripts/index/totalprice.js"></script>
+    <script src="assets/scripts/index/calendar.js"></script>
+    <script src="assets/scripts/index/form.js"></script>
+    <script src="assets/scripts/index/generateTransferCode.js"></script>
+    <script src="assets/scripts/index/modal.js"></script>
 </body>
 
 </html>
