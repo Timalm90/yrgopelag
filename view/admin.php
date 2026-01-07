@@ -1,9 +1,7 @@
 <?php
 require __DIR__ . "/../app/autoload.php";
-require __DIR__ . "/../app/config.php";
 
-
-//  IF NOT LOGGED IN -> redirect to login page 
+// If not logged in, redirect to login page
 if (!isset($_SESSION['admin'])) {
     header("Location: login.php"); //IN LOCALHOST
     // header("Location: /MAPP/view/login.php"); //IN DEPLOY
@@ -32,60 +30,72 @@ if (!isset($_SESSION['admin'])) {
     <main>
         <section class="whiteBox">
 
-            <!-- IF LOGGED IN: SHOW THIS DASHBOARD... ... ... -->
+            <!-- If logged in, show dashboard-->
             <?php
             if (isset($_SESSION['admin'])): ?>
-                <!-- DASHBOARD! -->
                 <h1>Welcome, <?= ucwords(htmlspecialchars(($_SESSION['admin']['name']))) ?>!</h1>
 
+                <!-- Dashboard Menu -->
+                <section class="dashboardMenu">
+                    <button class="active">Overview</button>
+                    <button>Statistics</button>
+                    <button>Financial</button>
+                    <button>Admin</button>
+                </section>
+
+                <!-- Confirmation or error messages -->
                 <section class="adminMessage">
-                    <!-- Show confirmation or error messages here! -->
-                    <?php if (isset($_SESSION['adminSuccess'])): ?>
-                        <article class="confirmationAdminBox">
-                            <?= $_SESSION['adminSuccess']; ?>
-                        </article>
-                    <?php $_SESSION['adminSuccess'] = NULL;
-                    endif; ?>
-
-                    <?php
-                    // ERROR-MESSAGE
-                    if (isset($_SESSION['adminErrors'])): ?>
-                        <article class="errorAdminBox">
-                            <ul>
-                                <?php foreach ($_SESSION['adminErrors'] as $error): ?>
-                                    <li>
-                                        <?= htmlspecialchars($error) ?>
-                                    </li>
-                                <?php endforeach ?>
-                            </ul>
-                        </article>
-                    <?php $_SESSION['adminErrors'] = NULL;
-                    endif ?>
+                    <article id="adminMessageBox" class="adminHidden"></article>
                 </section>
 
+                <!-- DASHBOARD: Overview -->
                 <section class="dashboard">
-                    <?php require __DIR__ . "/components/aboutHotel.php"; ?>
-                    <?php require __DIR__ . "/components/adminStatistics.php"; ?>
+                    <?php
+                    require __DIR__ . "/components/admin/aboutHotel.php";
+                    require __DIR__ . "/components/admin/addFeature.php";
+                    ?>
                 </section>
 
-                <section class="dashboard settingsDashboard">
-                    <?php require __DIR__ . "/components/checkBalance.php"; ?>
-                    <?php require __DIR__ . "/components/adminSettings.php"; ?>
-                    <?php require __DIR__ . "/components/adminFinancials.php"; ?>
-
+                <!-- DASHBOARD: Statistics -->
+                <section class="dashboard adminHidden">
+                    <?php require __DIR__ . "/components/admin/statistics.php";
+                    ?>
                 </section>
 
-                <section class="dashboard adminDashboard">
-                    <!-- Control admins -->
-                    <h2>This is the admin dashboard</h2>
+                <!-- DASHBOARD: Financial -->
+                <section class="dashboard adminHidden">
+                    <?php
+                    require __DIR__ . "/components/admin/checkBalance.php";
+                    require __DIR__ . "/components/admin/financials.php";
+                    ?>
+                </section>
+
+                <!-- DASHBOARD: Admin -->
+                <section class="dashboard adminHidden">
+                    <?php
+                    require __DIR__ . "/components/admin/createAdmin.php";
+                    require __DIR__ . "/components/admin/changePassword.php"; ?>
                 </section>
 
             <?php endif; ?>
         </section>
     </main>
-    <script src="../assets/scripts/admin.js"></script>
-    <!-- Shows current room/feature price when admin attempts to change it -->
-    <script src="../assets/scripts/changePrice.js"></script>
+
+    <!-- Mastercode modal -->
+    <!-- Modal -->
+    <section id="mastercodeModal" class="mastercodeModal adminHidden">
+        <article class="mastercodeModalContent">
+            <h3>Enter Mastercode</h3>
+            <input type="password" id="mastercodeInput" placeholder="Mastercode">
+            <button id="submitMastercode">Authorize</button>
+            <button id="cancelMastercode">Cancel</button>
+        </article>
+    </section>
+
+    <script src="../assets/scripts/functions.js"></script>
+    <script src="../assets/scripts/admin/dashboard.js"></script>
+    <script src="../assets/scripts/admin/financials.js"></script>
+    <script src="../assets/scripts/admin/users.js"></script>
 </body>
 
 </html>
