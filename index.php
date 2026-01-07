@@ -42,17 +42,22 @@ require __DIR__ . "/app/rooms.php";
     <div class="background"></div>
 
     <main>
-        <section class="hero whiteBox">
-            <div class="hotelStars">
-                <?php for ($i = 0; $i < (int)$starRating; $i++): ?>
-                    <img src="assets/images/star.png" alt="Mario star" />
-                <?php endfor ?>
-            </div>
-            <h1>Welcome to <?= ucwords(htmlspecialchars($hotelName)) ?> on <?= ucwords(htmlspecialchars($islandName)) ?></h1>
-            <h2> - where magic, adventure, and luxury meet!</h2>
-            <p>Experience a one-of-a-kind stay filled with fun, relaxation, and surprises. Whether you want to unwind in our luxurious Princess Peach Suite, challenge friends in exciting activities, or just enjoy a day at the island's most spectacular features - your next adventure awaits at Yoshi's Resort!</p>
-            <img class="heroImg" src="assets/images/yoshiLeft.png" alt="Walking happy Yoshi" />
+        <section class="heroWrapper">
+            <article class="heroImg">
+                <img class="heroImg" src="assets/images/yoshiLeft.png" alt="Walking happy Yoshi" />
+            </article>
+            <article class="hero whiteBox">
+                <div class="hotelStars">
+                    <?php for ($i = 0; $i < (int)$starRating; $i++): ?>
+                        <img src="assets/images/star.png" alt="Mario star" />
+                    <?php endfor ?>
+                </div>
+                <h1>Welcome to <?= ucwords(htmlspecialchars($hotelName)) ?> on <?= ucwords(htmlspecialchars($islandName)) ?></h1>
+                <h2> - where magic, adventure, and luxury meet!</h2>
+                <p>Experience a one-of-a-kind stay filled with fun, relaxation, and surprises. Whether you want to unwind in our luxurious Princess Peach Suite, challenge friends in exciting activities, or just enjoy a day at the island's most spectacular features - your next adventure awaits at Yoshi's Resort!</p>
+            </article>
         </section>
+        </div>
 
         <section class="roomToggle togglePill" role="tablist">
             <button class="roomToggleBtn" data-room="0" role="tab">
@@ -72,7 +77,9 @@ require __DIR__ . "/app/rooms.php";
         // Show error messages in errors-array:
         if (!empty($_SESSION['errors'])) : ?>
             <section class="sectionError">
-                <img class="errorImg errorGoomba" src="assets/images/goombaLeft.png" alt="Walking Goomba" />
+                <article class="errorImg errorLeft">
+                    <img class="errorImg errorGoomba" src="assets/images/goombaLeft.png" alt="Walking Goomba" />
+                </article>
 
                 <article class="errorMessage" id="errors">
                     <h2>Error!</h2>
@@ -85,8 +92,9 @@ require __DIR__ . "/app/rooms.php";
                         <?php endforeach ?>
                     </ul>
                 </article>
-
-                <img class="errorImg errorPiranha" src="assets/images/piranha.png" alt="Piranha plant" />
+                <article class="errorImg errorRight">
+                    <img class="errorImg errorPiranha" src="assets/images/piranha.png" alt="Piranha plant" />
+                </article>
             </section>
         <?php
             //Empty this session variable
