@@ -2,35 +2,30 @@
 
 declare(strict_types=1);
 
+// Island & Hotel info
 $islandName = getSettingsValue($pdoBooking, "island_name"); // Starlight Island
-
 $hotelName = getSettingsValue($pdoBooking, "hotel_name"); // Yoshi's Resort
-
 $starRating = getSettingsValue($pdoBooking, "star_rating"); // "5"
-
 $hotelOwner = getSettingsValue($pdoBooking, "hotel_owner"); // Emilie
-
 $url = getSettingsValue($pdoBooking, "webpage"); // https://developedbyemilie.se/yrgopelag
 
+// Rooms & Features
 $rooms = getRooms($pdoBooking);
 $tiers = getTierLevels($pdoBooking);
 $allFeatures = findNonActiveFeatures($pdoBooking);
-
 $topFeatures = topFeatures($pdoBooking);
 $daypassCount = countDayPass($pdoBooking);
 $bookedRoomCount = countRoomBookings($pdoBooking);
-
 $activeFeatures = getActiveFeatures($pdoBooking);
-
 $showOffers = getDiscountInfo($pdoBooking);
-
 $featurePrice = getFeaturePrices($pdoBooking);
 
-// // DISCOUNT VARIABLES in booking.php
-// $luxuryRoomId = getLuxuryRoomId($pdoBooking); //int in FE
+// Discounts in booking.php
+$luxuryRoomId = getLuxuryRoomId($pdoBooking); //int in FE
+$bowserFeatureId = getBowserFeatureId($pdoBooking); //int in FE
+$loyalDiscount = getDiscount($pdoBooking, 'loyal'); //int
+$comboDiscount = getDiscount($pdoBooking, 'luxuryCombo'); //int
 
-// $bowserFeatureId = getBowserFeatureId($pdoBooking); //int in FE
-
-// $loyalDiscount = getDiscount($pdoBooking, 'loyal');
-// $comboDiscount = getDiscount($pdoBooking, 'luxuryCombo');
-// //getDiscount returnerar int
+// Checkin/out times
+$checkinTime = "15:00";
+$checkoutTime = "11:00";
