@@ -168,9 +168,6 @@ div.features {
   background-color: var(--status-error-bg);
   color: var(--status-error-text);
   height: 3rem;
-}
-
-.hint.visible {
   opacity: 1;
 }
 
