@@ -28,7 +28,7 @@
             <!-- Features -->
             <?php if (!empty($confirmation['features'])): ?>
                 <p>Included features: </p>
-                <ul>
+                <ul class="listIcon">
                     <?php foreach ($confirmation['features'] as $feature): ?>
                         <li>
                             <?= ucwords(htmlspecialchars($feature)) ?>
