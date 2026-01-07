@@ -7,8 +7,3 @@ vendor
 *.png
 
 bookings.sqlite3
-
-TESTING
-startup.php
-
-createAdmin.php
