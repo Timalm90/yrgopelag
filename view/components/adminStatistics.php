@@ -13,11 +13,11 @@
 
 <article class="dashboardBox">
     <h3>Top 5 popular features</h3>
-    <ul>
+    <ol>
         <?php foreach ($topFeatures as $topFeature): ?>
             <li>
-                <?= htmlspecialchars($topFeature['feature']) ?> (<?= htmlspecialchars($topFeature['counts']) ?>)
+                <?= ucwords(htmlspecialchars($topFeature['feature'])) ?> (<?= htmlspecialchars($topFeature['counts']) ?>)
             </li>
         <?php endforeach ?>
-    </ul>
+    </ol>
 </article>
