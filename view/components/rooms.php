@@ -22,8 +22,9 @@
             </article>
         </section>
     <?php endforeach; ?>
-
-    <img class="roomCharacter hiddenCharacter" src="assets/images/toad.png" alt="Toad icon" />
-    <img class="roomCharacter" src="assets/images/luigi.png" alt="Luigi icon" />
-    <img class="roomCharacter hiddenCharacter" src="assets/images/peach.png" alt="Peach icon" />
+    <article class="roomCharacters">
+        <img class="roomCharacter hiddenCharacter" src="assets/images/toad.png" alt="Toad icon" />
+        <img class="roomCharacter" src="assets/images/luigi.png" alt="Luigi icon" />
+        <img class="roomCharacter hiddenCharacter" src="assets/images/peach.png" alt="Peach icon" />
+    </article>
 </div>
