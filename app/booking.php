@@ -12,13 +12,7 @@ $totalFeatureCost = 0;
 $errors = [];
 $selectedFeatures = [];
 $bookingId = NULL;
-
-// $islandName = getSettingsValue($pdoBooking, "island_name"); // Starlight Island
-// $hotelName = getSettingsValue($pdoBooking, "hotel_name"); // Yoshi's Resort
-// $starRating = getSettingsValue($pdoBooking, "star_rating"); // 5
 $starRating = (int)$starRating; // int 5
-// $hotelOwner = getSettingsValue($pdoBooking, "hotel_owner"); // Emilie
-// $url = getSettingsValue($pdoBooking, "webpage"); // https://developedbyemilie.se/yrgopelag
 
 // ------------------------------------------- SANITIZE & VALIDATE ---------------------------------------------
 //Check if mandatory information is provided (name & transferCode)
@@ -30,7 +24,6 @@ $name = trim($_POST['name']);
 $transferCode = ($_POST['transferCode']);
 
 // ------------------------------------------- FETCH FEATURES (ALL CUSTOMER TYPES) ------------------------
-// Form data is always strings – cast feature IDs to int for pricing & strict comparisons
 $selectedFeatures = [];
 if (isset($_POST['features'])) {
     foreach ($_POST['features'] as $featureId) {
@@ -65,8 +58,8 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     $selectedRoomId = (int) $_POST['room'];
 
     // Convert to DateTime and append checkin/checkout times
-    $arrivalDT = new DateTime($_POST['arrivalDate'] . ' 15:00');
-    $departureDT = new DateTime($_POST['departureDate'] . ' 11:00');
+    $arrivalDT = new DateTime($_POST['arrivalDate'] . ' ' . $checkinTime);
+    $departureDT = new DateTime($_POST['departureDate'] . ' ' . $checkoutTime);
 
     // Check if avaiable
     $occupiedDates = checkAvailable($pdoBooking, $selectedRoomId);
@@ -99,7 +92,7 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
 
 // ------------------------------------------- FEATURE-ONLY DATES ---------------------------------------------
 if (!isset($selectedRoomId) && isset($_POST['arrivalDate'])) {
-    $arrivalDT = new DateTime($_POST['arrivalDate'] . ' 15:00');
+    $arrivalDT = new DateTime($_POST['arrivalDate'] . ' ' . $checkinTime);
     $departureDT = clone $arrivalDT; // Mandatory in receipt
 }
 
@@ -113,14 +106,7 @@ if (!empty($selectedFeatures)) {
 $totalPrice = $totalRoomCost + $totalFeatureCost;
 
 // -------------------- PREPARE DISCOUNT -----------------------
-$luxuryRoomId = getLuxuryRoomId($pdoBooking);
-
-$bowserFeatureId = getBowserFeatureId($pdoBooking);
-
 $isLoyal = checkLoyalCustomer($pdoBooking, $guestId);
-
-$loyalDiscount = getDiscount($pdoBooking, 'loyal');
-$comboDiscount = getDiscount($pdoBooking, 'luxuryCombo');
 
 // Loyal offer:
 if ($isLoyal && isset($selectedRoomId) && $selectedRoomId === $luxuryRoomId) {
@@ -195,8 +181,6 @@ try {
 
 handleErrors($errors);
 
-
-
 // ------------------------------------ REQUEST CENTRALBANK DEPOSIT --------------------------------------
 // Make a request to centralbank to make a deposit
 try {
@@ -224,14 +208,12 @@ try {
 handleErrors($errors);
 
 // -------------------------------------- REGISTER BOOKED ROOM IN DB ----------------------------------------
-// Requires: guest_id, room_id, arrival & departure in checkins for room
 if (isset($selectedRoomId, $arrivalDT, $departureDT)) {
     roomBooking($pdoBooking, $guestId, $selectedRoomId, $arrivalDT, $departureDT);
     $bookingId = findBookingId($pdoBooking, $guestId, $arrivalDT);
 }
 
 // ------------------------------------ REGISTER FEATURE-ONLY CUSTOMERS --------------------------------------
-// Requires: guest_id, arrival --> customer gets checkin_id (used for registering features)
 if (!isset($selectedRoomId) && isset($arrivalDT)) {
     if (empty($selectedFeatures)) {
         $errors[] = "You must select at least one feature!";
@@ -242,7 +224,6 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
 }
 
 // -------------------------------------- REGISTER BOOKED FEATURE IN DB ----------------------------------------
-//Requires: checkin_id, choosen feature_id
 if (!empty($selectedFeatures) && $bookingId !== NULL) {
     // Register chosen features on checkin_id
     registerFeatures($pdoBooking, $bookingId, $selectedFeatures);
@@ -270,17 +251,17 @@ foreach ($selectedFeatures as $featureId) {
 // ------------------------------------------- PREPARE CONFIRMATION DATA ---------------------------------------------
 $confirmation = [
     'visitor'      => $name,
-    'bookingType'  => $bookingType, // "Room", "Room with features", "Day pass"
+    'bookingType'  => $bookingType,
     'arrival'      => $arrivalDT->format('Y-m-d'),
     'departure'    => $departureDT->format('Y-m-d'),
-    'checkinTime'  => '15:00',
-    'checkoutTime' => '11:00',
+    'checkinTime'  => $checkinTime,
+    'checkoutTime' => $checkoutTime,
     'roomName'     => isset($selectedRoomId) ? getRoomName($pdoBooking, $selectedRoomId) : null,
-    'features'     => $featureNames, // Array w feature names
+    'features'     => $featureNames,
     'totalcost'    => $totalPrice,
     'discountSum'  => ($loyalDiscountApplied ?? 0) + ($comboDiscountApplied ?? 0)
 ];
 
 $_SESSION['success'] = $confirmation;
-header("Location: ../index.php"); //Removed /, works for confirmation, but not for error...
+header("Location: ../index.php");
 exit;
