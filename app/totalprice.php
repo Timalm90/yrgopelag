@@ -25,8 +25,8 @@ if (isset($_POST['features'])) {
 
 // ------------------ ROOM COST ------------------
 if ($bookingType === 'room' && $selectedRoomId && $arrivalInput && $departureInput) {
-    $arrivalDT = new DateTime($arrivalInput . ' 15:00');
-    $departureDT = new DateTime($departureInput . ' 11:00');
+    $arrivalDT = new DateTime($arrivalInput . ' ' . $checkinTime);
+    $departureDT = new DateTime($departureInput . ' ' . $checkoutTime);
 
     $nights = countNights($arrivalDT, $departureDT);
     if ($nights < 0) {
@@ -45,17 +45,8 @@ if (!empty($selectedFeatures)) {
 $totalPrice = $totalRoomCost + $totalFeatureCost;
 
 // //  ------------------ DISCOUNTS ------------------
-// Luxury room ID
-$luxuryRoomId = (int)getLuxuryRoomId($pdoBooking);
-
-// Bowser feature ID
-$bowserFeatureId = (int)getBowserFeatureId($pdoBooking);
-
-// Combo discount
-$comboDiscount = getDiscount($pdoBooking, 'luxuryCombo');
 $name = trim($name);
 $isLoyal = false;
-$loyalDiscount = 0;
 
 // Combo Discount
 if ($selectedRoomId === $luxuryRoomId && in_array($bowserFeatureId, $selectedFeatures, true)) {
@@ -69,7 +60,6 @@ if (isset($name) || $name !== '') {
 
     if ($guestId !== null) {
         $isLoyal = checkLoyalCustomer($pdoBooking, $guestId);
-        $loyalDiscount = getDiscount($pdoBooking, 'loyal');
     };
 }
 
