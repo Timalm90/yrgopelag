@@ -3,14 +3,14 @@
 declare(strict_types=1);
 require __DIR__ . "/../autoload.php";
 
-function handleAdminErrors(array $errors): void
-{
-    if (!empty($errors)) {
-        $_SESSION['adminErrors'] = $errors;
-        header("Location: ../../view/admin.php");
-        exit;
-    }
-}
+// function handleAdminErrors(array $errors): void
+// {
+//     if (!empty($errors)) {
+//         $_SESSION['adminErrors'] = $errors;
+//         header("Location: ../../view/admin.php");
+//         exit;
+//     }
+// }
 
 // Start value
 $adminErrors = [];
