@@ -5,30 +5,29 @@ declare(strict_types=1);
 require __DIR__ . "/../autoload.php";
 require __DIR__ . "/../config.php";
 
+use GrahamCampbell\ResultType\Success;
 use GuzzleHttp\Exception\RequestException;
 
+header("Content-Type: application/json");
+
 // Start values
-// $islandName = getSettingsValue($pdoBooking, "island_name"); //
-// $hotelName = getSettingsValue($pdoBooking, "hotel_name"); //
-// $starRating = getSettingsValue($pdoBooking, "star_rating"); //
 $starRating = (int)$starRating;
-// $hotelOwner = getSettingsValue($pdoBooking, "hotel_owner"); //
-// $url = getSettingsValue($pdoBooking, "webpage"); //
-$addFeatureErrors = [];
+$data = json_decode(file_get_contents("php://input"), true);
+$featureId = $data['item'] ?? null;
+$mastercodeInput = $data['masterCode'] ?? null;
+$errors = [];
 
 // Validate input
-if (!isset($_POST['item']) || empty($_POST['item'])) {
-    $addFeatureErrors[] = "Add feature: No feature selected";
-
-    handleAdminErrors($addFeatureErrors);
-    // $_SESSION['adminErrors'] = $addFeatureErrors;
-    // header("Location: ../../view/admin.php");
-    // exit;
+if (!$featureId) {
+    echo json_encode([
+        'success' => false,
+        'error' => "Add feature: No feature selected"
+    ]);
+    exit;
 }
 
 // Find selected non-active feature
-$featureId = (int) $_POST['item'];
-// $allFeatures = findNonActiveFeatures($pdoBooking);
+$featureId = (int)$featureId;
 $newFeature = null;
 foreach ($allFeatures as $feature) {
     if ((int)$feature['id'] === $featureId) {
@@ -41,13 +40,16 @@ foreach ($allFeatures as $feature) {
 }
 
 if (!$newFeature) {
-    $addFeatureErrors[] = "Add feature: Invalid selection";
-
-    handleAdminErrors($addFeatureErrors);
-    // $_SESSION['adminErrors'] = $addFeatureErrors;
-    // header("Location: ../../view/admin.php");
-    // exit;
+    echo json_encode([
+        'success' => false,
+        'error' => "Add feature: Invalid selection"
+    ]);
+    exit;
 }
+
+//Check mastercode
+$mastercodeInput = $data['masterCode'] ?? null;
+requireMastercode($mastercodeInput, $mastercode);
 
 // Fetch active features from Centralbank
 try {
@@ -62,14 +64,11 @@ try {
 
     $activeFeatures = $activeResult['features'] ?? [];
 } catch (RequestException $activeException) {
-    $addFeatureErrors[] = "Add feature: Could not fetch active features";
-
-    handleAdminErrors($addFeatureErrors);
-    // if (!empty($addFeatureErrors)) {
-    //     $_SESSION['adminErrors'] = $addFeatureErrors;
-    //     header("Location: ../../view/admin.php");
-    //     exit;
-    // }
+    echo json_encode([
+        'success' => false,
+        'error' => "Add feature: Could not fetch active features"
+    ]);
+    exit;
 };
 
 // Convert active features to right format for "/centralbank/islands"
@@ -99,35 +98,35 @@ try {
     $registerResult = json_decode($registerResponse->getBody()->getContents(), true);
 
     if (isset($registerResult['error'])) {
-        $addFeatureErrors[] = $registerResult['error'];
+        echo json_encode([
+            'success' => false,
+            'error' => $registerResult['error']
+        ]);
+        exit;
     }
 } catch (RequestException $registerException) {
     if ($registerException->hasResponse()) {
         $apiError = json_decode($registerException->getResponse()->getBody()->getContents(), true)['error'] ?? '';
-        $addFeatureErrors[] = getErrorMessage($apiError);
+        echo json_encode([
+            'success' => false,
+            'error' => getErrorMessage($apiError)
+        ]);
     } else {
-        $addFeatureErrors[] = "Add feature: Could not register feature at Centralbank.";
+        echo json_encode([
+            'success' => false,
+            'error' => "Add feature: Could not register feature at Centralbank, please try again later."
+        ]);
     }
+    exit;
 }
-
-//Error handling if anything goes wrong in connection to API
-handleAdminErrors($addFeatureErrors);
-// if (!empty($addFeatureErrors)) {
-//     $_SESSION['adminErrors'] = $addFeatureErrors;
-//     header("Location: ../../view/admin.php");
-//     exit;
-// }
-
-// Set feature to active in database
-// $stmt = $pdoBooking->prepare("UPDATE features SET is_active = 1 WHERE id = :id");
-// $stmt->bindParam(":id", $featureId, PDO::PARAM_INT);
-// $stmt->execute();
 
 activateFeature($pdoBooking, $featureId);
 
-// $item = $feature['activity'];
 $item = ucwords($newFeature['feature']);
 $adminSuccess = "Add feature: $item was added successfully";
-$_SESSION['adminSuccess'] = $adminSuccess;
-header("Location: ../../view/admin.php");
+
+echo json_encode([
+    'success' => true,
+    'message' => $adminSuccess
+]);
 exit;
