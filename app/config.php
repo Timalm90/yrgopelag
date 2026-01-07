@@ -16,3 +16,4 @@ $dotenv->load();
 
 // Save result to variable apiKey
 $apiKey = $_ENV['API_KEY'] ?? null;
+$mastercode = $_ENV['MASTERCODE'] ?? null;
