@@ -1,36 +1,29 @@
-const getButton = document.getElementById("getTransferCode");
+const getButton = document.querySelector("#getTransferCode");
+const errorMessage = document.querySelector("#transferCodeError");
 
 getButton.addEventListener("click", () => {
-  const name = document.getElementById("name").value;
-  const apiKey = document.getElementById("apiKey").value;
+  const name = document.querySelector("#name").value;
+  const apiKey = document.querySelector("#apiKey").value;
 
-  // Create a container for error hints
-  let transferError = document.getElementById("transferError");
-  if (!transferError) {
-    transferError = document.createElement("div");
-    transferError.id = "transferError";
-    transferError.className = "hint";
-    getButton.parentNode.appendChild(transferError);
-  }
+  //Reset error
+  errorMessage.textContent = "";
+  errorMessage.classList.remove("hint");
 
-  // --- Remove if error ---
-  transferError.textContent = "";
-  transferError.classList.remove("visible");
-
+  // Validate name & apiKey
   if (!name || !apiKey) {
-    transferError.textContent = "Please fill in your name and API key";
-    transferError.classList.add("visible"); // Show with CSS
+    errorMessage.textContent = "Please fill in your name and API key";
+    errorMessage.classList.add("hint"); // Show with CSS
     return;
   }
 
-  // Fetch total price från frontend
+  // Fetch total price from frontend
   const totalCost =
     parseInt(document.querySelector("#totalPrice").textContent) || 0;
 
   if (totalCost <= 0) {
-    transferError.textContent =
+    errorMessage.textContent =
       "Total price is 0, please choose room and/or features to complete your order and try again!";
-    transferError.classList.add("visible");
+    errorMessage.classList.add("visible", "hint");
     return;
   }
 
@@ -43,15 +36,15 @@ getButton.addEventListener("click", () => {
     .then((response) => response.json())
     .then((data) => {
       if (data.transferCode) {
-        document.getElementById("transferCode").value = data.transferCode;
+        document.querySelector("#transferCode").value = data.transferCode;
       } else {
-        transferError.textContent = data.error;
-        transferError.classList.add("visible");
+        errorMessage.textContent = data.error;
+        errorMessage.classList.add("hint");
       }
     })
     .catch((err) => {
       // console.error(err);
-      transferError.textContent = "Failed to get transfer code";
-      transferError.classList.add("visible");
+      errorMessage.textContent = "Failed to get transfer code";
+      errorMessage.classList.add("hint");
     });
 });
