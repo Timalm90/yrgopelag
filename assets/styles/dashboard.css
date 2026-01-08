@@ -1,0 +1,132 @@
+/* Dashbaord layout */
+section.dashboard,
+section.adminMessage {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.dashboard {
+  display: flex;
+  gap: 3rem;
+  height: fit-content;
+  display: flex;
+  padding: 4% 0;
+  border-radius: var(--standard-radius);
+}
+
+/* Message */
+.adminMessage {
+  height: 1rem;
+  margin-bottom: 1rem;
+}
+
+.adminMessageBox {
+  border-radius: var(--standard-radius);
+  padding: 1rem 1.5rem;
+  opacity: 1;
+  transition: background 0.2s ease;
+}
+
+.adminConfirmation {
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
+  border: var(--success-border);
+}
+
+.adminError {
+  background: var(--status-error-bg);
+  border: var(--status-error-border);
+  color: var(--status-error-text);
+}
+
+/* Dashboard box */
+.dashboardBox {
+  background-color: var(--bg-panel);
+  padding: 2%;
+  border: var(--medium-border);
+  border-radius: var(--standard-radius);
+}
+
+.centerButton {
+  display: flex;
+  justify-content: center;
+}
+
+#balanceOutput {
+  height: 1rem;
+}
+
+article.changePassword,
+article.createAdmin,
+article.changePriceBox,
+article.checkBalanceBox,
+article.mastercodeModalContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+article.aboutHotel {
+  display: flex;
+  flex-direction: column;
+}
+
+article.addFeatureBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.checkBalanceBox {
+  justify-content: space-between;
+  padding-bottom: 2%;
+}
+
+.createAdmin .layout,
+.changePassword .layout,
+.changePriceBox .layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  row-gap: 0.5rem;
+  column-gap: 1rem;
+}
+
+.mastercodeModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mastercodeModalContent {
+  width: 25vw;
+}
+
+.cancelButton {
+  background-color: var(--status-error-text);
+  color: white;
+  margin-left: 1rem;
+}
+
+.cancelButton:hover {
+  background-color: var(--status-error-text);
+}
+
+.showModal {
+  display: flex;
+}
+
+/* Put this last due to cascading! */
+.visibilityHidden {
+  visibility: hidden;
+}
+
+.adminHidden {
+  display: none;
+}
