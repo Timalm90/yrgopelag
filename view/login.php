@@ -12,35 +12,39 @@ require __DIR__ . "/../app/autoload.php";
     <link rel="stylesheet" href="../assets/styles/general.css">
     <link rel="stylesheet" href="../assets/styles/admin.css">
     <link rel="stylesheet" href="../assets/styles/nav.css">
+    <link rel="stylesheet" href="../assets/styles/login.css">
 </head>
 
 <body>
     <?php
     require __DIR__ . "/components/nav.php";
     ?>
+
     <div class="adminBackground">
         <main>
             <article class="adminLoginForm">
                 <h1>Login</h1>
+                <section class="adminMessage">
+                    <?php if (isset($_SESSION['loginError'])): ?>
+                        <div class="adminMessageBox adminError">
 
-                <?php if (isset($_SESSION['loginError'])) {
-                    echo ($_SESSION['loginError']);
-                    $_SESSION['loginError'] = NULL;
-                }
-                ?>
+                            <?= ($_SESSION['loginError']);
+                            $_SESSION['loginError'] = NULL; ?>
+                        </div>
+                    <?php endif; ?>
+                </section>
 
                 <form action="../app/admin/login.php" method="post">
-                    <div>
+                    <div class="loginLayout">
                         <label for="username">Username:</label>
                         <input type="text" name="username" placeholder="Enter username" required>
-                    </div>
 
-                    <div>
                         <label for="password">Password:</label>
                         <input type="password" name="password" placeholder="Enter password" required>
                     </div>
-
-                    <button type="submit">Login</button>
+                    <div class="centerButton">
+                        <button class="adminButton" type="submit">Login</button>
+                    </div>
                 </form>
             </article>
         </main>
