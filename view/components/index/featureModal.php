@@ -1,8 +1,3 @@
-<?php
-// Fetch feature description
-// $activeFeatures = getActiveFeatures($pdoBooking);
-?>
-
 <section id="featureModal">
     <article class=" whiteBox modalContent">
         <span class="modalCloseFeature" id="closeModalFeature">&times;</span>
