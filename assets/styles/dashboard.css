@@ -7,9 +7,9 @@ section.adminMessage {
 
 .dashboard {
   display: flex;
+  justify-content: center;
   gap: 3rem;
   height: fit-content;
-  display: flex;
   padding: 4% 0;
   border-radius: var(--standard-radius);
 }
@@ -92,6 +92,31 @@ article.addFeatureBox {
   column-gap: 1rem;
 }
 
+.overviewLayout img,
+.statisticsLayout img,
+.financialLayout img {
+  width: 10vw;
+}
+
+.adminLayout {
+  position: relative;
+  z-index: 5;
+}
+
+.changePassword,
+.createAdmin {
+  z-index: 5;
+}
+
+.goldenKey {
+  width: 7vw;
+  position: absolute;
+  top: 20%;
+  right: -10%;
+  z-index: 2;
+}
+
+/* Mastercode Modal */
 .mastercodeModal {
   position: fixed;
   top: 0;
