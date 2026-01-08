@@ -26,8 +26,15 @@ section.whiteBox {
   height: 85vh;
 }
 
-h1 {
-  text-align: center;
+.welcome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+
+.welcome img {
+  height: 50px;
 }
 
 .adminButton {
