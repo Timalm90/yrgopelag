@@ -84,7 +84,7 @@ function updateTotalPrice() {
 // ---------- ADMIN PAGE ----------
 // Show message
 function showAdminMessage(message, isError = false) {
-  const box = document.querySelector("#adminMessageBox");
+  const box = document.querySelector(".adminMessageBox");
   box.textContent = message;
   box.classList.remove("adminHidden", "adminError", "adminConfirmation");
   box.classList.add(isError ? "adminError" : "adminConfirmation");
@@ -92,7 +92,7 @@ function showAdminMessage(message, isError = false) {
 
 // Clear message
 function clearAdminMessage() {
-  const box = document.querySelector("#adminMessageBox");
+  const box = document.querySelector(".adminMessageBox");
   box.textContent = "";
   box.classList.remove("adminError", "adminConfirmation");
   box.classList.add("adminHidden");
