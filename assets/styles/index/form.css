@@ -65,7 +65,8 @@ article.roomSection .field {
 }
 
 /* ----- Features ----- */
-.secretBox {
+.secretBox,
+.secretBoxes {
   width: 1.3rem;
   height: 1.3rem;
   cursor: pointer;
@@ -73,8 +74,9 @@ article.roomSection .field {
   margin-left: 1vw;
 }
 
-.secretBox:hover {
-  transform: translateY(-1px);
+.secretBox:hover,
+.secretBoxes:hover {
+  transform: translateY(-2px);
 }
 
 .featureGrid {

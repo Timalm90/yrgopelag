@@ -59,6 +59,18 @@ function getActiveFeatures(PDO $pdo): array
     return $result;
 }
 
+function getActiveFeaturesByCategory(PDO $pdo, int $categoryId): array
+{
+    $stmt = $pdo->prepare("SELECT * FROM features WHERE is_active = 1 AND category_id = :categoryId
+    ");
+    $stmt->bindParam(":categoryId", $categoryId, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $result;
+}
+
+
 function getRooms(PDO $pdo): array
 {
     $stmt = $pdo->prepare("SELECT * FROM rooms");

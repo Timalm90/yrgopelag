@@ -64,7 +64,7 @@
             <!-- BOOK FEATURES -->
             <fieldset class="field features">
                 <legend>Features
-                    <img class="secretBox" src="assets/images/secretBox.png" />
+                    <!-- <img class="secretBox" src="assets/images/secretBox.png" /> -->
                 </legend>
 
                 <article class="featureGrid">
@@ -73,6 +73,11 @@
                         <div class="featureCategory">
                             <p class="categoryName">
                                 <?= ucwords(htmlspecialchars($category['category'])); ?>
+                                <img
+                                    class="secretBoxes"
+                                    src="assets/images/secretBox.png"
+                                    data-category-id="<?= $category['id']; ?>"
+                                    alt="More info" />
                             </p>
                             <?php
                             $featureByCategory = featureByCategory($pdo, $category['id']);
