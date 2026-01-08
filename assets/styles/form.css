@@ -1,6 +1,6 @@
 .bookingForm {
   padding: 4%;
-  border-radius: 16px;
+  border-radius: var(--standard-radius);
   width: 70vw;
   min-height: fit-content;
   position: relative;
@@ -103,7 +103,7 @@ div.features {
 
 #bookButton {
   aspect-ratio: 7/2;
-  border-radius: 8px;
+  border-radius: var(--standard-radius);
 }
 
 #bookButton {
@@ -146,7 +146,7 @@ div.features {
 #getTransferCode {
   width: fit-content;
   aspect-ratio: 7/1;
-  border-radius: 8px;
+  border-radius: var(--smaller-radius);
 }
 
 .bookingForm .field.hidden {
@@ -186,10 +186,10 @@ article.showPrice {
 
 div.showPrice {
   width: 90%;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-top-right-radius: var(--smaller-radius);
+  border-bottom-right-radius: var(--smaller-radius);
   background-color: var(--offer-bg);
-  border: var(--offer-border);
+  border: 1px solid var(--offer-border);
   color: var(--offer-text);
   padding: 0.5%;
   display: flex;

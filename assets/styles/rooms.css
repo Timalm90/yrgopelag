@@ -1,11 +1,10 @@
 /* SHOW CHOOSEN ROOM BLOCK ONLY */
 .roomSection {
   display: none;
-  /* width: 100%; */
   width: 70vw;
   align-items: center;
   min-height: 10vh;
-  border-radius: 16px;
+  border-radius: var(--standard-radius);
   margin-bottom: 5%;
   position: relative;
 }
@@ -14,10 +13,10 @@
   display: flex;
 }
 
-/* ROOM PRESENTATION BLOCKS */
+/* Article: Room image */
 article.roomImg {
-  border-top-left-radius: 16px;
-  border-bottom-left-radius: 16px;
+  border-top-left-radius: var(--standard-radius);
+  border-bottom-left-radius: var(--standard-radius);
   aspect-ratio: 1;
   max-width: 30%;
   overflow: hidden;
@@ -29,6 +28,7 @@ img.roomImg {
   object-fit: cover;
 }
 
+/* Article: Room presentation */
 .roomDescription {
   display: flex;
   flex-direction: column;
@@ -39,17 +39,12 @@ img.roomImg {
   width: 40%;
 }
 
+/* Article: Calendar */
 .roomCalendar {
   width: 30%;
   display: flex;
   position: relative;
 }
-
-/* .roomCalendar p {
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 0;
-} */
 
 article.roomCalendar {
   display: flex;
@@ -73,7 +68,6 @@ article.roomCalendar {
 
 .hintWrapper {
   grid-column: 3;
-  /* justify-self: end; */
   position: relative;
 }
 
@@ -102,7 +96,7 @@ div.calendarDot {
   visibility: hidden;
   opacity: 0;
   background-color: white;
-  border-radius: 8px;
+  border-radius: var(--smaller-radius);
   border: 1px dashed var(--border-subtle);
   padding: 1%;
   position: absolute;
@@ -120,7 +114,7 @@ div.calendarDot {
   opacity: 1;
 }
 
-/* For png character */
+/* Article: Character */
 .roomWrapper {
   width: 100vw;
   display: flex;

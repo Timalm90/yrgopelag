@@ -7,10 +7,10 @@
 
 .errorMessage {
   width: 70%;
-  border-radius: 16px;
+  border-radius: var(--standard-radius);
   padding: 1rem 1.5rem;
   background: var(--status-error-bg);
-  border: 1px solid var(--status-error-border);
+  border: var(--error-border);
   color: var(--status-error-text);
   transition: background 0.2s ease;
   scroll-margin-top: 16vh; /* To redirect below fixed navbar */

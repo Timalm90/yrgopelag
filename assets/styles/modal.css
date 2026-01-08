@@ -14,10 +14,9 @@
 /* Modal content */
 .confirmationModal .whiteBox {
   background: #fff;
-  border-radius: 16px;
+  border-radius: var(--standard-radius);
   padding: 2rem;
   width: 60%;
-
   display: grid;
   grid-template-columns: 3fr 1fr;
   gap: 1rem;
@@ -120,7 +119,7 @@
   max-height: 60vh;
   overflow-y: auto; /* Scroll if content overflows */
   animation: modalFadeIn 0.25s ease-out;
-  border: 2px dashed var(--border-subtle);
+  border: var(--medium-border);
 }
 
 .modalCloseFeature {
