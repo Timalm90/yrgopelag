@@ -1,9 +1,3 @@
-<?php
-// $rooms = getRooms($pdoBooking);
-// $activeFeatures = getActiveFeatures($pdoBooking);
-// $featurePrice = getFeaturePrices($pdoBooking);
-?>
-
 <div class="formWrapper">
     <article class="showPrice">
         <div class="showPrice">
