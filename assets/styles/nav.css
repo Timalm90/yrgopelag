@@ -1,3 +1,4 @@
+/* ----- NAVBAR ----- */
 nav {
   width: 100vw;
   display: flex;
@@ -22,18 +23,27 @@ nav {
   width: fit-content;
   display: flex;
   justify-content: space-around;
-  gap: 40px;
-  margin-right: 5vw;
+  gap: 50px;
+  margin-right: 4vw;
 }
 
 .navLink {
-  color: black;
+  color: var(--nav-text);
+  /* font-weight: 700; */
+  text-decoration: none;
+}
+
+.navLink:hover {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
 .activeNav {
   font-weight: bold;
+  border-bottom: 3px solid var(--nav-text);
 }
 
+/* ----- OFFERS ----- */
 .stickyOffers {
   position: fixed;
   width: 100vw;

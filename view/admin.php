@@ -4,7 +4,7 @@ require __DIR__ . "/../app/autoload.php";
 // If not logged in, redirect to login page
 if (!isset($_SESSION['admin'])) {
     header("Location: login.php"); //IN LOCALHOST
-    // header("Location: /MAPP/view/login.php"); //IN DEPLOY
+    // header("Location: /yrgopelag/view/login.php"); //IN DEPLOY
     exit;
 }
 ?>
@@ -49,7 +49,7 @@ if (!isset($_SESSION['admin'])) {
                 </section>
 
                 <!-- DASHBOARD: Overview -->
-                <section class="dashboard">
+                <section class="dashboard overviewLayout">
                     <?php
                     require __DIR__ . "/components/admin/aboutHotel.php";
                     require __DIR__ . "/components/admin/addFeature.php";
@@ -57,13 +57,13 @@ if (!isset($_SESSION['admin'])) {
                 </section>
 
                 <!-- DASHBOARD: Statistics -->
-                <section class="dashboard adminHidden">
+                <section class="dashboard statisticsLayout adminHidden">
                     <?php require __DIR__ . "/components/admin/statistics.php";
                     ?>
                 </section>
 
                 <!-- DASHBOARD: Financial -->
-                <section class="dashboard adminHidden">
+                <section class="dashboard financialLayout adminHidden">
                     <?php
                     require __DIR__ . "/components/admin/checkBalance.php";
                     require __DIR__ . "/components/admin/financials.php";
@@ -71,7 +71,7 @@ if (!isset($_SESSION['admin'])) {
                 </section>
 
                 <!-- DASHBOARD: Admin -->
-                <section class="dashboard adminHidden">
+                <section class="dashboard adminLayout adminHidden">
                     <?php
                     require __DIR__ . "/components/admin/createAdmin.php";
                     require __DIR__ . "/components/admin/changePassword.php"; ?>

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 require __DIR__ . "/../autoload.php";
-require __DIR__ . "/../config.php";
 
 use GrahamCampbell\ResultType\Success;
 use GuzzleHttp\Exception\RequestException;
@@ -12,6 +11,7 @@ header("Content-Type: application/json");
 
 // Start values
 $starRating = (int)$starRating;
+
 $data = json_decode(file_get_contents("php://input"), true);
 $featureId = $data['item'] ?? null;
 $mastercodeInput = $data['masterCode'] ?? null;
@@ -48,7 +48,6 @@ if (!$newFeature) {
 }
 
 //Check mastercode
-$mastercodeInput = $data['masterCode'] ?? null;
 requireMastercode($mastercodeInput, $mastercode);
 
 // Fetch active features from Centralbank
@@ -71,7 +70,7 @@ try {
     exit;
 };
 
-// Convert active features to right format for "/centralbank/islands"
+// Convert active features to API-format
 $featureToRegister = [];
 foreach ($activeFeatures as $feature) {
     $featureToRegister[$feature['activity']][$feature['tier']] = $feature['feature'];
@@ -81,7 +80,6 @@ foreach ($activeFeatures as $feature) {
 try {
     $featureToRegister[$newFeature['activity']][$newFeature['tier']] = $newFeature['feature'];
 
-    // islandName, hotelName, url, stars, user, api_key, hotel_specific_name (optional), features[activity][tier]=name...
     $registerResponse = $client->post('/centralbank/islands', [
         'json' => [
             'islandName' => $islandName,

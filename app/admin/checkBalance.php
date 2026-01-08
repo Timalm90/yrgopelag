@@ -3,13 +3,10 @@
 declare(strict_types=1);
 
 require __DIR__ . "/../autoload.php";
-require __DIR__ . "/../config.php"; // -> $apiKey
 
 use GuzzleHttp\Exception\RequestException;
 
 header('Content-Type: application/json');
-
-// $hotelOwner = getSettingsValue($pdoBooking, "hotel_owner"); //
 
 try {
     $accountResponse = $client->post('/centralbank/accountInfo', [

@@ -1,4 +1,4 @@
-// ---------------------------------------- INDEX PAGE ----------------------------------------
+// ---------- INDEX PAGE ----------
 // Clear selection in calendar
 function clearSelection() {
   document.querySelectorAll(".day.selected").forEach((d) => {
@@ -81,7 +81,7 @@ function updateTotalPrice() {
     });
 }
 
-// ---------------------------------------- ADMIN PAGE ----------------------------------------
+// ---------- ADMIN PAGE ----------
 // Show message
 function showAdminMessage(message, isError = false) {
   const box = document.querySelector("#adminMessageBox");

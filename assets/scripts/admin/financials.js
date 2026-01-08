@@ -23,7 +23,7 @@ checkBalanceBtn.addEventListener("click", () => {
     });
 });
 
-// ---------- CHANGE PRICE ON ROOM OR FEATURE / TOGGLE FORM ----------
+// ---------- CHANGE PRICE ON ROOM OR FEATURE: TOGGLE FORM ----------
 const categorySelect = document.getElementById("category");
 const itemSelect = document.getElementById("item");
 const currentPriceEl = document.getElementById("currentPrice");
@@ -133,18 +133,17 @@ changePriceBtn.addEventListener("click", () => {
 });
 
 // ---------- ADD FEATURE ----------
-// ------------------- ELEMENTREFERENSER -------------------
 const addFeatureBtn = document.querySelector(".addFeatureButton");
 const featureSelect = document.querySelector(".featureSelect");
 
-// ------------------- CLICK EVENT / FETCH -------------------
+// Click event
 addFeatureBtn.addEventListener("click", (e) => {
   // Clear ealier messages
   clearAdminMessage();
 
   const selectedFeature = featureSelect.value;
 
-  // Validering
+  // Validation
   if (!selectedFeature) {
     showAdminMessage("Add feature: Please select a feature to add", true);
     return;

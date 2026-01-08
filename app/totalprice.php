@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 require __DIR__ . "/autoload.php";
 
-// ------------------ START VALUES ------------------
+// ----- START VALUES -----
 $totalRoomCost = 0;
 $totalFeatureCost = 0;
 
-// ------------------ FETCH FORM DATA ------------------
+// ----- FETCH FORM DATA -----
 $bookingType = $_POST['bookingType'] ?? 'room';
 $selectedRoomId = isset($_POST['room']) ? (int)$_POST['room'] : null;
 $arrivalInput = $_POST['arrivalDate'] ?? null;
@@ -23,7 +23,7 @@ if (isset($_POST['features'])) {
     };
 };
 
-// ------------------ ROOM COST ------------------
+// ----- ROOM COST -----
 if ($bookingType === 'room' && $selectedRoomId && $arrivalInput && $departureInput) {
     $arrivalDT = new DateTime($arrivalInput . ' ' . $checkinTime);
     $departureDT = new DateTime($departureInput . ' ' . $checkoutTime);
@@ -36,15 +36,15 @@ if ($bookingType === 'room' && $selectedRoomId && $arrivalInput && $departureInp
     $totalRoomCost = countRoomCost($pdoBooking, $selectedRoomId, $nights);
 }
 
-// ------------------ FEATURES COST ------------------
+// ----- FEATURES COST -----
 if (!empty($selectedFeatures)) {
     $totalFeatureCost = countFeatureCost($pdoBooking, $selectedFeatures);
 }
 
-// ------------------ TOTAL PRICE ------------------
+// ----- TOTAL PRICE -----
 $totalPrice = $totalRoomCost + $totalFeatureCost;
 
-// //  ------------------ DISCOUNTS ------------------
+// ----- DISCOUNTS -----
 $name = trim($name);
 $isLoyal = false;
 
@@ -67,12 +67,12 @@ if ($isLoyal && $selectedRoomId === $luxuryRoomId) {
     $totalPrice -= $loyalDiscount;
 };
 
-// Ensure total is not negative
+// Ensure total price is not negative
 if ($totalPrice < 0) {
     $totalPrice = 0;
 }
 
-// ------------------ RETURN JSON ------------------
+// ----- RETURN JSON -----
 echo json_encode([
     'totalPrice' => $totalPrice,
     'isLoyal' => $isLoyal

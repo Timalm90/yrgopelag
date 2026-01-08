@@ -2,11 +2,7 @@
 
 declare(strict_types=1);
 
-// Get all rooms
-// $rooms = getRooms($pdoBooking);
-
-// ------------------------------ Fetch occupied dates ------------------------------
-// Array for all booked dates
+// Fetch occupied dates
 $bookedByRoom = [];
 
 foreach ($rooms as $room) {

@@ -6,7 +6,7 @@ require __DIR__ . "/config.php";
 
 use GuzzleHttp\Exception\RequestException;
 
-// ------------------------------------------- START VALUES ---------------------------------------------
+// ----- START VALUES -----
 $totalRoomCost = 0;
 $totalFeatureCost = 0;
 $errors = [];
@@ -14,7 +14,7 @@ $selectedFeatures = [];
 $bookingId = NULL;
 $starRating = (int)$starRating; // int 5
 
-// ------------------------------------------- SANITIZE & VALIDATE ---------------------------------------------
+// ----- SANITIZE & VALIDATE -----
 //Check if mandatory information is provided (name & transferCode)
 if (!isset($_POST['name'], $_POST['transferCode']) || $_POST['name'] === '' || $_POST['transferCode'] === '') {
     $errors[] = "Name and transferCode is mandatory!";
@@ -23,7 +23,7 @@ if (!isset($_POST['name'], $_POST['transferCode']) || $_POST['name'] === '' || $
 $name = trim($_POST['name']);
 $transferCode = ($_POST['transferCode']);
 
-// ------------------------------------------- FETCH FEATURES (ALL CUSTOMER TYPES) ------------------------
+// ----- FETCH FEATURES (ALL CUSTOMER TYPES) -----
 $selectedFeatures = [];
 if (isset($_POST['features'])) {
     foreach ($_POST['features'] as $featureId) {
@@ -31,14 +31,14 @@ if (isset($_POST['features'])) {
     }
 }
 
-// ------------------------------------------- VALIDATE FEATURE-ONLY REQUIREMENTS ------------------------
+// ----- VALIDATE DAY PASS REQUIREMENTS -----
 if (!isset($_POST['room']) && !empty($selectedFeatures)) {
     if (!isset($_POST['arrivalDate']) || $_POST['arrivalDate'] === '') {
-        $errors[] = "Date is required when booking features only.";
+        $errors[] = "Date is required when booking Day pass.";
     }
 }
 
-// ---------------------------------------- FIND/REGISTER GUEST IN DB ------------------------------------------
+// ----- FIND/REGISTER GUEST IN DB -----
 // Find guest in DB if already exists
 $guestId = findGuest($pdoBooking, $name);
 
@@ -52,7 +52,7 @@ if ($guestId === NULL) {
     }
 }
 
-// ------------------------------------------- BOOK ROOM ---------------------------------------------
+// ----- BOOK ROOM -----
 if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     //Fetch input from form:
     $selectedRoomId = (int) $_POST['room'];
@@ -90,22 +90,22 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     $totalRoomCost = countRoomCost($pdoBooking, $selectedRoomId, $nights);
 }
 
-// ------------------------------------------- FEATURE-ONLY DATES ---------------------------------------------
+// ----- DAY PASS DATES -----
 if (!isset($selectedRoomId) && isset($_POST['arrivalDate'])) {
     $arrivalDT = new DateTime($_POST['arrivalDate'] . ' ' . $checkinTime);
     $departureDT = clone $arrivalDT; // Mandatory in receipt
 }
 
-// ------------------------------------------- PAYMENT FEATURES ---------------------------------------------
+// ----- PAYMENT FEATURES -----
 if (!empty($selectedFeatures)) {
     // Calculate total cost for all selected features
     $totalFeatureCost = countFeatureCost($pdoBooking, $selectedFeatures);
 }
 
-// ------------------------------------------- TOTAL PRICE ---------------------------------------------
+// ----- TOTAL PRICE -----
 $totalPrice = $totalRoomCost + $totalFeatureCost;
 
-// -------------------- PREPARE DISCOUNT -----------------------
+// ----- PREPARE DISCOUNT -----
 $isLoyal = checkLoyalCustomer($pdoBooking, $guestId);
 
 // Loyal offer:
@@ -118,7 +118,7 @@ if (isset($selectedRoomId) && $selectedRoomId === $luxuryRoomId && in_array($bow
     $totalPrice -= $comboDiscount;
 }
 
-// ------------------------------------------- VALIDATE TRANSFERCODE ---------------------------------------------
+// ----- VALIDATE TRANSFERCODE -----
 try {
     $transferCodeResponse = $client->post('/centralbank/transferCode', [
         'json' => [
@@ -143,12 +143,10 @@ try {
 
 handleErrors($errors);
 
-// ------------------------------------------- PREPARE FEATURES FOR RECEIPT ---------------------------------------------
+// ----- PREPARE FEATURES FOR RECEIPT -----
 $featuresUsed = prepareFeaturesForReceipt($pdoBooking, $selectedFeatures);
 
-// ------------------------------------------- RECEIPT ---------------------------------------------
-
-// Create a receipt and send to centralbank
+// ----- RECEIPT -----
 try {
     $receiptResponse = $client->post('/centralbank/receipt', [
         'json' => [
@@ -181,8 +179,7 @@ try {
 
 handleErrors($errors);
 
-// ------------------------------------ REQUEST CENTRALBANK DEPOSIT --------------------------------------
-// Make a request to centralbank to make a deposit
+// ----- REQUEST CENTRALBANK DEPOSIT -----
 try {
     $depositResponse = $client->post('/centralbank/deposit', [
         'json' => [
@@ -207,31 +204,30 @@ try {
 
 handleErrors($errors);
 
-// -------------------------------------- REGISTER BOOKED ROOM IN DB ----------------------------------------
+// ----- REGISTER BOOKED ROOM IN DB -----
 if (isset($selectedRoomId, $arrivalDT, $departureDT)) {
     roomBooking($pdoBooking, $guestId, $selectedRoomId, $arrivalDT, $departureDT);
     $bookingId = findBookingId($pdoBooking, $guestId, $arrivalDT);
 }
 
-// ------------------------------------ REGISTER FEATURE-ONLY CUSTOMERS --------------------------------------
+// ----- REGISTER DAY PASS CUSTOMERS -----
 if (!isset($selectedRoomId) && isset($arrivalDT)) {
     if (empty($selectedFeatures)) {
         $errors[] = "You must select at least one feature!";
         handleErrors($errors);
     }
-    featureOnlyBooking($pdoBooking, $guestId, $arrivalDT);
+    daypassBooking($pdoBooking, $guestId, $arrivalDT);
     $bookingId = findBookingId($pdoBooking, $guestId, $arrivalDT);
 }
 
-// -------------------------------------- REGISTER BOOKED FEATURE IN DB ----------------------------------------
+// ----- REGISTER BOOKED FEATURES IN DB -----
 if (!empty($selectedFeatures) && $bookingId !== NULL) {
-    // Register chosen features on checkin_id
     registerFeatures($pdoBooking, $bookingId, $selectedFeatures);
 }
 
-// ----------------------------------------- USER CONFIRMATION -------------------------------------------
+// ----- USER CONFIRMATION -----
 
-// ------------------ DETERMINE BOOKING TYPE ------------------
+// Determine booking type
 if (isset($selectedRoomId) && !empty($selectedFeatures)) {
     $bookingType = 'Room with features';
 } elseif (isset($selectedRoomId)) {
@@ -248,7 +244,7 @@ foreach ($selectedFeatures as $featureId) {
     }
 }
 
-// ------------------------------------------- PREPARE CONFIRMATION DATA ---------------------------------------------
+// Prepare confirmation data
 $confirmation = [
     'visitor'      => $name,
     'bookingType'  => $bookingType,
@@ -262,6 +258,7 @@ $confirmation = [
     'discountSum'  => ($loyalDiscountApplied ?? 0) + ($comboDiscountApplied ?? 0)
 ];
 
+// Send back to index page with confirmation data
 $_SESSION['success'] = $confirmation;
 header("Location: ../index.php");
 exit;

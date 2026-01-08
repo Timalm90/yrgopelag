@@ -3,8 +3,6 @@
 declare(strict_types=1);
 require __DIR__ . "/../autoload.php";
 
-// In this file we login admins.
-
 $username = $_POST['username'];
 $username = trim($username);
 
@@ -17,7 +15,7 @@ if ($username === '' || $password === '') {
 // Fetch admin in database
 $dbAdmin = findAdmin($pdoBooking, $username);
 
-// If admin wasn't found in the database, redirect the user back to the login page.
+// If not founbd, redirect back to login page.
 if (!$dbAdmin) {
     handleLoginError();
 }
@@ -25,19 +23,18 @@ if (!$dbAdmin) {
 $dbUser = $dbAdmin['username'];
 $dbPassword = $dbAdmin['password'];
 
-// If admin was found in database, verify the password against the one in the database.
+// Verify password
 $verified = password_verify($password, $dbPassword);
 
-// If password was valid, store the admin's username in a session variable called user.
+// If valid, store in session varible, else redirect to login page
 if ($verified) {
     $_SESSION['admin'] = [
         "name" => $dbUser,
     ];
 } else {
     handleLoginError();
-    // header("Location: ../../view/login.php");
-    // exit;
 };
 
+// Redirect to admin page
 header("Location: ../../view/admin.php");
 exit;

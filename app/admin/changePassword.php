@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 require __DIR__ . "/../autoload.php";
-require __DIR__ . "/../config.php";
 
 header("Content-Type: application/json");
 
 // Fetch JSON-data
 $data = json_decode(file_get_contents("php://input"), true);
-
 
 $username = $data['usernameChangePassword'] ?? null;
 $currentPassword = $data['currentPassword'] ?? null;
@@ -63,7 +61,6 @@ if (!empty($errors)) {
 }
 
 // Check mastercode
-$mastercodeInput = $data['masterCode'] ?? null;
 requireMastercode($mastercodeInput, $mastercode);
 
 // -------- DATABASE --------

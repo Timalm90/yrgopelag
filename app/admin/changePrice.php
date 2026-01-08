@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 require __DIR__ . "/../autoload.php";
-require __DIR__ . "/../config.php";
 
 header("Content-Type: application/json");
 
@@ -38,7 +37,6 @@ if (!empty($errors)) {
 }
 
 //Check mastercode
-$mastercodeInput = $data['masterCode'] ?? null;
 requireMastercode($mastercodeInput, $mastercode);
 
 // Uppdate in database

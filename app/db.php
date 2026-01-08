@@ -11,7 +11,6 @@ function getSettingsValue(PDO $pdo, string $key): string
     return $result['value'];
 }
 
-//Find admin in DB
 function findAdmin(PDO $pdo, string $username): array
 {
     $stmt = $pdo->prepare("SELECT * FROM admins WHERE username = :username AND is_active = 1");
@@ -100,7 +99,6 @@ function getTierPriceByName(PDO $pdo, string $tier): ?int
     return $result['price_per_feature'] ?? null;
 }
 
-
 function findGuest(PDO $pdo, string $name): ?int
 {
     $stmt = $pdo->prepare("SELECT id FROM guests WHERE name = :name");
@@ -128,7 +126,7 @@ function roomBooking(PDO $pdo, int $guestId, int $roomId, DateTime $arrivalDT, D
     $stmt->execute();
 }
 
-function featureOnlyBooking(PDO $pdo, int $guestId, DateTime $arrivalDT): void
+function daypassBooking(PDO $pdo, int $guestId, DateTime $arrivalDT): void
 {
     $stmt = $pdo->prepare("INSERT INTO bookings (guest_id, arrival) VALUES (:guest_id, :arrival)
     ");
@@ -166,6 +164,7 @@ function getLuxuryRoomId(PDO $pdo): ?int
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result['id'] ?? null;
 }
+
 function getBowserFeatureId(PDO $pdo): ?int
 {
     $stmt = $pdo->prepare("SELECT id FROM features WHERE feature = 'Bowser’s Castle Escape'");
@@ -173,6 +172,7 @@ function getBowserFeatureId(PDO $pdo): ?int
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result['id'] ?? null;
 }
+
 function checkLoyalCustomer(PDO $pdo, int $guestId): bool
 {
     $stmt = $pdo->prepare("SELECT COUNT(*) AS visits FROM bookings WHERE guest_id = :guestId");
@@ -182,6 +182,7 @@ function checkLoyalCustomer(PDO $pdo, int $guestId): bool
 
     return ((int) $result['visits'] ?? 0) >= 1;
 }
+
 function getDiscount(PDO $pdo, string $type): int
 {
     $stmt = $pdo->prepare("SELECT discount FROM discounts WHERE type = :type LIMIT 1");
@@ -209,8 +210,6 @@ function getFeatureName(PDO $pdo, int $featureId): ?string
     return $result['feature'] ?? null;
 }
 
-
-
 // For Confirmation message in bookings
 function getRoomName(PDO $pdo, int $roomId): ?string
 {
@@ -220,7 +219,6 @@ function getRoomName(PDO $pdo, int $roomId): ?string
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result['room'] ?? null;
 }
-
 
 // Update prices
 function updateRoomPrice(PDO $pdo, string $room, int $price): void
@@ -238,7 +236,6 @@ function updateTierPrice(PDO $pdo, string $tierName, int $price): void
     $stmt->bindParam(":tierName", $tierName, PDO::PARAM_STR);
     $stmt->execute();
 }
-
 
 // Buy/Add features
 function findNonActiveFeatures(PDO $pdo): array

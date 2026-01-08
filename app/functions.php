@@ -25,7 +25,6 @@ function bookedDays(array $bookings): array
     return $days;
 }
 
-
 // Count number of nights
 function countNights(DateTime $arrival, DateTime $departure): int
 {
@@ -36,14 +35,12 @@ function countNights(DateTime $arrival, DateTime $departure): int
     return $nights;
 }
 
-
 // Count total cost for hotel room
 function countRoomCost(PDO $pdo, int $roomId, int $nights): int
 {
     $roomPrices = getRoomPrices($pdo);
     return $roomPrices[$roomId] * $nights;
 }
-
 
 // Count total cost for features
 function countFeatureCost(PDO $pdo, array $selectedFeatures): int
@@ -80,15 +77,6 @@ function handleLoginError(): void
     exit;
 };
 
-function handleAdminErrors(array $errors): void
-{
-    if (!empty($errors)) {
-        $_SESSION['adminErrors'] = $errors;
-        header("Location: ../../view/admin.php");
-        exit;
-    }
-}
-
 // Prepare features for receipt. Returns an array with keys activity and tier.
 function prepareFeaturesForReceipt(PDO $pdo, array $selectedFeatures): array
 {
@@ -119,4 +107,25 @@ function prepareFeaturesForReceipt(PDO $pdo, array $selectedFeatures): array
     }
 
     return $featuresUsed;
+}
+
+// ---------- MASTERCODE ----------
+function verifyMastercode(string $input, string $mastercode): bool
+{
+    if (!$input || !$mastercode) {
+        return false;
+    }
+
+    return password_verify($input, $mastercode);
+}
+
+function requireMastercode(string $input, string $mastercode): void
+{
+    if (!verifyMastercode($input, $mastercode)) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Mastercode is invalid. Operation denied.'
+        ]);
+        exit;
+    }
 }
