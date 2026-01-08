@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+// Start the session:
+session_start();
+
+// Set time zone:
+date_default_timezone_set('Europe/Stockholm');
+
+// Encoding, extra security for making å, ä, ö  & emojis working
+mb_internal_encoding('UTF-8');
+
+// Requires
+require __DIR__ . "/functions.php"; // Require functions
+require __DIR__ . "/db.php"; // DB connections
+
+// Require in config file, save to variable for later usage in files
+require __DIR__ . "/config.php";
+
+// Connection to booking DB
+$dbPath = __DIR__ . "/database/bookings.sqlite3";
+$pdo = new PDO("sqlite:" . $dbPath);
+
+//Variables
+require __DIR__ . "/variables.php";
+
+// Guzzle client
+use GuzzleHttp\Client;
+
+$client = new Client(['base_uri' => 'https://www.yrgopelag.se']);

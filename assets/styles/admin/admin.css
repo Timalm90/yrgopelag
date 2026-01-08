@@ -1,0 +1,132 @@
+/* ----- Background ----- */
+.adminBackground {
+  position: fixed;
+  inset: 0;
+  background-image: url("../../images/adminBackground.jpeg");
+  background-size: cover;
+  background-position: top;
+  z-index: -1;
+}
+
+.adminBackground::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+/* ----- Main layout ----- */
+main {
+  margin-top: 15vh;
+  margin-left: 10vw;
+  margin-right: 10vw;
+  margin-bottom: 10vw;
+}
+
+section.whiteBox {
+  height: 85vh;
+}
+
+section.dashboard,
+section.adminMessage {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  height: fit-content;
+  padding: 4% 0;
+  border-radius: var(--standard-radius);
+}
+
+/* ----- Header ----- */
+.welcome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+
+.welcome img {
+  height: 50px;
+}
+
+/* ----- Dashboard menu ----- */
+.dashboardMenu {
+  width: 100%;
+  padding: 2% 0;
+  display: flex;
+  justify-content: space-around;
+  background-color: var(--footer-bg);
+  border: 1px solid var(--dashboardMenu-border);
+  margin-bottom: 2%;
+}
+
+.dashboardMenu button {
+  color: var(--nav-text);
+  background-color: var(--footer-bg);
+  font-weight: 700;
+  border: none;
+}
+
+.dashboardMenu button:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.dashboardMenu button.active {
+  border-bottom: 3px solid var(--nav-text);
+  transform: scale(1.05);
+}
+
+/* ----- Admin message ----- */
+.adminMessage {
+  height: 1rem;
+  margin-bottom: 1rem;
+}
+
+.adminMessageBox {
+  border-radius: var(--standard-radius);
+  padding: 1rem 1.5rem;
+  opacity: 1;
+  transition: background 0.2s ease;
+}
+
+.adminConfirmation {
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
+  border: var(--success-border);
+}
+
+.adminError {
+  background: var(--status-error-bg);
+  border: var(--status-error-border);
+  color: var(--status-error-text);
+}
+
+/* ----- Buttons ----- */
+.adminButton {
+  margin-top: 1.5rem;
+  background-color: var(--accent-primary);
+  border-radius: var(--smaller-radius);
+  font-weight: 500;
+  font-size: 1rem;
+  width: 10vw;
+  min-height: 2rem;
+  max-width: 8rem;
+}
+
+.adminButton:hover {
+  background-color: var(--accent-primary-hover);
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.centerButton {
+  display: flex;
+  justify-content: center;
+}

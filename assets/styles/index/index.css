@@ -1,0 +1,66 @@
+/* ----- Background ----- */
+.background {
+  position: fixed;
+  inset: 0;
+  background-image: url("../../images/landscapewChar.png");
+  background-size: cover;
+  background-position: bottom;
+  z-index: -1;
+}
+
+.background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg-app);
+}
+
+/* ----- Main layout ----- */
+main {
+  margin-top: 20vh;
+  margin-left: 15vw;
+  margin-right: 15vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* ----- Hero ----- */
+.heroWrapper {
+  width: 100vw;
+  display: flex;
+}
+
+article.heroImg {
+  width: 15vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+img.heroImg {
+  width: 10vw;
+  height: auto;
+}
+
+.hero {
+  width: 70vw;
+  padding: 2% 5%;
+  text-align: center;
+}
+
+.hotelStars {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.hotelStars img {
+  width: 5%;
+}
+
+section.roomToggle {
+  margin-top: 5%;
+}

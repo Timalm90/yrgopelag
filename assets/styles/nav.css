@@ -1,0 +1,63 @@
+/* ----- NAVBAR ----- */
+nav {
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 8vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: var(--nav-bg);
+  border: 1px solid var(--nav-border);
+  color: var(--nav-text);
+}
+
+.navLogo {
+  height: 100%;
+  margin: 1%;
+}
+
+.navbar {
+  width: fit-content;
+  display: flex;
+  justify-content: space-around;
+  gap: 50px;
+  margin-right: 4vw;
+}
+
+.navLink {
+  color: var(--nav-text);
+  text-decoration: none;
+}
+
+.navLink:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.activeNav {
+  font-weight: bold;
+  border-bottom: 3px solid var(--nav-text);
+}
+
+/* ----- OFFERS ----- */
+.stickyOffers {
+  position: fixed;
+  width: 100vw;
+  top: 8vh;
+  left: 0;
+  padding: 0;
+  text-align: center;
+  z-index: 1000;
+  font-weight: 700;
+  background-color: var(--offer-bg);
+  border: 2px solid var(--offer-border);
+  color: var(--offer-text);
+}
+
+.stickyOffers p {
+  padding: 0;
+  margin: 0;
+}

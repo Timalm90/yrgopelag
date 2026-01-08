@@ -1,0 +1,86 @@
+:root {
+  /* ----- COLOR ----- */
+  /* Background */
+  --bg-app: rgba(250, 245, 239, 0.2); /* Filter for background images*/
+  --bg-panel: rgba(250, 245, 239, 0.94);
+  --border-subtle: #cfcfcf;
+
+  /* Texts */
+  --text-main: #1f1f1f;
+  --text-muted: #6b6b6b;
+  --text-disabled: #9e9e9e;
+
+  /* CTA buttons */
+  --CTA: #f4c75e;
+  --CTA-hover: #f0a531;
+
+  /* Buttons */
+  --accent-primary: #5fa37a;
+  --accent-primary-hover: #3e7f61;
+
+  /* Error */
+  --status-error-text: #b00020;
+  --status-error-bg: #fdeaea;
+  --status-error-border: #b00020;
+
+  /* Success */
+  --status-success-text: #1b7f4b;
+  --status-success-bg: #e8f5ee;
+  --status-success-border: #1b7f4b;
+
+  /* Navbar */
+  --nav-bg: #fbe089;
+  --nav-border: #f4c75e;
+  --nav-text: #1f1f1f;
+  --nav-text-muted: #4f4f4f;
+  --nav-active: #2d6a4f;
+
+  /* Offers/discounts */
+  --offer-bg: #fff0d9;
+  --offer-bg: #ffe8b3;
+  --offer-border: #f4c75e;
+  --offer-border: #f4a531;
+  --offer-text: #5c3a00;
+
+  /* Footer */
+  --dashboardMenu-border: #cfd4cf;
+  --footer-bg: #e6e8e4;
+
+  /* Total price */
+  --price-bg: #ffffff;
+  --price-border: #e0e0e0;
+  --price-text: #1f1f1f;
+  --price-accent: #d4af37;
+
+  /* ----- BORDER RADIUS ----- */
+  --standard-radius: 16px;
+  --smaller-radius: 8px;
+
+  /* BORDER */
+  --standard-border: 4px dashed var(--border-subtle);
+  --medium-border: 2px dashed var(--border-subtle);
+  --thin-border: 1px dashed var(--border-subtle);
+  --error-border: 1px solid var(--status-error-border);
+  --success-border: 1px solid var(--status-success-border);
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Nunito Sans", sans-serif;
+  color: var(--text-main);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Raleway", sans-serif;
+}
+
+.whiteBox {
+  background-color: var(--bg-panel);
+  border-radius: var(--standard-radius);
+  border: var(--standard-border);
+}

@@ -1,0 +1,58 @@
+/* ----- Error message ----- */
+.sectionError {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.errorMessage {
+  width: 70%;
+  border-radius: var(--standard-radius);
+  padding: 1rem 1.5rem;
+  background: var(--status-error-bg);
+  border: var(--error-border);
+  color: var(--status-error-text);
+  transition: background 0.2s ease;
+  scroll-margin-top: 16vh; /* To redirect below fixed navbar */
+  position: relative;
+}
+
+.errorMessage h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--status-error-text);
+}
+
+.errorMessage ul {
+  margin: 0.5rem 0 0 1.2rem;
+  padding: 0;
+}
+
+.errorMessage li {
+  margin-bottom: 0.3rem;
+}
+
+/* ----- Decoration icons ----- */
+.errorLeft,
+.errorRight {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.errorRight {
+  align-items: end;
+}
+
+.errorPiranha {
+  width: 12vw;
+  height: auto;
+}
+
+.errorGoomba {
+  width: 5vw;
+}
