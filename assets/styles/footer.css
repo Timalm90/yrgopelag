@@ -1,14 +1,13 @@
 .siteFooter {
   width: 100%;
   margin-top: 5%;
-  background-color: #222;
-  color: white;
+  background-color: var(--nav-bg);
   text-align: center;
   padding: 2rem 1rem;
 }
 
 .siteFooter img {
-  width: 32px;
+  width: 2rem;
   margin: 0 0.5rem;
   vertical-align: middle;
 }

@@ -4,7 +4,6 @@
   border-radius: var(--standard-radius);
   border: var(--standard-border);
   padding: 2%;
-  z-index: 5;
 }
 
 .adminLoginForm h1 {
