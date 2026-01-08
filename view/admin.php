@@ -19,6 +19,7 @@ if (!isset($_SESSION['admin'])) {
     <link rel="stylesheet" href="../assets/styles/general.css">
     <link rel="stylesheet" href="../assets/styles/nav.css">
     <link rel="stylesheet" href="../assets/styles/admin.css">
+    <link rel="stylesheet" href="../assets/styles/dashboardMenu.css">
 </head>
 
 <body>
@@ -45,7 +46,7 @@ if (!isset($_SESSION['admin'])) {
 
                 <!-- Confirmation or error messages -->
                 <section class="adminMessage">
-                    <article id="adminMessageBox" class="adminHidden"></article>
+                    <article class="adminMessageBox adminHidden"></article>
                 </section>
 
                 <!-- DASHBOARD: Overview -->
