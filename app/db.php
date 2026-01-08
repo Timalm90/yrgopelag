@@ -210,6 +210,25 @@ function getFeatureName(PDO $pdo, int $featureId): ?string
     return $result['feature'] ?? null;
 }
 
+// Form:
+function getCategories(PDO $pdo): array
+{
+    $stmt = $pdo->prepare("SELECT * FROM categories");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
+}
+
+function featureByCategory($pdo, $category)
+{
+    $stmt = $pdo->prepare("SELECT features.id, feature, price_per_feature FROM features INNER JOIN categories ON categories.id = features.category_id INNER JOIN tiers ON tiers.id = features.tier_id WHERE category_id = :category AND is_active = 1");
+    $stmt->bindParam(":category", $category, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
+}
+
+
 // For Confirmation message in bookings
 function getRoomName(PDO $pdo, int $roomId): ?string
 {
