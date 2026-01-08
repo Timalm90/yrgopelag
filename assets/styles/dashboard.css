@@ -41,10 +41,10 @@ section.adminMessage {
 
 /* Dashboard box */
 .dashboardBox {
-  background-color: var(--bg-panel);
+  /* background-color: var(--bg-panel); */
   padding: 2%;
   border: var(--medium-border);
-  border-radius: var(--standard-radius);
+  /* border-radius: var(--standard-radius); */
 }
 
 .centerButton {
@@ -105,7 +105,7 @@ article.addFeatureBox {
 }
 
 .mastercodeModalContent {
-  width: 25vw;
+  width: 30vw;
 }
 
 .cancelButton {
