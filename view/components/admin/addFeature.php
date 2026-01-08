@@ -1,4 +1,4 @@
-<article class="dashboardBox addFeatureBox">
+<article class="whiteBox dashboardBox addFeatureBox">
     <h3>Add features to hotel</h3>
 
     <div>

@@ -1,4 +1,4 @@
-<article class="dashboardBox createAdmin">
+<article class="whiteBox dashboardBox createAdmin">
     <h3>Create a new admin account</h3>
     <div class="layout">
         <label for="newUsername">New username:</label>

@@ -1,4 +1,4 @@
-<article class="dashboardBox changePriceBox">
+<article class="whiteBox dashboardBox changePriceBox">
     <h3>Change hotel prices</h3>
     <div class="layout">
         <!-- Select category (room or tier) -->

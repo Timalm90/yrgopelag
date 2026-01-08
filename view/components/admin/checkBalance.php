@@ -1,4 +1,4 @@
-<article class="dashboardBox checkBalanceBox">
+<article class="whiteBox dashboardBox checkBalanceBox">
     <h3>Check balance</h3>
     <div class="boxContent">
         <p id="balanceOutput" class="adminMessage"></p>

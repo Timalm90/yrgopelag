@@ -1,4 +1,4 @@
-<article class="dashboardBox">
+<article class="whiteBox dashboardBox">
     <h3>About hotel</h3>
     <p><strong>Island: </strong><?= htmlspecialchars($islandName) ?></p>
     <p><strong>Hotel: </strong><?= htmlspecialchars($hotelName) ?></p>
