@@ -1,7 +1,7 @@
 .background {
   position: fixed;
   inset: 0;
-  background-image: url("../images/landscapewChar.png");
+  background-image: url("../../images/landscapewChar.png");
   background-size: cover;
   background-position: bottom;
   z-index: -1;

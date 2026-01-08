@@ -17,15 +17,15 @@ require __DIR__ . "/app/rooms.php";
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/styles/general.css">
-    <link rel="stylesheet" href="assets/styles/index.css">
+    <link rel="stylesheet" href="assets/styles/index/index.css">
     <link rel="stylesheet" href="assets/styles/nav.css">
-    <link rel="stylesheet" href="assets/styles/togglebar.css">
-    <link rel="stylesheet" href="assets/styles/rooms.css">
-    <link rel="stylesheet" href="assets/styles/error.css">
-    <link rel="stylesheet" href="assets/styles/form.css">
-    <link rel="stylesheet" href="assets/styles/calendar.css">
+    <link rel="stylesheet" href="assets/styles/index/togglebar.css">
+    <link rel="stylesheet" href="assets/styles/index/rooms.css">
+    <link rel="stylesheet" href="assets/styles/index/error.css">
+    <link rel="stylesheet" href="assets/styles/index/form.css">
+    <link rel="stylesheet" href="assets/styles/index/calendar.css">
     <link rel="stylesheet" href="assets/styles/footer.css">
-    <link rel="stylesheet" href="assets/styles/modal.css">
+    <link rel="stylesheet" href="assets/styles/index/modal.css">
 </head>
 
 <body>

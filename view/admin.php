@@ -18,9 +18,8 @@ if (!isset($_SESSION['admin'])) {
     <title>Admin Yrgopelag</title>
     <link rel="stylesheet" href="../assets/styles/general.css">
     <link rel="stylesheet" href="../assets/styles/nav.css">
-    <link rel="stylesheet" href="../assets/styles/admin.css">
-    <link rel="stylesheet" href="../assets/styles/dashboardMenu.css">
-    <link rel="stylesheet" href="../assets/styles/dashboard.css">
+    <link rel="stylesheet" href="../assets/styles/admin/admin.css">
+    <link rel="stylesheet" href="../assets/styles/admin/dashboard.css">
 </head>
 
 <body>

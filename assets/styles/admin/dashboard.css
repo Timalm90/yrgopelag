@@ -1,61 +1,10 @@
-/* Dashbaord layout */
-section.dashboard,
-section.adminMessage {
-  margin-left: 10%;
-  margin-right: 10%;
-}
-
-.dashboard {
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  height: fit-content;
-  padding: 4% 0;
-  border-radius: var(--standard-radius);
-}
-
-/* Message */
-.adminMessage {
-  height: 1rem;
-  margin-bottom: 1rem;
-}
-
-.adminMessageBox {
-  border-radius: var(--standard-radius);
-  padding: 1rem 1.5rem;
-  opacity: 1;
-  transition: background 0.2s ease;
-}
-
-.adminConfirmation {
-  background-color: var(--status-success-bg);
-  color: var(--status-success-text);
-  border: var(--success-border);
-}
-
-.adminError {
-  background: var(--status-error-bg);
-  border: var(--status-error-border);
-  color: var(--status-error-text);
-}
-
-/* Dashboard box */
+/* ----- Dashboard box (complement to whiteBox) ----- */
 .dashboardBox {
-  /* background-color: var(--bg-panel); */
   padding: 2%;
   border: var(--medium-border);
-  /* border-radius: var(--standard-radius); */
 }
 
-.centerButton {
-  display: flex;
-  justify-content: center;
-}
-
-#balanceOutput {
-  height: 1rem;
-}
-
+/* ----- Layouts on dashboards ----- */
 article.changePassword,
 article.createAdmin,
 article.changePriceBox,
@@ -92,6 +41,11 @@ article.addFeatureBox {
   column-gap: 1rem;
 }
 
+#balanceOutput {
+  height: 1rem;
+}
+
+/* ----- Icons on dashboards ----- */
 .overviewLayout img,
 .statisticsLayout img,
 .financialLayout img {
@@ -116,7 +70,7 @@ article.addFeatureBox {
   z-index: 2;
 }
 
-/* Mastercode Modal */
+/* ----- Mastercode Modal ----- */
 .mastercodeModal {
   position: fixed;
   top: 0;
@@ -147,7 +101,7 @@ article.addFeatureBox {
   display: flex;
 }
 
-/* Put this last due to cascading! */
+/* Put these last due to cascading! */
 .visibilityHidden {
   visibility: hidden;
 }
