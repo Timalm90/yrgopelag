@@ -3,14 +3,14 @@
   padding: 2% 0;
   display: flex;
   justify-content: space-around;
-  background-color: var(--nav-bg);
-  border: 1px solid var(--nav-border);
+  background-color: var(--footer-bg);
+  border: 1px solid var(--dashboardMenu-border);
   margin-bottom: 2%;
 }
 
 .dashboardMenu button {
   color: var(--nav-text);
-  background-color: var(--nav-bg);
+  background-color: var(--footer-bg);
   font-weight: 700;
   border: none;
 }
