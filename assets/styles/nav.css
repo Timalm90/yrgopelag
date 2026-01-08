@@ -29,7 +29,6 @@ nav {
 
 .navLink {
   color: var(--nav-text);
-  /* font-weight: 700; */
   text-decoration: none;
 }
 

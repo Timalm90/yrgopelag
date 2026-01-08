@@ -1,4 +1,4 @@
-/* SHOW CHOOSEN ROOM BLOCK ONLY */
+/* Show choosen room block */
 .roomSection {
   display: none;
   width: 70vw;
@@ -39,19 +39,17 @@ img.roomImg {
   width: 40%;
 }
 
-/* Article: Calendar */
+/* ----- Article: Calendar ----- */
 .roomCalendar {
   width: 30%;
   display: flex;
   position: relative;
-}
-
-article.roomCalendar {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+/* Header and hint */
 .calendarHeader {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -69,27 +67,6 @@ article.roomCalendar {
 .hintWrapper {
   grid-column: 3;
   position: relative;
-}
-
-div.calendarGuide {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  margin-bottom: 2%;
-}
-
-div.calendarDot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #e67e22;
-  border: 1px solid #b35400;
-}
-
-.calendarGuide span {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  font-style: italic;
 }
 
 .hintWrapper .tooltip {
@@ -114,7 +91,29 @@ div.calendarDot {
   opacity: 1;
 }
 
-/* Article: Character */
+/* Guide below calendar */
+div.calendarGuide {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-bottom: 2%;
+}
+
+div.calendarDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #e67e22;
+  border: 1px solid #b35400;
+}
+
+.calendarGuide span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* ----- Article: Character ----- */
 .roomWrapper {
   width: 100vw;
   display: flex;

@@ -1,3 +1,4 @@
+/* ----- Error message ----- */
 .sectionError {
   width: 100%;
   display: flex;
@@ -34,7 +35,7 @@
   margin-bottom: 0.3rem;
 }
 
-/* Decoration icons */
+/* ----- Decoration icons ----- */
 .errorLeft,
 .errorRight {
   width: 25%;

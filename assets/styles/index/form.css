@@ -1,6 +1,5 @@
 .bookingForm {
   padding: 4%;
-  border-radius: var(--standard-radius);
   width: 70vw;
   min-height: fit-content;
   position: relative;
@@ -11,12 +10,7 @@ form .field {
   margin-bottom: 4%;
 }
 
-.priceSpan {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  font-style: italic;
-}
-
+/* ----- Choose Room and Date ----- */
 .roomSection .field {
   margin-top: 0;
   margin-bottom: 0;
@@ -64,6 +58,13 @@ article.roomSection .field {
   margin: 0;
 }
 
+.priceSpan {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ----- Features ----- */
 .secretBox {
   width: 1.3rem;
   height: 1.3rem;
@@ -74,11 +75,6 @@ article.roomSection .field {
 
 .secretBox:hover {
   transform: translateY(-1px);
-}
-
-div.features {
-  display: flex;
-  flex-direction: column;
 }
 
 .featureGrid {
@@ -100,6 +96,7 @@ div.features {
   text-decoration: underline;
 }
 
+/* ----- Guest info and Payment ----- */
 .paymentSection {
   display: flex;
   align-items: end;
@@ -120,19 +117,25 @@ div.features {
   margin-top: 0;
 }
 
+.transferCodeInput {
+  padding-left: 4%;
+}
+
+/* ----- Buttons ----- */
 #bookButton {
   aspect-ratio: 7/2;
   border-radius: var(--standard-radius);
-}
-
-#bookButton {
   background-color: var(--CTA);
   font-weight: 700;
   font-size: 1.4rem;
+  width: 15vw;
 }
 
 #getTransferCode {
   background-color: var(--accent-primary);
+  width: fit-content;
+  aspect-ratio: 7/1;
+  border-radius: var(--smaller-radius);
 }
 
 #getTransferCode:hover,
@@ -149,29 +152,12 @@ div.features {
   background-color: var(--CTA-hover);
 }
 
-.transferCodeInput {
-  padding-left: 4%;
-}
-
 .bookButton {
   display: flex;
   justify-content: center;
 }
 
-#bookButton {
-  width: 15vw;
-}
-
-#getTransferCode {
-  width: fit-content;
-  aspect-ratio: 7/1;
-  border-radius: var(--smaller-radius);
-}
-
-.bookingForm .field.hidden {
-  display: none;
-}
-
+/* ----- Hints in form ----- */
 .hint {
   display: flex;
   justify-content: center;
@@ -190,6 +176,12 @@ div.features {
   opacity: 1;
 }
 
+/* ----- Hides fields when toggling to Day pass ----- */
+.bookingForm .field.hidden {
+  display: none;
+}
+
+/* ----- Sticky total price ----- */
 .formWrapper {
   display: flex;
   align-items: start;

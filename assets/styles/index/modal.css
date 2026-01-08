@@ -1,4 +1,4 @@
-/* --------------- CONFIRMATION MODAL --------------- */
+/* ----- Confirmation Modal ----- */
 /* Modal overlay */
 .confirmationModal {
   position: fixed;
@@ -100,7 +100,7 @@
   }
 }
 
-/* --------------- FEATURE DESCRIPTION MODAL --------------- */
+/* ----- Feature Descriptions Modal ----- */
 #featureModal {
   display: none;
   position: fixed;
