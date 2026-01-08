@@ -66,7 +66,7 @@ require __DIR__ . "/app/rooms.php";
             </button>
         </section>
 
-        <?php require __DIR__ . "/view/components/rooms.php"; ?>
+        <?php require __DIR__ . "/view/components/index/rooms.php"; ?>
 
         <?php
         // Show error messages in errors-array:
@@ -97,7 +97,7 @@ require __DIR__ . "/app/rooms.php";
         endif; ?>
 
         <?php
-        require __DIR__ . "/view/components/form.php";
+        require __DIR__ . "/view/components/index/form.php";
         ?>
 
     </main>
@@ -106,12 +106,12 @@ require __DIR__ . "/app/rooms.php";
     require __DIR__ . "/view/components/footer.php";
 
     // Modals
-    require __DIR__ . "/view/components/featureModal.php";
+    require __DIR__ . "/view/components/index/featureModal.php";
 
     if (!empty($_SESSION['success'])) {
         $confirmation = $_SESSION['success'];
 
-        require __DIR__ . "/view/components/confirmationModal.php";
+        require __DIR__ . "/view/components/index/confirmationModal.php";
 
         //Empty session variable
         $_SESSION['success'] = NULL;
