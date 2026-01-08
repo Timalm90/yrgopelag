@@ -67,10 +67,7 @@ requireMastercode($mastercodeInput, $mastercode);
 $hashedPassword = password_hash($changePassword1, PASSWORD_DEFAULT);
 
 try {
-    $statement = $pdoBooking->prepare("UPDATE admins SET password = :password WHERE username = :username");
-    $statement->bindParam(":password", $hashedPassword, PDO::PARAM_STR);
-    $statement->bindParam(":username", $username, PDO::PARAM_STR);
-    $statement->execute();
+    changePassword($pdoBooking, $hashedPassword, $username);
 
     echo json_encode([
         'success' => true,

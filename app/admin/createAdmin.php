@@ -60,16 +60,13 @@ if (!empty($errors)) {
 }
 
 // Check mastercode
-requireMastercode($masterCodeInput, $mastercode);
+requireMastercode($mastercodeInput, $mastercode);
 
 // -------- DATABASE --------
 $hashedPassword = password_hash($password1, PASSWORD_DEFAULT);
 
 try {
-    $statement = $pdoBooking->prepare("INSERT INTO admins (username, password) VALUES (:username, :password)");
-    $statement->bindParam(":username", $username, PDO::PARAM_STR);
-    $statement->bindParam(":password", $hashedPassword, PDO::PARAM_STR);
-    $statement->execute();
+    createAdmin($pdoBooking, $username, $hashedPassword);
 
     echo json_encode([
         'success' => true,

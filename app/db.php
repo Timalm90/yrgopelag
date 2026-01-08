@@ -278,3 +278,20 @@ function countRoomBookings(PDO $pdo): array
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result;
 }
+
+//Admin users
+function createAdmin(PDO $pdo, string $username, string $password): void
+{
+    $stmt = $pdo->prepare("INSERT INTO admins (username, password) VALUES (:username, :password)");
+    $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+    $stmt->bindParam(":password", $password, PDO::PARAM_STR);
+    $stmt->execute();
+}
+
+function changePassword(PDO $pdo, string $password, string $username): void
+{
+    $stmt = $pdo->prepare("UPDATE admins SET password = :password WHERE username = :username");
+    $stmt->bindParam(":password", $password, PDO::PARAM_STR);
+    $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+    $stmt->execute();
+}
