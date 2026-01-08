@@ -29,27 +29,21 @@
   --status-success-border: #1b7f4b;
 
   /* Navbar */
-  /* --nav-bg: #e6e8e4; */
-  /* --nav-bg: #e6e3dd;
-  --nav-bg: #f9f3e8; */
   --nav-bg: #fbe089;
-  /* --nav-border: #cfd4cf;
-  --nav-border: #f0e2c8; */
   --nav-border: #f4c75e;
   --nav-text: #1f1f1f;
   --nav-text-muted: #4f4f4f;
   --nav-active: #2d6a4f;
 
   /* Offers/discounts */
-  /* --offer-bg: #fff6e5; */
   --offer-bg: #fff0d9;
   --offer-bg: #ffe8b3;
-  /* --offer-border: #f0c36d; */
   --offer-border: #f4c75e;
   --offer-border: #f4a531;
   --offer-text: #5c3a00;
 
   /* Footer */
+  --dashboardMenu-border: #cfd4cf;
   --footer-bg: #e6e8e4;
 
   /* Total price */
