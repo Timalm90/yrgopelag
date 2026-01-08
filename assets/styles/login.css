@@ -1,0 +1,29 @@
+.adminLoginForm {
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 30vw;
+  border-radius: var(--standard-radius);
+  border: var(--standard-border);
+  padding: 2%;
+  z-index: 5;
+}
+
+.adminLoginForm h1 {
+  margin-top: 0.5%;
+  margin-bottom: 1%;
+}
+
+.adminMessageBox {
+  padding: 0.5rem 1rem;
+}
+
+.loginLayout {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 8%;
+  width: fit-content;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  row-gap: 0.5rem;
+  column-gap: 0;
+}
