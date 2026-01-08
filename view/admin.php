@@ -3,8 +3,8 @@ require __DIR__ . "/../app/autoload.php";
 
 // If not logged in, redirect to login page
 if (!isset($_SESSION['admin'])) {
-    header("Location: login.php"); //IN LOCALHOST
-    // header("Location: /yrgopelag/view/login.php"); //IN DEPLOY
+    // header("Location: login.php"); //IN LOCALHOST
+    header("Location: /yrgopelag/view/login.php"); //IN DEPLOY
     exit;
 }
 ?>
@@ -86,7 +86,7 @@ if (!isset($_SESSION['admin'])) {
     <!-- Mastercode modal -->
     <!-- Modal -->
     <section id="mastercodeModal" class="mastercodeModal adminHidden">
-        <article class="dashboardBox mastercodeModalContent">
+        <article class="whiteBox dashboardBox mastercodeModalContent">
             <h3>Enter Mastercode</h3>
             <input type="password" id="mastercodeInput" placeholder="Mastercode">
             <div>
