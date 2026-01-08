@@ -20,11 +20,11 @@ if (!$category || !$item) {
 
 switch ($category) {
     case 'room':
-        $price = getRoomPriceByName($pdoBooking, $item);
+        $price = getRoomPriceByName($pdo, $item);
         break;
 
     case 'tier':
-        $price = getTierPriceByName($pdoBooking, $item);
+        $price = getTierPriceByName($pdo, $item);
         break;
 
     default:

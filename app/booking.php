@@ -40,12 +40,12 @@ if (!isset($_POST['room']) && !empty($selectedFeatures)) {
 
 // ----- FIND/REGISTER GUEST IN DB -----
 // Find guest in DB if already exists
-$guestId = findGuest($pdoBooking, $name);
+$guestId = findGuest($pdo, $name);
 
 // If not exists, register and fetch ID
 if ($guestId === NULL) {
-    registerGuest($pdoBooking, $name);
-    $guestId = findGuest($pdoBooking, $name);
+    registerGuest($pdo, $name);
+    $guestId = findGuest($pdo, $name);
     if ($guestId === NULL) {
         $errors[] = "Could not register guest. Please try again.";
         handleErrors($errors);
@@ -62,7 +62,7 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     $departureDT = new DateTime($_POST['departureDate'] . ' ' . $checkoutTime);
 
     // Check if avaiable
-    $occupiedDates = checkAvailable($pdoBooking, $selectedRoomId);
+    $occupiedDates = checkAvailable($pdo, $selectedRoomId);
     $isAvailable = true;
 
     // Loop through all booked dates
@@ -87,7 +87,7 @@ if (isset($_POST['room'], $_POST['arrivalDate'], $_POST['departureDate'])) {
     }
 
     // Calculate total Room cost
-    $totalRoomCost = countRoomCost($pdoBooking, $selectedRoomId, $nights);
+    $totalRoomCost = countRoomCost($pdo, $selectedRoomId, $nights);
 }
 
 // ----- DAY PASS DATES -----
@@ -99,14 +99,14 @@ if (!isset($selectedRoomId) && isset($_POST['arrivalDate'])) {
 // ----- PAYMENT FEATURES -----
 if (!empty($selectedFeatures)) {
     // Calculate total cost for all selected features
-    $totalFeatureCost = countFeatureCost($pdoBooking, $selectedFeatures);
+    $totalFeatureCost = countFeatureCost($pdo, $selectedFeatures);
 }
 
 // ----- TOTAL PRICE -----
 $totalPrice = $totalRoomCost + $totalFeatureCost;
 
 // ----- PREPARE DISCOUNT -----
-$isLoyal = checkLoyalCustomer($pdoBooking, $guestId);
+$isLoyal = checkLoyalCustomer($pdo, $guestId);
 
 // Loyal offer:
 if ($isLoyal && isset($selectedRoomId) && $selectedRoomId === $luxuryRoomId) {
@@ -144,7 +144,7 @@ try {
 handleErrors($errors);
 
 // ----- PREPARE FEATURES FOR RECEIPT -----
-$featuresUsed = prepareFeaturesForReceipt($pdoBooking, $selectedFeatures);
+$featuresUsed = prepareFeaturesForReceipt($pdo, $selectedFeatures);
 
 // ----- RECEIPT -----
 try {
@@ -206,8 +206,8 @@ handleErrors($errors);
 
 // ----- REGISTER BOOKED ROOM IN DB -----
 if (isset($selectedRoomId, $arrivalDT, $departureDT)) {
-    roomBooking($pdoBooking, $guestId, $selectedRoomId, $arrivalDT, $departureDT);
-    $bookingId = findBookingId($pdoBooking, $guestId, $arrivalDT);
+    roomBooking($pdo, $guestId, $selectedRoomId, $arrivalDT, $departureDT);
+    $bookingId = findBookingId($pdo, $guestId, $arrivalDT);
 }
 
 // ----- REGISTER DAY PASS CUSTOMERS -----
@@ -216,13 +216,13 @@ if (!isset($selectedRoomId) && isset($arrivalDT)) {
         $errors[] = "You must select at least one feature!";
         handleErrors($errors);
     }
-    daypassBooking($pdoBooking, $guestId, $arrivalDT);
-    $bookingId = findBookingId($pdoBooking, $guestId, $arrivalDT);
+    daypassBooking($pdo, $guestId, $arrivalDT);
+    $bookingId = findBookingId($pdo, $guestId, $arrivalDT);
 }
 
 // ----- REGISTER BOOKED FEATURES IN DB -----
 if (!empty($selectedFeatures) && $bookingId !== NULL) {
-    registerFeatures($pdoBooking, $bookingId, $selectedFeatures);
+    registerFeatures($pdo, $bookingId, $selectedFeatures);
 }
 
 // ----- USER CONFIRMATION -----
@@ -238,7 +238,7 @@ if (isset($selectedRoomId) && !empty($selectedFeatures)) {
 
 $featureNames = [];
 foreach ($selectedFeatures as $featureId) {
-    $featureRow = getFeatureName($pdoBooking, $featureId);
+    $featureRow = getFeatureName($pdo, $featureId);
     if ($featureRow !== NULL) {
         $featureNames[] = $featureRow;
     }
@@ -252,7 +252,7 @@ $confirmation = [
     'departure'    => $departureDT->format('Y-m-d'),
     'checkinTime'  => $checkinTime,
     'checkoutTime' => $checkoutTime,
-    'roomName'     => isset($selectedRoomId) ? getRoomName($pdoBooking, $selectedRoomId) : null,
+    'roomName'     => isset($selectedRoomId) ? getRoomName($pdo, $selectedRoomId) : null,
     'features'     => $featureNames,
     'totalcost'    => $totalPrice,
     'discountSum'  => ($loyalDiscountApplied ?? 0) + ($comboDiscountApplied ?? 0)

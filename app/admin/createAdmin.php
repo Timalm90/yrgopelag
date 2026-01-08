@@ -66,7 +66,7 @@ requireMastercode($mastercodeInput, $mastercode);
 $hashedPassword = password_hash($password1, PASSWORD_DEFAULT);
 
 try {
-    createAdmin($pdoBooking, $username, $hashedPassword);
+    createAdmin($pdo, $username, $hashedPassword);
 
     echo json_encode([
         'success' => true,

@@ -33,12 +33,12 @@ if ($bookingType === 'room' && $selectedRoomId && $arrivalInput && $departureInp
         $nights = 0;
     }
 
-    $totalRoomCost = countRoomCost($pdoBooking, $selectedRoomId, $nights);
+    $totalRoomCost = countRoomCost($pdo, $selectedRoomId, $nights);
 }
 
 // ----- FEATURES COST -----
 if (!empty($selectedFeatures)) {
-    $totalFeatureCost = countFeatureCost($pdoBooking, $selectedFeatures);
+    $totalFeatureCost = countFeatureCost($pdo, $selectedFeatures);
 }
 
 // ----- TOTAL PRICE -----
@@ -56,10 +56,10 @@ if ($selectedRoomId === $luxuryRoomId && in_array($bowserFeatureId, $selectedFea
 // Loyal discount
 if (isset($name) || $name !== '') {
     // Find guest
-    $guestId = findGuest($pdoBooking, $name);
+    $guestId = findGuest($pdo, $name);
 
     if ($guestId !== null) {
-        $isLoyal = checkLoyalCustomer($pdoBooking, $guestId);
+        $isLoyal = checkLoyalCustomer($pdo, $guestId);
     };
 }
 

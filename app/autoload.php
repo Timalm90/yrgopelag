@@ -23,8 +23,8 @@ require __DIR__ . "/db.php"; // DB connections
 require __DIR__ . "/config.php";
 
 // Connection to booking DB
-$dbPathBooking = __DIR__ . "/database/bookings.sqlite3";
-$pdoBooking = new PDO("sqlite:" . $dbPathBooking);
+$dbPath = __DIR__ . "/database/bookings.sqlite3";
+$pdo = new PDO("sqlite:" . $dbPath);
 
 //Variables
 require __DIR__ . "/variables.php";

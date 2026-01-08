@@ -1,5 +1,6 @@
 <div class="roomWrapper">
-    <?php foreach ($rooms as $room):
+    <?php
+    foreach ($rooms as $room):
         $booked = bookedDays($bookedByRoom[$room['id']]);
     ?>
         <section class="roomSection whiteBox">
@@ -31,7 +32,9 @@
 
             </article>
         </section>
-    <?php endforeach; ?>
+    <?php
+    endforeach;
+    ?>
     <article class="roomCharacters">
         <img class="roomCharacter hiddenCharacter" src="assets/images/toad.png" alt="Toad icon" />
         <img class="roomCharacter" src="assets/images/luigi.png" alt="Luigi icon" />

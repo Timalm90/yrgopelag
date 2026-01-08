@@ -13,7 +13,7 @@ if ($username === '' || $password === '') {
 };
 
 // Fetch admin in database
-$dbAdmin = findAdmin($pdoBooking, $username);
+$dbAdmin = findAdmin($pdo, $username);
 
 // If not founbd, redirect back to login page.
 if (!$dbAdmin) {

@@ -118,7 +118,7 @@ try {
     exit;
 }
 
-activateFeature($pdoBooking, $featureId);
+activateFeature($pdo, $featureId);
 
 $item = ucwords($newFeature['feature']);
 $adminSuccess = "Add feature: $item was added successfully";

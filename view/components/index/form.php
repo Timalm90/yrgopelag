@@ -75,7 +75,7 @@
                                 <?= ucwords(htmlspecialchars($category['category'])); ?>
                             </p>
                             <?php
-                            $featureByCategory = featureByCategory($pdoBooking, $category['id']);
+                            $featureByCategory = featureByCategory($pdo, $category['id']);
 
                             foreach ($featureByCategory as $feature): ?>
                                 <div>

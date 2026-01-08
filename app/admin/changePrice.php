@@ -42,11 +42,11 @@ requireMastercode($mastercodeInput, $mastercode);
 // Uppdate in database
 switch ($category) {
     case 'room':
-        updateRoomPrice($pdoBooking, $item, $price);
+        updateRoomPrice($pdo, $item, $price);
         break;
 
     case 'tier':
-        updateTierPrice($pdoBooking, $item, $price);
+        updateTierPrice($pdo, $item, $price);
         break;
 
     default:

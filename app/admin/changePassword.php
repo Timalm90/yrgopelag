@@ -24,7 +24,7 @@ if (!$username || !$currentPassword || !$changePassword1 || !$changePassword2) {
 $username = trim((string)$username);
 
 // Find user in DB
-$admin = findAdmin($pdoBooking, $username);
+$admin = findAdmin($pdo, $username);
 
 if (!$admin) {
     $errors[] = "Change password: Admin not found";
@@ -67,7 +67,7 @@ requireMastercode($mastercodeInput, $mastercode);
 $hashedPassword = password_hash($changePassword1, PASSWORD_DEFAULT);
 
 try {
-    changePassword($pdoBooking, $hashedPassword, $username);
+    changePassword($pdo, $hashedPassword, $username);
 
     echo json_encode([
         'success' => true,

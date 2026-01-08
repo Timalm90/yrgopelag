@@ -6,8 +6,5 @@ declare(strict_types=1);
 $bookedByRoom = [];
 
 foreach ($rooms as $room) {
-    $bookedByRoom[$room['id']] = checkAvailable(
-        $pdoBooking,
-        (int)$room['id']
-    );
+    $bookedByRoom[$room['id']] = checkAvailable($pdo, (int)$room['id']);
 }
