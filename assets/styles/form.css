@@ -81,6 +81,25 @@ div.features {
   flex-direction: column;
 }
 
+.featureGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  row-gap: 1rem;
+  margin-left: 4%;
+  margin-right: 4%;
+}
+
+.featureCategory {
+  display: flex;
+  flex-direction: column;
+}
+
+.categoryName {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .paymentSection {
   display: flex;
   align-items: end;
