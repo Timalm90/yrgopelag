@@ -1,0 +1,26 @@
+.dashboardMenu {
+  width: 100%;
+  padding: 2% 0;
+  display: flex;
+  justify-content: space-around;
+  background-color: var(--nav-bg);
+  border: 1px solid var(--nav-border);
+  margin-bottom: 2%;
+}
+
+.dashboardMenu button {
+  color: var(--nav-text);
+  background-color: var(--nav-bg);
+  font-weight: 700;
+  border: none;
+}
+
+.dashboardMenu button:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.dashboardMenu button.active {
+  border-bottom: 3px solid var(--nav-text);
+  transform: scale(1.05);
+}
