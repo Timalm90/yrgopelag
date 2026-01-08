@@ -20,6 +20,7 @@ if (!isset($_SESSION['admin'])) {
     <link rel="stylesheet" href="../assets/styles/nav.css">
     <link rel="stylesheet" href="../assets/styles/admin.css">
     <link rel="stylesheet" href="../assets/styles/dashboardMenu.css">
+    <link rel="stylesheet" href="../assets/styles/dashboard.css">
 </head>
 
 <body>
@@ -85,11 +86,13 @@ if (!isset($_SESSION['admin'])) {
     <!-- Mastercode modal -->
     <!-- Modal -->
     <section id="mastercodeModal" class="mastercodeModal adminHidden">
-        <article class="mastercodeModalContent">
+        <article class="dashboardBox mastercodeModalContent">
             <h3>Enter Mastercode</h3>
             <input type="password" id="mastercodeInput" placeholder="Mastercode">
-            <button id="submitMastercode">Authorize</button>
-            <button id="cancelMastercode">Cancel</button>
+            <div>
+                <button id="submitMastercode" class="adminButton">Authorize</button>
+                <button id="cancelMastercode" class="adminButton cancelButton">Cancel</button>
+            </div>
         </article>
     </section>
 
