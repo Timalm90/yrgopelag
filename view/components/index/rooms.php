@@ -11,7 +11,16 @@
                 <p><?= htmlspecialchars($room['description']) ?></p>
             </article>
             <article class="roomCalendar">
-                <p>Jan 2026</p>
+                <div class="calendarHeader">
+                    <p>Jan 2026</p>
+                    <div class="hintWrapper">
+                        <img src="assets/images/secretBox.png" alt="Hint to calendar" class="calendarHint secretBox">
+                        <p class="tooltip">
+                            Click to select arrival & departure dates for this room. Or fill the form below.
+                        </p>
+                    </div>
+                </div>
+
                 <div class="calendar">
                     <?php
                     require __DIR__ . '/calendar.php'; ?>
@@ -19,13 +28,6 @@
                 <div class="calendarGuide">
                     <div class="calendarDot"></div> <span> = occupied</span>
                 </div>
-                <div class="hintWrapper">
-                    <p class="tooltip">
-                        Click to select arrival & <br> departure dates for this <br> room. Or fill the form below.
-                    </p>
-                    <img src="assets/images/secretBox.png" alt="Hint to calendar" class="calendarHint secretBox">
-                </div>
-
 
             </article>
         </section>
