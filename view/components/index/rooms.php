@@ -16,7 +16,7 @@
                     <div class="hintWrapper">
                         <img src="assets/images/secretBox.png" alt="Hint to calendar" class="calendarHint secretBox">
                         <p class="tooltip">
-                            Click to select arrival & departure dates for this room. Or fill the form below.
+                            Select arrival & departure dates in the calender (or fill the form below)
                         </p>
                     </div>
                 </div>
