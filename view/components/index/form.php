@@ -66,19 +66,31 @@
                 <legend>Features
                     <img class="secretBox" src="assets/images/secretBox.png" />
                 </legend>
-                <?php
-                // Present all avaiable feautures
-                foreach ($activeFeatures as $feature) :
-                    // Fetch price for feature
-                    $priceFeature = $featurePrice[$feature['id']];
-                ?>
-                    <div>
-                        <input type="checkbox" id="feature_<?= htmlspecialchars($feature['id']); ?>" name="features[]" value="<?= htmlspecialchars($feature['id']); ?>">
-                        <label for="feature_<?= htmlspecialchars($feature['id']); ?>"><?= ucwords(htmlspecialchars($feature['feature'])); ?>
-                            <span class="priceSpan">(<?= htmlspecialchars($priceFeature) ?>c)</span>
-                        </label>
-                    </div>
-                <?php endforeach; ?>
+
+                <article class="featureGrid">
+                    <?php
+                    foreach ($categories as $category): ?>
+                        <div class="featureCategory">
+                            <p class="categoryName">
+                                <?= ucwords(htmlspecialchars($category['category'])); ?>
+                            </p>
+                            <?php
+                            $featureByCategory = featureByCategory($pdoBooking, $category['id']);
+
+                            foreach ($featureByCategory as $feature): ?>
+                                <div>
+
+                                    <input type="checkbox" id="feature_<?= htmlspecialchars($feature['id']); ?>" name="features[]" value="<?= htmlspecialchars($feature['id']); ?>">
+                                    <label for="feature_<?= htmlspecialchars($feature['id']); ?>"><?= ucwords(htmlspecialchars($feature['feature'])); ?>
+                                        <span class="priceSpan">(<?= htmlspecialchars($feature['price_per_feature']) ?>c)</span>
+                                    </label>
+                                </div>
+                            <?php endforeach ?>
+                        </div>
+                    <?php
+                    endforeach
+                    ?>
+                </article>
             </fieldset>
 
             <!-- GUEST INFO & PAYMENT -->
