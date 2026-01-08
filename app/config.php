@@ -12,4 +12,3 @@ $dotenv->load();
 // Variables
 $apiKey = $_ENV['API_KEY'] ?? null;
 $mastercode = $_ENV['MASTERCODE'] ?? null;
-$mastercode = str_replace(['"', "'"], '', $mastercode);

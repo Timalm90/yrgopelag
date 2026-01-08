@@ -64,7 +64,6 @@
             <!-- BOOK FEATURES -->
             <fieldset class="field features">
                 <legend>Features
-                    <!-- <img class="secretBox" src="assets/images/secretBox.png" /> -->
                 </legend>
 
                 <article class="featureGrid">
