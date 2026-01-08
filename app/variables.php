@@ -19,6 +19,7 @@ $bookedRoomCount = countRoomBookings($pdoBooking);
 $activeFeatures = getActiveFeatures($pdoBooking);
 $showOffers = getDiscountInfo($pdoBooking);
 $featurePrice = getFeaturePrices($pdoBooking);
+$categories = getCategories($pdoBooking);
 
 // Discounts in booking.php
 $luxuryRoomId = getLuxuryRoomId($pdoBooking); //int in FE
