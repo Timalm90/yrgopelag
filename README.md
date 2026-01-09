@@ -42,3 +42,34 @@ git clone https://github.com/ESengenbjerg/yrgopelag.git
 - Allow administrators to change offers and discounts
 - Allow administrators to update hotel star ratings
 - Display occupancy rate per room
+
+
+
+Review from Tim :
+
+1. booking.php:83-86 -
+It’s possible to book arrival and departure the same day, resulting in free stay (as long as you book a feature). The date isn't visually booked in the calendar, but the user cannot book this date anymore. I also had the price be -1
+
+"Dear Tim,
+Thank you for choosing Yoshi's Resort on Starlight Island. We're looking forward to your visit!
+Your visit is registered for 2026-01-04 - 2026-01-04. Check-in: 15:00 Checkout: 11:00
+Your room: Luxury
+Included features:
+* 		Pool
+Total price: -1 credits"
+
+
+
+2.  Nav.php
+I don’t really see the point of the admin link up top. When not logged in it just leads to the login.php page. Possible to just keep the login page and have the admin-page invisible for the visitor?
+
+3. I find it hard to see available rooms, since the input field isn’t beside the calendar.
+
+4. Input radio has no visual link to roomWrapper. Would be nice if the room type updated when selecting one of the options.
+
+5. What’s Day pass? Would be nice to have some info regarding what it is. 
+
+6. No visual calendar for day pass, making it hard to book
+
+7. On bad request:  Forms are reset, making it so that the user have to rewrite everything into forms. Would be nice with cashed data on error.
+ 
